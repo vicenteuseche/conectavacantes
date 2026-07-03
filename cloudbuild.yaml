@@ -1,0 +1,33 @@
+steps:
+  # 1. Construir la imagen del contenedor
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/conectavacantes:latest', '.']
+
+  # 2. Subir la imagen al registro de Google
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/conectavacantes:latest']
+
+  # 3. Desplegar en Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'conectavacantes'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/conectavacantes:latest'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--cpu'
+      - '1'
+      - '--memory'
+      - '256Mi'
+      - '--min-instances'
+      - '1'
+      - '--max-instances'
+      - '5'
+      - '--set-secrets'
+      - 'GEMINI_API_KEY=gemini-api-key:latest'

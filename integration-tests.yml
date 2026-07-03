@@ -1,0 +1,53 @@
+name: API Integration Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  integration-test:
+    name: Run API Integration Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start server in background
+        run: npm start &
+        env:
+          # Usamos variables dummy para que el servidor inicie sin errores
+          # pero los endpoints que dependen de ellas fallen como se espera en un test
+          GEMINI_API_KEY: "dummy-key-for-test"
+          FIREBASE_SERVICE_ACCOUNT_JSON: "{}"
+
+      - name: Wait for server to be ready
+        run: |
+          echo "Waiting for server to start..."
+          for i in {1..10}; do
+            curl -s -o /dev/null http://localhost:3000/api/health && echo "Server is up!" && exit 0
+            sleep 2
+          done
+          echo "Server did not start in time."
+          exit 1
+
+      - name: Run integration tests
+        run: |
+          echo "--- Running Health Check Test ---"
+          curl -s -f http://localhost:3000/api/health | grep '"ok":true'
+          echo "--- Running Stats Endpoint Test ---"
+          # Este endpoint fallará (500) porque FIREBASE_SERVICE_ACCOUNT_JSON es inválido, lo cual es un test válido.
+          curl -s http://localhost:3000/api/stats | grep '"error":"No se pudieron obtener las métricas del servidor."'
+          echo "--- Running Match Vacancies Test ---"
+          # Este endpoint fallará (500) porque GEMINI_API_KEY es inválida, lo cual es un test válido.
+          curl -s -X POST http://localhost:3000/api/match-vacancies -H "Content-Type: application/json" -d '{}' | grep '"error":"API key not valid"'

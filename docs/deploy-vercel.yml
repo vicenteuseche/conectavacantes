@@ -1,0 +1,25 @@
+name: Deploy to Vercel Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        uses: vercel/vercel-action@v3
+        with:
+          # Token de acceso para la API de Vercel
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          # ID de la organización en Vercel
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          # ID del proyecto en Vercel
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          # Desplegar en el entorno de producción
+          vercel-args: "--prod"

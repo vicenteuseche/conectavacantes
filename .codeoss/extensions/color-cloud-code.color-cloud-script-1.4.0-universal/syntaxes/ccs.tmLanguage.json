@@ -1,0 +1,53 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Color Cloud Script",
+    "patterns": [
+        { "include": "#comments" },
+        { "include": "#keywords" },
+        { "include": "#strings" },
+        { "include": "#commands" },
+        { "include": "#numbers" }
+    ],
+    "repository": {
+        "keywords": {
+            "patterns": [{
+                "name": "keyword.control.ccs",
+                "match": "\\b(Wenn|dann|Ende|Variable|Wiederhole|mal|ist gleich|gleich|ist|Funktion|Aufruf|Warte|Sekunden|Aktivierung|wenn|von|Aktivierungsschalter|betätigt|wird)\\b"
+            },
+            {
+                "name": "constant.language.ccs",
+                "match": "\\b(wahr|falsch)\\b"
+            }]
+        },
+        "commands": {
+            "patterns": [{
+                "name": "entity.name.function.ccs",
+                "match": "\\b(Schreibe|Frage|Zufall|Betätige)\\b"
+            }]
+        },
+        "strings": {
+            "name": "string.quoted.double.ccs",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.ccs",
+                    "match": "\\\\."
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [{
+                "name": "constant.numeric.ccs",
+                "match": "\\b\\d+(\\.\\d+)?\\b"
+            }]
+        },
+        "comments": {
+            "patterns": [{
+                "name": "comment.line.double-dash.ccs",
+                "match": "--.*$"
+            }]
+        }
+    },
+    "scopeName": "source.ccs"
+}

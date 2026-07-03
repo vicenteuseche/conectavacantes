@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 2
+    },
+    "auditLog": "/home/vicenteaugusto_useche/.codeoss/data/User/workspaceStorage/-1a97932b/redhat.java/.8f9a45721f35435e55bced1edcae7dd360d18097-audit.json",
+    "files": [
+        {
+            "date": 1783027020463,
+            "name": "/home/vicenteaugusto_useche/.codeoss/data/User/workspaceStorage/-1a97932b/redhat.java/client.log.2026-07-02",
+            "hash": "3c8fbf927b2afc30b554a02406448463743b88b1b46abc0195d84475d7b3bbca"
+        },
+        {
+            "date": 1783087808254,
+            "name": "/home/vicenteaugusto_useche/.codeoss/data/User/workspaceStorage/-1a97932b/redhat.java/client.log.2026-07-03",
+            "hash": "d47055d6f86643153b33cc64bc757fbec2771b4a5de5fc266d872ce82c680316"
+        }
+    ],
+    "hashType": "sha256"
+}

@@ -1,0 +1,75 @@
+{
+	"name": "color-cloud-script",
+	"displayName": "Color Cloud Script",
+	"description": "Die offizielle Programmiersprache für die Color Cloud Community. Jetzt mit Play-Button!",
+	"version": "1.4.0",
+	"publisher": "color-cloud-code",
+	"author": "Dominik & Color Cloud Team",
+	"license": "MIT",
+	"icon": "logo.png",
+	"engines": {
+		"vscode": "^1.60.0"
+	},
+	"activationEvents": [
+		"onLanguage:ccs"
+	],
+	"main": "./out/extension.js",
+	"categories": [
+		"Programming Languages"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": "ccs",
+				"aliases": [
+					"Color Cloud Script",
+					"ccs"
+				],
+				"extensions": [
+					".ccs"
+				],
+				"configuration": "./language-configuration.json",
+				"icon": {
+					"light": "./logo.png",
+					"dark": "./logo.png"
+				}
+			}
+		],
+		"grammars": [
+			{
+				"language": "ccs",
+				"scopeName": "source.ccs",
+				"path": "./syntaxes/ccs.tmLanguage.json"
+			}
+		],
+		"commands": [
+			{
+				"command": "ccs.runFile",
+				"title": "Color Cloud Script ausführen",
+				"icon": "$(play)"
+			}
+		],
+		"menus": {
+			"editor/title": [
+				{
+					"command": "ccs.runFile",
+					"group": "navigation",
+					"when": "resourceExtname == .ccs"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"compile": "tsc -p ./"
+	},
+	"devDependencies": {
+		"@types/node": "^25.6.0",
+		"@types/vscode": "^1.60.0",
+		"typescript": "^4.4.0"
+	},
+	"__metadata": {
+		"installedTimestamp": 1783096022923,
+		"targetPlatform": "universal",
+		"size": 72749
+	}
+}

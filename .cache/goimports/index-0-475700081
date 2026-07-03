@@ -1,0 +1,70 @@
+0
+/home/vicenteaugusto_useche/gopath/pkg/mod
+2026-07-03 14:10:09
+:counter,golang.org/x/telemetry/counter,golang.org/x/telemetry@v0.0.0-20241004145657-5eebfecbdf1f/counter,v0.0.0-20241004145657-5eebfecbdf1f
+Add F 0 name string n int64
+CountCommandLineFlags F 0
+CountFlags F 0 prefix string fs flag.FlagSet
+Counter T
+Inc F 0 name string
+New F 1 name string
+NewStack F 1 name string depth int
+Open F 0
+OpenAndRotate F 0
+OpenDir F 0 telemetryDir string
+StackCounter T
+:countertest,golang.org/x/telemetry/counter/countertest,golang.org/x/telemetry@v0.0.0-20241004145657-5eebfecbdf1f/counter/countertest,v0.0.0-20241004145657-5eebfecbdf1f
+Open F 0 telemetryDir string
+ReadCounter F 2 c *counter.Counter
+ReadFile F 3 name string
+ReadStackCounter F 2 c *counter.StackCounter
+SupportedPlatform C
+:crashmonitor,golang.org/x/telemetry/crashmonitor,golang.org/x/telemetry@v0.0.0-20241004145657-5eebfecbdf1f/crashmonitor,v0.0.0-20241004145657-5eebfecbdf1f
+Supported F 1
+:driver,github.com/google/pprof/driver,github.com/google/pprof@v0.0.0-20240727154555-813a5fbdbec8/driver,v0.0.0-20240727154555-813a5fbdbec8
+Fetcher T
+FlagSet T
+Frame T
+HTTPServerArgs T
+Inst T
+MappingSources T
+ObjFile T
+ObjTool T
+Options T
+PProf F 1 o *Options
+Sym T
+Symbolizer T
+UI T
+Writer T
+:pprof,github.com/google/pprof/fuzz,github.com/google/pprof@v0.0.0-20240727154555-813a5fbdbec8/fuzz,v0.0.0-20240727154555-813a5fbdbec8
+Fuzz F 1 data []byte
+:profile,github.com/google/pprof/profile,github.com/google/pprof@v0.0.0-20240727154555-813a5fbdbec8/profile,v0.0.0-20240727154555-813a5fbdbec8
+CompatibilizeSampleTypes F 1 ps []*Profile
+Function T
+Line T
+Location T
+Mapping T
+Merge F 2 srcs []*Profile
+Parse F 2 r io.Reader
+ParseData F 2 data []byte
+ParseProcMaps F 2 rd io.Reader
+ParseUncompressed F 2 data []byte
+Profile T
+Sample T
+TagMatch T
+ValueType T
+:svgpan,github.com/google/pprof/third_party/svgpan,github.com/google/pprof@v0.0.0-20240727154555-813a5fbdbec8/third_party/svgpan,v0.0.0-20240727154555-813a5fbdbec8
+JSSource V
+:telemetry,golang.org/x/telemetry,golang.org/x/telemetry@v0.0.0-20241004145657-5eebfecbdf1f,v0.0.0-20241004145657-5eebfecbdf1f
+Config T
+CounterConfig T
+Dir F 1
+MaybeChild F 0 config Config
+Mode F 1
+ProgramConfig T
+ProgramReport T
+Report T
+SetMode F 1 mode string
+Start F 1 config Config
+StartResult T
+UploadConfig T

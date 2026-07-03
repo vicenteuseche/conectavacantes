@@ -1,0 +1,30 @@
+name: PR Build Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-check:
+    name: Verify Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Usa la misma versión que tu entorno de desarrollo/producción
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+        env:
+          # Proporciona variables dummy si el build las necesita para no fallar
+          VITE_FIREBASE_API_KEY: "dummy-key"

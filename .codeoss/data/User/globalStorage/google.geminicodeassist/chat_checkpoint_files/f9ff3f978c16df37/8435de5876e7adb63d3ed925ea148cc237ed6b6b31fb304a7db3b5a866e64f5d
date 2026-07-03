@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ConectaVacantes - SaaS Pro IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-slate-200 p-4 sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-blue-600">ConectaVacantes</h1>
+        <div class="flex items-center space-x-4">
+          <span class="text-sm font-medium text-slate-500 hidden sm:inline">Vicente Useche</span>
+          <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold border border-blue-200 shadow-sm">V</div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Search Section -->
+    <div class="bg-blue-600 py-16 px-4 shadow-inner relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10 pointer-events-none">
+        <div class="grid grid-cols-6 gap-4 transform rotate-12 -translate-y-20">
+          <div class="h-24 bg-white rounded-2xl"></div><div class="h-24 bg-white rounded-2xl"></div>
+          <div class="h-24 bg-white rounded-2xl"></div><div class="h-24 bg-white rounded-2xl"></div>
+          <div class="h-24 bg-white rounded-2xl"></div><div class="h-24 bg-white rounded-2xl"></div>
+        </div>
+      </div>
+      <div class="max-w-3xl mx-auto text-center space-y-6 relative z-10">
+        <h2 class="text-4xl font-extrabold text-white tracking-tight">Tu próximo empleo remoto, <br class="hidden sm:block">impulsado por Inteligencia Artificial</h2>
+        <div class="bg-white p-2 rounded-[2rem] shadow-2xl flex flex-col md:flex-row gap-2">
+          <input id="jobSearch" type="text" placeholder="Ej. React Developer, Data Architect, Product Manager..." class="flex-1 p-5 outline-none rounded-2xl text-lg font-medium">
+          <button onclick="buscarVacantes()" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-[1.5rem] font-bold shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-2">
+            Buscar Vacantes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Columna Izquierda: ATS Optimizer simulator -->
+      <aside class="lg:col-span-1 space-y-6">
+        <div class="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm sticky top-24">
+          <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+            🚀 Optimizador ATS
+          </h2>
+          <div class="space-y-4">
+            <button class="w-full flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 transition-all group">
+              <span class="font-semibold text-slate-700">Sincronizar LinkedIn</span>
+              <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-blue-600 group-hover:text-white transition-all">Conectar</span>
+            </button>
+            <button class="w-full flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 transition-all group">
+              <span class="font-semibold text-slate-700">Sincronizar Indeed</span>
+              <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-blue-600 group-hover:text-white transition-all">Conectar</span>
+            </button>
+          </div>
+          <div class="mt-8 pt-6 border-t border-slate-100">
+            <label class="block text-sm font-bold text-slate-700 mb-3 uppercase tracking-widest text-[10px]">Cargar Currículum (PDF)</label>
+            <div class="border-2 border-dashed border-slate-200 rounded-[2rem] p-10 text-center hover:border-blue-400 hover:bg-slate-50 cursor-pointer transition-all group">
+                <div class="text-3xl text-slate-400 group-hover:text-blue-500 mb-2">📁</div>
+                <p class="text-sm font-semibold text-slate-600">Arrastra tu CV aquí</p>
+                <p class="text-[10px] text-slate-400 mt-2 uppercase font-bold tracking-widest">Formatos: PDF, DOCX</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Columna Derecha: Ofertas de Empleo Recomendadas -->
+      <section class="lg:col-span-2 space-y-6">
+        <div class="flex items-center justify-between px-2">
+            <h2 class="text-2xl font-bold text-slate-800">Ofertas Recomendadas</h2>
+            <span id="resultsCount" class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Esperando búsqueda...</span>
+        </div>
+        <div id="vacanciesContainer" class="space-y-4">
+            <!-- Estado Inicial -->
+            <div class="bg-white p-20 rounded-[2.5rem] border border-slate-200 text-center text-slate-400 shadow-sm">
+                <p class="text-5xl mb-6">🔍</p>
+                <p class="font-bold text-xl text-slate-700">Comienza tu búsqueda</p>
+                <p class="text-sm mt-2 text-slate-500 max-w-xs mx-auto">Ingresa un puesto arriba para que la IA analice las mejores oportunidades remotas para tu perfil.</p>
+            </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      async function buscarVacantes() {
+        const query = document.getElementById('jobSearch').value;
+        const container = document.getElementById('vacanciesContainer');
+        const countLabel = document.getElementById('resultsCount');
+        
+        if (!query) return alert("Por favor ingresa un puesto para buscar.");
+
+        // UI Loading State
+        container.innerHTML = `
+          <div class="bg-white p-20 rounded-[2.5rem] border border-slate-200 flex flex-col items-center justify-center gap-6 shadow-sm">
+            <div class="w-14 h-14 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div class="text-center">
+              <p class="text-slate-800 font-bold text-xl">Gemini está analizando el mercado...</p>
+              <p class="text-slate-500 text-sm animate-pulse mt-1">Sincronizando con fuentes de LinkedIn y Indeed</p>
+            </div>
+          </div>
+        `;
+        countLabel.innerText = "PROCESANDO...";
+
+        try {
+          const response = await fetch('/api/match-vacancies', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              cv: "Vicente Useche - Perfil Extraído del Perfil Local",
+              profileKeywords: query,
+              allowedRegions: ["Global"]
+            })
+          });
+
+          // Validación Crítica: Evitar error de JSON parser si el servidor devuelve un HTML de error (404/500)
+          if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(errorData.includes('<!doctype') ? 'Error interno del servidor' : errorData);
+          }
+
+          const data = await response.json();
+          renderVacantes(data.vacancies);
+          countLabel.innerText = \`\${data.vacancies.length} VACANTES ENCONTRADAS\`;
+
+        } catch (error) {
+          console.error("Fallo en la comunicación:", error);
+          countLabel.innerText = "ERROR EN BÚSQUEDA";
+          container.innerHTML = \`
+            <div class="bg-red-50 border border-red-200 p-10 rounded-[2.5rem] text-red-700 flex flex-col items-center gap-4 shadow-sm text-center">
+              <div class="text-4xl">⚠️</div>
+              <div>
+                <h3 class="font-bold text-xl">Fallo en la comunicación</h3>
+                <p class="text-sm mt-2 opacity-80">\${error.message}</p>
+                <button onclick="buscarVacantes()" class="mt-6 bg-red-600 text-white px-8 py-3 rounded-2xl font-bold text-sm hover:bg-red-700 transition-all shadow-lg shadow-red-100">Reintentar</button>
+              </div>
+            </div>
+          \`;
+        }
+      }
+
+      function renderVacantes(vacancies) {
+        const container = document.getElementById('vacanciesContainer');
+        container.innerHTML = '';
+
+        if (!vacancies || vacancies.length === 0) {
+          container.innerHTML = '<div class="text-center py-20 bg-white rounded-[2.5rem] border border-slate-200 font-medium text-slate-500 shadow-sm">No se encontraron resultados para tu perfil técnico.</div>';
+          return;
+        }
+
+        vacancies.forEach(vac => {
+          const card = document.createElement('div');
+          card.className = "bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-2xl hover:border-blue-300 transition-all group cursor-pointer transform hover:-translate-y-1";
+          card.innerHTML = \`
+            <div class="flex flex-col sm:flex-row justify-between items-start gap-8">
+              <div class="flex-1 space-y-4">
+                <div class="flex items-center gap-4">
+                    <span class="bg-blue-600 text-white px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-blue-100">\${vac.platform}</span>
+                    <span class="text-[9px] text-slate-400 font-black uppercase tracking-widest bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">\${vac.sourceApi}</span>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">\${vac.title}</h3>
+                    <p class="text-slate-500 font-bold mt-1 text-sm tracking-tight">\${vac.company} • \${vac.location}</p>
+                </div>
+                <p class="text-sm text-slate-600 leading-relaxed line-clamp-2 font-medium opacity-80">\${vac.description}</p>
+              </div>
+              <div class="w-full sm:w-auto flex flex-col items-end justify-between self-stretch">
+                <div class="bg-emerald-100 text-emerald-700 px-5 py-2.5 rounded-2xl text-[11px] font-black ring-1 ring-emerald-200 shadow-sm tracking-tighter">
+                  \${vac.matchScore}% ATS MATCH
+                </div>
+                <button class="w-full sm:w-auto mt-6 bg-slate-900 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-slate-100 group-hover:shadow-blue-200">
+                  Ver Vacante
+                </button>
+              </div>
+            </div>
+          \`;
+          container.appendChild(card);
+        });
+      }
+    </script>
+  </body>
+</html>
