@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 import { createServer as createViteServer } from "vite";
-import { createApp } from "./server";
+import app from "./server";
 
 dotenv.config();
 
@@ -27,7 +27,6 @@ const listenWithFallback = (app: any, port: number, host: string) => {
 };
 
 async function main() {
-  const app = createApp();
   const vite = await createViteServer({
     server: { middlewareMode: true, hmr: { port: HMR_PORT } },
     appType: "spa"

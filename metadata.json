@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "ConectaVacantes",
   "description": "Streamline your job application process with CV analysis, vacancy requirements cross-referencing, and ATS-optimized document generation.",
   "requestFramePermissions": [],
@@ -6,3 +7,10 @@
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
   ]
 }
+=======
+  "name": "ConectaVacantes Hub",
+  "description": "Streamline your job application process with CV analysis, vacancy requirements cross-referencing, and ATS-optimized document generation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+>>>>>>> 1742d16c17d75e6b70e636f44838e48de8d81b58

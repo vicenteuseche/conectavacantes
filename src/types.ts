@@ -28,9 +28,19 @@ export interface Vacancy {
   matchScore: number;
   description: string;
   requirements: string;
+<<<<<<< HEAD
   platform?: "LinkedIn" | "Upwork";
   sourceApi?: string;
   recruiterEmail?: string;
+=======
+  platform?: "LinkedIn" | "Upwork" | "Indeed";
+  autoApplied?: boolean;
+  applied?: boolean;
+  gapAnalysis?: {
+    missingSkills: string[];
+    reason: string;
+  };
+>>>>>>> 1742d16c17d75e6b70e636f44838e48de8d81b58
 }
 
 export type OutputFormat = "cover-letter" | "cold-email";
