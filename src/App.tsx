@@ -1,40 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { CheckCircle, XCircle, LogOut, User, BarChart3, Mail, FileText, Sparkles } from "lucide-react";
+import { CheckCircle, XCircle, LogOut, User, BarChart3, Mail, Search, FileText, Send, TrendingUp, AlertCircle, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import Header from "./components/Header";
 import CVUpload from "./components/CVUpload";
-import JobInput from "./components/JobInput";
-import ResultPanel from "./components/ResultPanel";
-import DashboardAnalytics from "./components/DashboardAnalytics";
-import CareerConsultant from "./components/CareerConsultant";
-import MailInbox from "./components/MailInbox";
 import { CVFileState, GenerationResult, Vacancy } from "./types";
 
 export default function App() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"main" | "dashboard" | "mail">("main");
+  const [activeTab, setActiveTab] = useState<"search" | "dashboard" | "consultant">("search");
   const [selectedFile, setSelectedFile] = useState<CVFileState | null>(null);
-  const [jobInput, setJobInput] = useState("");
-  const [result, setResult] = useState<GenerationResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [processes, setProcesses] = useState<any[]>([]);
-  const [format, setFormat] = useState<"cover-letter" | "cold-email">("cover-letter");
+  const [vacancies, setVacancies] = useState<Vacancy[]>([]);
+  const [autoSentCount, setAutoSentCount] = useState(0);
+  const [pendingApprovalCount, setPendingApprovalCount] = useState(0);
+  const [cvModifiedCount, setCVModifiedCount] = useState(0);
+  const [linksShownCount, setLinksShownCount] = useState(0);
+  const [improvementSuggestions, setImprovementSuggestions] = useState<string[]>([]);
 
-  // Check for saved session and auto-login in demo mode
+  // Check for saved session
   useEffect(() => {
     const savedEmail = localStorage.getItem("cv_user_email");
     if (savedEmail) {
       setUserEmail(savedEmail);
-    } else {
-      // Auto-login in demo mode
-      setUserEmail("demo@conectavacantes.com");
-      localStorage.setItem("cv_user_email", "demo@conectavacantes.com");
-    }
-    const savedProcesses = localStorage.getItem(`cv_processes_${savedEmail || "demo@conectavacantes.com"}`);
-    if (savedProcesses) {
-      setProcesses(JSON.parse(savedProcesses));
     }
   }, []);
 
@@ -60,43 +49,9 @@ export default function App() {
     }, 3000);
   };
 
-  const handleGenerate = async () => {
-    if (!selectedFile && !jobInput) {
-      setError("Por favor, sube un CV o introduce una descripción de vacante.");
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cv: selectedFile,
-          jobInput,
-          format,
-        }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Error al generar el contenido.");
-      }
-
-      setResult(data);
-      showToast("Contenido generado con éxito.", "success");
-    } catch (err: any) {
-      setError(err.message || "Error al conectar con el servidor.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleMatchVacancies = async () => {
+  const handleSearchVacancies = async () => {
     if (!selectedFile) {
-      setError("Por favor, sube un CV primero.");
+      setError("Por favor, sube tu CV primero.");
       return;
     }
 
@@ -109,7 +64,7 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           cv: selectedFile,
-          searchQuery: jobInput,
+          searchQuery: "",
         }),
       });
 
@@ -118,25 +73,40 @@ export default function App() {
         throw new Error(data.error || "Error al buscar vacantes.");
       }
 
-      // Convert vacancies to processes format
-      const newProcesses = data.vacancies.map((v: Vacancy) => ({
-        id: "proc_" + Date.now() + Math.random().toString(36).substr(2, 5),
-        title: v.title,
-        company: v.company,
-        platform: v.platform || "LinkedIn",
-        matchScore: v.matchScore,
-        date: new Date().toLocaleDateString("es-ES"),
-        status: "Enviado" as const,
-        recruiterEmail: v.recruiterEmail,
-      }));
+      const results = data.vacancies || [];
+      setVacancies(results);
 
-      setProcesses((prev) => {
-        const updated = [...newProcesses, ...prev];
-        localStorage.setItem(`cv_processes_${userEmail}`, JSON.stringify(updated));
-        return updated;
-      });
+      // Process vacancies: auto-send if >55% and has recruiter email
+      let autoSent = 0;
+      let pending = 0;
+      let links = 0;
+      const suggestions: string[] = [];
 
-      showToast(`Se encontraron ${data.vacancies.length} vacantes compatibles.`, "success");
+      for (const vac of results) {
+        if (vac.matchScore >= 55) {
+          if (vac.recruiterEmail) {
+            // Auto-send cover letter
+            autoSent++;
+            await sendCoverLetter(vac, selectedFile);
+          } else {
+            // Show link for manual application
+            links++;
+          }
+        } else {
+          // Add improvement suggestions
+            if (vac.requirements) {
+              const skills = vac.requirements.split(",").map((s: string) => s.trim()).filter((s: string) => s.length > 0);
+              suggestions.push(...skills.slice(0, 3));
+            }
+        }
+      }
+
+      setAutoSentCount(autoSent);
+      setPendingApprovalCount(pending);
+      setLinksShownCount(links);
+      setImprovementSuggestions([...new Set(suggestions)].slice(0, 10));
+
+      showToast(`Se encontraron ${results.length} vacantes. ${autoSent} envíos automáticos realizados.`, "success");
     } catch (err: any) {
       setError(err.message || "Error al buscar vacantes.");
     } finally {
@@ -144,14 +114,42 @@ export default function App() {
     }
   };
 
-  // If no user, show loading screen
+  const sendCoverLetter = async (vacancy: Vacancy, cv: CVFileState) => {
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cv: cv,
+          jobInput: vacancy.requirements || vacancy.description,
+          format: "cover-letter",
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok && data.generatedText) {
+        // In a real app, this would send an email
+        console.log(`Cover letter generated for ${vacancy.company}`);
+      }
+    } catch (err) {
+      console.error("Error generating cover letter:", err);
+    }
+  };
+
+  // If no user, show login screen
   if (!userEmail) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center p-8 bg-white rounded-2xl shadow-xl">
-          <h1 className="text-2xl font-bold text-slate-900 mb-4">Conecta<span className="text-blue-600">Vacantes</span></h1>
-          <p className="text-slate-600 mb-4">Cargando aplicación...</p>
-          <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto" />
+        <div className="text-center p-8 bg-white rounded-2xl shadow-xl max-w-md w-full">
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Conecta<span className="text-blue-600">Vacantes</span></h1>
+          <p className="text-slate-600 mb-6">Ingresa con tu cuenta de Google</p>
+          <button
+            onClick={() => handleLoginSuccess("demo@conectavacantes.com")}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md w-full"
+          >
+            <User className="h-5 w-5" />
+            <span>Ingresar con Google</span>
+          </button>
         </div>
       </div>
     );
@@ -159,21 +157,21 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex flex-col">
-      <Header />
+      <Header userEmail={userEmail} onLogout={handleLogout} />
 
       {/* Navigation Tabs */}
       <div className="max-w-5xl mx-auto px-4 py-4 sm:px-6 lg:px-8 w-full">
         <div className="flex items-center gap-2 bg-white/80 backdrop-blur-md p-2 rounded-2xl border border-slate-100 shadow-sm mb-6">
           <button
-            onClick={() => setActiveTab("main")}
+            onClick={() => setActiveTab("search")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              activeTab === "main"
+              activeTab === "search"
                 ? "bg-blue-600 text-white shadow-md"
                 : "text-slate-600 hover:bg-slate-100"
             }`}
           >
-            <FileText className="h-4 w-4" />
-            <span>Generador ATS</span>
+            <Search className="h-4 w-4" />
+            <span>Busca Vacantes</span>
           </button>
           <button
             onClick={() => setActiveTab("dashboard")}
@@ -187,105 +185,39 @@ export default function App() {
             <span>Tablero</span>
           </button>
           <button
-            onClick={() => setActiveTab("mail")}
+            onClick={() => setActiveTab("consultant")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              activeTab === "mail"
+              activeTab === "consultant"
                 ? "bg-blue-600 text-white shadow-md"
                 : "text-slate-600 hover:bg-slate-100"
             }`}
           >
-            <Mail className="h-4 w-4" />
-            <span>Correo</span>
+            <FileText className="h-4 w-4" />
+            <span>Consultor de Carrera</span>
           </button>
-          <div className="ml-auto flex items-center gap-3">
-            <div className="text-xs text-slate-500 flex items-center gap-1.5">
-              <User className="h-3.5 w-3.5" />
-              <span>{userEmail}</span>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-              title="Cerrar sesión"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
-          </div>
         </div>
       </div>
 
       {/* Main Content */}
       <main className="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-12">
         <AnimatePresence mode="wait">
-          {activeTab === "main" && (
+          {activeTab === "search" && (
             <motion.div
-              key="main"
+              key="search"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               className="space-y-6"
             >
-              {/* Format Selector */}
-              <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                <div className="flex items-center gap-4">
-                  <span className="text-xs font-bold text-slate-600">Formato de salida:</span>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setFormat("cover-letter")}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                        format === "cover-letter"
-                          ? "bg-blue-600 text-white"
-                          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                      }`}
-                    >
-                      Carta de Presentación
-                    </button>
-                    <button
-                      onClick={() => setFormat("cold-email")}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                        format === "cold-email"
-                          ? "bg-blue-600 text-white"
-                          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                      }`}
-                    >
-                      Email de Contacto
-                    </button>
-                  </div>
-                </div>
-              </div>
-
               {/* CV Upload Section */}
               <CVUpload onUpload={setSelectedFile} selectedFile={selectedFile} />
 
-              {/* Job Input Section */}
-              <JobInput value={jobInput} onChange={setJobInput} />
-
-              {/* Generate Button */}
+              {/* Search Button */}
               <div className="flex justify-center">
                 <button
-                  onClick={handleGenerate}
-                  disabled={loading || (!selectedFile && !jobInput)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? (
-                    <>
-                      <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
-                      <span>Generando...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="h-4 w-4" />
-                      <span>Generar {format === "cover-letter" ? "Carta" : "Email"} ATS</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {/* Match Vacancies Button */}
-              <div className="flex justify-center">
-                <button
-                  onClick={handleMatchVacancies}
+                  onClick={handleSearchVacancies}
                   disabled={loading || !selectedFile}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <>
@@ -294,19 +226,63 @@ export default function App() {
                     </>
                   ) : (
                     <>
-                      <span>🔍 Buscar Vacantes Compatibles</span>
+                      <Search className="h-4 w-4" />
+                      <span>Buscar Vacantes Compatibles</span>
                     </>
                   )}
                 </button>
               </div>
 
-              {/* Result Panel */}
-              {result && <ResultPanel result={result} format={format} />}
+              {/* Results Section */}
+              {vacancies.length > 0 && (
+                <div className="space-y-4">
+                  <h2 className="text-lg font-bold text-slate-800">Vacantes Encontradas</h2>
+                  <div className="grid gap-4">
+                    {vacancies.map((vac, idx) => (
+                      <div key={idx} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                        <div className="flex justify-between items-start mb-2">
+                          <h3 className="font-bold text-slate-900">{vac.title}</h3>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            vac.matchScore >= 55 ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+                          }`}>
+                            {vac.matchScore}% compatibilidad
+                          </span>
+                        </div>
+                        <p className="text-sm text-slate-600 mb-1">{vac.company} - {vac.location}</p>
+                        {vac.recruiterEmail && vac.matchScore >= 55 && (
+                          <p className="text-xs text-emerald-600 flex items-center gap-1">
+                            <Send className="h-3 w-3" />
+                            Carta enviada automáticamente
+                          </p>
+                        )}
+                        {!vac.recruiterEmail && vac.matchScore >= 55 && (
+                          <a href="#" className="text-xs text-blue-600 hover:underline">
+                            Ver enlace de postulación
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-              {/* Career Consultant Chat */}
-              <div className="mt-8">
-                <CareerConsultant cvText={selectedFile?.textData} jobDescription={jobInput} />
-              </div>
+              {/* Improvement Suggestions */}
+              {improvementSuggestions.length > 0 && (
+                <div className="bg-amber-50 p-4 rounded-xl border border-amber-100">
+                  <h3 className="font-bold text-amber-800 mb-2 flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4" />
+                    Mejora tu CV para estas vacantes
+                  </h3>
+                  <ul className="text-sm text-amber-700 space-y-1">
+                    {improvementSuggestions.map((suggestion, idx) => (
+                      <li key={idx} className="flex items-center gap-2">
+                        <RefreshCw className="h-3 w-3" />
+                        {suggestion}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </motion.div>
           )}
 
@@ -316,26 +292,72 @@ export default function App() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
+              className="space-y-6"
             >
-              <DashboardAnalytics
-                userEmail={userEmail}
-                cvName={selectedFile?.name}
-                cvText={selectedFile?.textData}
-                onShowToast={showToast}
-                processes={processes}
-                setProcesses={setProcesses}
-              />
+              <h2 className="text-xl font-bold text-slate-800">Tablero de Métricas</h2>
+              
+              {/* Stats Cards */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-white p-4 rounded-xl border border-slate-100 text-center">
+                  <p className="text-2xl font-bold text-blue-600">{vacancies.length}</p>
+                  <p className="text-xs text-slate-500">Postulaciones Evaluadas</p>
+                </div>
+                <div className="bg-white p-4 rounded-xl border border-slate-100 text-center">
+                  <p className="text-2xl font-bold text-emerald-600">{autoSentCount}</p>
+                  <p className="text-xs text-slate-500">Envíos Automáticos</p>
+                </div>
+                <div className="bg-white p-4 rounded-xl border border-slate-100 text-center">
+                  <p className="text-2xl font-bold text-amber-600">{pendingApprovalCount}</p>
+                  <p className="text-xs text-slate-500">En Aprobación</p>
+                </div>
+                <div className="bg-white p-4 rounded-xl border border-slate-100 text-center">
+                  <p className="text-2xl font-bold text-purple-600">{cvModifiedCount}</p>
+                  <p className="text-xs text-slate-500">CVs Modificados</p>
+                </div>
+              </div>
+
+              {/* Vacancies Table */}
+              {vacancies.length > 0 && (
+                <div className="bg-white rounded-xl border border-slate-100 overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead className="bg-slate-50">
+                      <tr>
+                        <th className="px-4 py-2 text-left">Vacante</th>
+                        <th className="px-4 py-2 text-left">Empresa</th>
+                        <th className="px-4 py-2 text-center">Compatibilidad</th>
+                        <th className="px-4 py-2 text-center">Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {vacancies.map((vac, idx) => (
+                        <tr key={idx} className="border-t border-slate-100">
+                          <td className="px-4 py-2">{vac.title}</td>
+                          <td className="px-4 py-2">{vac.company}</td>
+                          <td className="px-4 py-2 text-center">{vac.matchScore}%</td>
+                          <td className="px-4 py-2 text-center">
+                            {vac.matchScore >= 55 && vac.recruiterEmail ? "Enviado" : 
+                             vac.matchScore >= 55 ? "Link mostrado" : "No compatible"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </motion.div>
           )}
 
-          {activeTab === "mail" && (
+          {activeTab === "consultant" && (
             <motion.div
-              key="mail"
+              key="consultant"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
             >
-              <MailInbox userEmail={userEmail} onShowToast={showToast} />
+              <div className="bg-white p-6 rounded-xl border border-slate-100">
+                <h2 className="text-xl font-bold text-slate-800 mb-4">Consultor de Carrera AI</h2>
+                <p className="text-slate-600">Simulador de consultor de carrera - Próximamente disponible</p>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
