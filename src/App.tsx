@@ -1,814 +1,368 @@
 import React, { useState, useEffect } from "react";
-import { 
-  Sparkles, 
-  ArrowRight, 
-  RefreshCw, 
-  AlertCircle, 
-  CheckCircle2, 
-  Sliders, 
-  Linkedin, 
-  Search, 
-  ExternalLink, 
-  Mail, 
-  Briefcase, 
-  MapPin, 
-  Award, 
-  ChevronRight, 
-  X, 
-  User, 
-  Settings, 
-  Send, 
-  FileText, 
-  ThumbsUp, 
-  AlertTriangle,
-  Clipboard,
-  Check,
-  Database,
-  Clock,
-  Bell,
-  BellOff
-} from "lucide-react";
+import { CheckCircle, XCircle, LogOut, User, BarChart3, Mail, FileText, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import Header from "./components/Header";
 import CVUpload from "./components/CVUpload";
-import CareerConsultant from "./components/CareerConsultant";
-import LoginScreen from "./components/LoginScreen";
+import JobInput from "./components/JobInput";
+import ResultPanel from "./components/ResultPanel";
 import DashboardAnalytics from "./components/DashboardAnalytics";
+import CareerConsultant from "./components/CareerConsultant";
 import MailInbox from "./components/MailInbox";
-import { CVFileState, OutputFormat, GenerationResult, Vacancy } from "./types";
-import { auth, isFirebaseReady, saveProcessToFirestore, saveMetricToFirestore, saveSearchEventToFirestore, ensureUserProfile, listProcessesFromFirestore } from "./firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { sanitizeEmail, sanitizeSearchFilters, sanitizeText } from "./utils/sanitize";
-
-interface Process {
-  id: string;
-  title: string;
-  company: string;
-  platform: string;
-  matchScore: number;
-  date: string;
-  status: "Enviado" | "Entrevista" | "Rechazado" | "Ofrecido";
-  recruiterEmail?: string;
-}
+import { CVFileState, GenerationResult, Vacancy } from "./types";
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAuthHydrated, setIsAuthHydrated] = useState(false);
-  const [userEmail, setUserEmail] = useState(() => localStorage.getItem("connectavacantes_user_email") || "");
-  const [activePage, setActivePage] = useState<"postulations" | "dashboard" | "consultor" | "mail">("postulations");
-  const [cv, setCv] = useState<CVFileState | null>(null);
-  const [candidateName, setCandidateName] = useState("Vicente Useche");
-  const [profileKeywords, setProfileKeywords] = useState("React, Node.js, TypeScript, Cloud Architecture");
-  const [linkedinProfile, setLinkedinProfile] = useState("https://linkedin.com/in/vicente-useche");
-  const [showProfileModal, setShowProfileModal] = useState(false);
-  const [isLinkedinConnected, setIsLinkedinConnected] = useState(() => localStorage.getItem("connectavacantes_linkedin_connected") === "true");
-  const [isIndeedConnected, setIsIndeedConnected] = useState(() => localStorage.getItem("connectavacantes_indeed_connected") === "true");
-  const [isWorkupConnected, setIsWorkupConnected] = useState(() => localStorage.getItem("connectavacantes_workup_connected") === "true");
-  const [selectedPlatform, setSelectedPlatform] = useState<string>("Todas");
-  const [jobSearch, setJobSearch] = useState("");
-  const [vacancies, setVacancies] = useState<Vacancy[] | null>(null);
-  const [matchingLoading, setMatchingLoading] = useState(false);
-  const [activeVacancy, setActiveVacancy] = useState<Vacancy | null>(null);
-  const [activeInspectTab, setActiveInspectTab] = useState<"analysis" | "document">("analysis");
-  const [recruiterEmail, setRecruiterEmail] = useState("");
-  const [generationResult, setGenerationResult] = useState<GenerationResult | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [loadingStep, setLoadingStep] = useState(0);
-  const [generationError, setGenerationError] = useState<string | null>(null);
-  const [processes, setProcesses] = useState<Process[]>([]);
-  const [isPersisting, setIsPersisting] = useState(false);
-  const [alertToast, setAlertToast] = useState<{ message: string; type: "success" | "error" | "warning" } | null>(null);
-  const [isWellfoundAlertActive, setIsWellfoundAlertActive] = useState(false);
-  const [unreadEmailsCount, setUnreadEmailsCount] = useState(0);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"main" | "dashboard" | "mail">("main");
+  const [selectedFile, setSelectedFile] = useState<CVFileState | null>(null);
   const [jobInput, setJobInput] = useState("");
+  const [result, setResult] = useState<GenerationResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [processes, setProcesses] = useState<any[]>([]);
+  const [format, setFormat] = useState<"cover-letter" | "cold-email">("cover-letter");
 
-  // Historial de búsquedas recientes
-  const [searchHistory, setSearchHistory] = useState<string[]>(() => {
-    const saved = localStorage.getItem(`cv_search_history_${userEmail}`);
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // Filtros adicionales
-  const [selectedRegions, setSelectedRegions] = useState<string[]>(["latam", "na", "es", "caribe"]);
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>(["es", "en"]);
-  const [selectedContracts, setSelectedContracts] = useState<string[]>(["contrato", "proyecto"]);
-
+  // Check for saved session and auto-login in demo mode
   useEffect(() => {
-    if (!auth) {
-      setIsAuthHydrated(true);
-      return;
+    const savedEmail = localStorage.getItem("cv_user_email");
+    if (savedEmail) {
+      setUserEmail(savedEmail);
+    } else {
+      // Auto-login in demo mode
+      setUserEmail("demo@conectavacantes.com");
+      localStorage.setItem("cv_user_email", "demo@conectavacantes.com");
     }
-
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      const signedIn = Boolean(user);
-      setIsLoggedIn(signedIn);
-      setUserEmail(user?.email || "");
-      localStorage.setItem("connectavacantes_logged_in", signedIn ? "true" : "false");
-      if (user?.email) {
-        localStorage.setItem("connectavacantes_user_email", user.email);
-        await ensureUserProfile(user.email, { displayName: user.displayName || user.email.split("@")[0] });
-      } else {
-        localStorage.removeItem("connectavacantes_user_email");
-      }
-      setIsAuthHydrated(true);
-    });
-
-    return () => unsubscribe();
+    const savedProcesses = localStorage.getItem(`cv_processes_${savedEmail || "demo@conectavacantes.com"}`);
+    if (savedProcesses) {
+      setProcesses(JSON.parse(savedProcesses));
+    }
   }, []);
 
-  // Escuchar mensajes de OAuth
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      // LOG DE DEPURACIÓN: Ver qué llega a la ventana principal
-      console.log("--- OAuth Debug: Mensaje Recibido ---");
-      console.log("Origin:", event.origin);
-      console.log("Data:", event.data);
-
-      const origin = event.origin;
-      if (!origin.endsWith(".run.app") && !origin.includes("localhost") && !origin.includes("127.0.0.1")) return;
-
-      if (event.data?.type === "OAUTH_AUTH_SUCCESS") {
-        const { platform, profile } = event.data;
-        if (platform === "linkedin") {
-          setIsLinkedinConnected(true);
-          localStorage.setItem("connectavacantes_linkedin_connected", "true");
-        } else if (platform === "indeed") {
-          setIsIndeedConnected(true);
-          localStorage.setItem("connectavacantes_indeed_connected", "true");
-        } else if (platform === "workup") {
-          setIsWorkupConnected(true);
-          localStorage.setItem("connectavacantes_workup_connected", "true");
-        }
-
-        if (profile) {
-          if (profile.name) {
-            setCandidateName(profile.name);
-            localStorage.setItem(`cv_name_${userEmail}`, profile.name);
-          }
-          if (profile.keywords) {
-            setProfileKeywords(profile.keywords);
-            localStorage.setItem(`cv_keywords_${userEmail}`, profile.keywords);
-          }
-        }
-        showToast(`🔌 ¡Cuenta de ${platform} vinculada correctamente!`, "success");
-      }
-    };
-
-    window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
-  }, [userEmail]);
-
-  const handleConnectOAuth = async (platform: "linkedin" | "indeed" | "workup") => {
-    try {
-      const res = await fetch(`/api/auth/${platform}/url`);
-      if (!res.ok) throw new Error(`Error al obtener URL de OAuth para ${platform}`);
-      const { url } = await res.json();
-      
-      const width = 600;
-      const height = 700;
-      const left = window.screen.width / 2 - width / 2;
-      const top = window.screen.height / 2 - height / 2;
-      
-      const popup = window.open(url, `oauth_${platform}_popup`, `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`);
-      
-      if (!popup) {
-        showToast("⚠️ El navegador bloqueó la ventana emergente. Por favor, permítela.", "warning");
-      }
-    } catch (err: any) {
-      showToast(`Error de conexión: ${err.message}`, "error");
-    }
+  const handleLoginSuccess = (email: string) => {
+    setUserEmail(email);
+    localStorage.setItem("cv_user_email", email);
+    setSuccess("¡Bienvenido! Sesión iniciada correctamente.");
   };
 
-  const handleDisconnectOAuth = (platform: "linkedin" | "indeed" | "workup") => {
-    if (platform === "linkedin") {
-      setIsLinkedinConnected(false);
-      localStorage.removeItem("connectavacantes_linkedin_connected");
-    } else if (platform === "indeed") {
-      setIsIndeedConnected(false);
-      localStorage.removeItem("connectavacantes_indeed_connected");
-    } else if (platform === "workup") {
-      setIsWorkupConnected(false);
-      localStorage.removeItem("connectavacantes_workup_connected");
-    }
-    showToast(`🔌 Cuenta de ${platform} desvinculada.`, "success");
+  const handleLogout = () => {
+    setUserEmail(null);
+    localStorage.removeItem("cv_user_email");
+    setSuccess("Sesión cerrada correctamente.");
   };
 
-  const handleAutoSendEmail = async () => {
-    if (!activeVacancy) return;
+  const showToast = (msg: string, type: "success" | "error" | "warning" = "success") => {
+    if (type === "success") setSuccess(msg);
+    else if (type === "error") setError(msg);
+    else setError(msg);
+    setTimeout(() => {
+      setSuccess(null);
+      setError(null);
+    }, 3000);
+  };
 
-    const safeRecruiterEmail = sanitizeEmail(recruiterEmail);
-    if (!safeRecruiterEmail) {
-      showToast("⚠️ Añade un correo de reclutador válido antes de enviar.", "warning");
+  const handleGenerate = async () => {
+    if (!selectedFile && !jobInput) {
+      setError("Por favor, sube un CV o introduce una descripción de vacante.");
       return;
     }
 
-    const newProc: Process = {
-      id: "proc_" + Date.now(),
-      title: activeVacancy.title,
-      company: activeVacancy.company,
-      platform: activeVacancy.platform || "LinkedIn",
-      matchScore: activeVacancy.matchScore,
-      date: new Date().toLocaleDateString("es-ES"),
-      status: "Enviado",
-      recruiterEmail: safeRecruiterEmail
-    };
-
-    const updated = [newProc, ...processes];
-    setProcesses(updated);
-    localStorage.setItem(`cv_processes_${userEmail}`, JSON.stringify(updated));
-
-    setIsPersisting(true);
-    try {
-      if (isFirebaseReady) {
-        await saveProcessToFirestore(userEmail, newProc);
-        await saveMetricToFirestore(userEmail, {
-          type: "email_sent",
-          platform: newProc.platform,
-          matchScore: newProc.matchScore,
-          company: newProc.company,
-        });
-      }
-      showToast(`✉️ ¡Postulación registrada en el CRM y enviada a ${safeRecruiterEmail}!`, "success");
-    } catch (error) {
-      console.warn("Persistencia Firestore no disponible", error);
-      showToast("⚠️ Se guardó localmente y se seguirá sincronizando cuando Firebase esté listo.", "warning");
-    } finally {
-      setIsPersisting(false);
-    }
-
-    if (generationResult) {
-      const subject = encodeURIComponent(`Postulación - ${activeVacancy.title} (${activeVacancy.company})`);
-      const body = encodeURIComponent(generationResult.generatedText);
-      window.location.href = `mailto:${safeRecruiterEmail}?subject=${subject}&body=${body}`;
-    }
-  };
-
-  const handleLogout = async () => {
-    if (auth) {
-      await signOut(auth);
-    }
-    setIsLoggedIn(false);
-    localStorage.removeItem("connectavacantes_logged_in");
-    localStorage.removeItem("connectavacantes_user_email");
-  };
-
-  // Función para reproducir el efecto de sonido "ping"
-  const playNotificationPing = () => {
-    const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
-    audio.volume = 0.5;
-    audio.play().catch(() => { /* El navegador puede bloquear el audio sin interacción previa */ });
-  };
-
-  // Simulación de monitoreo en segundo plano para vacantes de Wellfound
-  useEffect(() => {
-    let interval: any;
-    if (isWellfoundAlertActive) {
-      interval = setInterval(() => {
-        const mockMatchFound = Math.random() > 0.85; // Simula hallazgo aleatorio
-        if (mockMatchFound) {
-          playNotificationPing();
-          showToast("🚀 Wellfound Alert: Nueva vacante de Startup detectada. Coincidencia del 94% con tu perfil.", "success");
-          setUnreadEmailsCount(prev => prev + 1);
-        }
-      }, 45000); // Comprobación cada 45 segundos para la demo
-    }
-    return () => clearInterval(interval);
-  }, [isWellfoundAlertActive]);
-
-  const showToast = (message: string, type: "success" | "error" | "warning" = "warning") => {
-    setAlertToast({ message, type });
-    setTimeout(() => setAlertToast(null), 4500);
-  };
-
-  useEffect(() => {
-    const loadProcesses = async () => {
-      if (!isLoggedIn || !userEmail) return;
-      const savedProcs = localStorage.getItem(`cv_processes_${userEmail}`);
-      if (savedProcs) {
-        setProcesses(JSON.parse(savedProcs));
-      }
-
-      if (isFirebaseReady) {
-        try {
-          const remote = await listProcessesFromFirestore(userEmail);
-          if (remote?.length) {
-            const parsed = remote.map((item: any) => ({
-              id: item.id,
-              title: item.title,
-              company: item.company,
-              platform: item.platform,
-              matchScore: item.matchScore,
-              date: item.date,
-              status: item.status,
-              recruiterEmail: item.recruiterEmail,
-            }));
-            setProcesses(parsed);
-            localStorage.setItem(`cv_processes_${userEmail}`, JSON.stringify(parsed));
-          }
-        } catch (error) {
-          console.warn("No se pudieron cargar procesos desde Firestore", error);
-        }
-      }
-    };
-
-    loadProcesses();
-  }, [isLoggedIn, userEmail]);
-
-  const handleSearchVacancies = async () => {
-    if (!cv) {
-      showToast("⚠️ Debes cargar tu CV antes de realizar la búsqueda.", "warning");
-      return;
-    }
-
-    const query = sanitizeText(jobSearch.trim(), 80);
-    if (!query) {
-      showToast("⚠️ Escribe un puesto o habilidad para buscar vacantes.", "warning");
-      return;
-    }
-
-    setMatchingLoading(true);
-    setActiveVacancy(null);
-    setVacancies(null);
-
-    try {
-      let cvBody: any = null;
-      if (cv) {
-        cvBody = cv.type === "application/pdf" ? { base64: cv.base64Data, mimeType: cv.type } : { textData: cv.textData };
-      }
-
-      const response = await fetch("/api/match-vacancies", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          cv: cvBody, 
-          profileKeywords: sanitizeText(profileKeywords, 220),
-          allowedRegions: sanitizeSearchFilters(selectedRegions),
-          languages: sanitizeSearchFilters(selectedLanguages),
-          contractTypes: sanitizeSearchFilters(selectedContracts),
-          searchQuery: query 
-        })
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error ${response.status}: ${errorText.includes('<!doctype') ? 'El servidor devolvió HTML en lugar de JSON' : errorText}`);
-      }
-      
-      const data = await response.json();
-      const results = Array.isArray(data.vacancies) ? data.vacancies : [];
-      setVacancies(results);
-
-      if (isFirebaseReady) {
-        await saveSearchEventToFirestore(userEmail, {
-          query,
-          resultsCount: results.length,
-          filters: {
-            regions: sanitizeSearchFilters(selectedRegions),
-            languages: sanitizeSearchFilters(selectedLanguages),
-            contracts: sanitizeSearchFilters(selectedContracts),
-          },
-        });
-      }
-
-      if (!results.length) {
-        showToast("No se encontraron vacantes con esos filtros. Prueba con otros términos o cambia el rango regional.", "warning");
-      } else {
-        const nextHistory = [query, ...searchHistory.filter((item) => item !== query)].slice(0, 6);
-        setSearchHistory(nextHistory);
-        localStorage.setItem(`cv_search_history_${userEmail}`, JSON.stringify(nextHistory));
-      }
-    } catch (err) {
-      console.error(err);
-      showToast("No fue posible completar la búsqueda. Se devolvió una respuesta local de respaldo.", "warning");
-      setVacancies([]);
-    } finally {
-      setMatchingLoading(false);
-    }
-  };
-
-  const handleSelectVacancy = async (vac: Vacancy) => {
-    setActiveVacancy(vac);
-    setRecruiterEmail(vac.recruiterEmail);
     setLoading(true);
-    setGenerationError(null);
-    try {
-      let cvBody: any = null;
-      if (cv) {
-        cvBody = cv.type === "application/pdf" ? { base64: cv.base64Data, mimeType: cv.type } : { textData: cv.textData };
-      }
+    setError(null);
 
+    try {
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cv: cvBody || profileKeywords, jobInput: vac.requirements, format: "cover-letter", linkedinProfile })
+        body: JSON.stringify({
+          cv: selectedFile,
+          jobInput,
+          format,
+        }),
       });
+
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Error IA");
-      setGenerationResult(data);
-    } catch (err) {
-      setGenerationError("Error en el análisis de IA");
+      if (!response.ok) {
+        throw new Error(data.error || "Error al generar el contenido.");
+      }
+
+      setResult(data);
+      showToast("Contenido generado con éxito.", "success");
+    } catch (err: any) {
+      setError(err.message || "Error al conectar con el servidor.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!isAuthHydrated) {
-    return <div className="min-h-screen flex items-center justify-center bg-slate-50 text-sm text-slate-500">Sincronizando sesión...</div>;
+  const handleMatchVacancies = async () => {
+    if (!selectedFile) {
+      setError("Por favor, sube un CV primero.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/match-vacancies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cv: selectedFile,
+          searchQuery: jobInput,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Error al buscar vacantes.");
+      }
+
+      // Convert vacancies to processes format
+      const newProcesses = data.vacancies.map((v: Vacancy) => ({
+        id: "proc_" + Date.now() + Math.random().toString(36).substr(2, 5),
+        title: v.title,
+        company: v.company,
+        platform: v.platform || "LinkedIn",
+        matchScore: v.matchScore,
+        date: new Date().toLocaleDateString("es-ES"),
+        status: "Enviado" as const,
+        recruiterEmail: v.recruiterEmail,
+      }));
+
+      setProcesses((prev) => {
+        const updated = [...newProcesses, ...prev];
+        localStorage.setItem(`cv_processes_${userEmail}`, JSON.stringify(updated));
+        return updated;
+      });
+
+      showToast(`Se encontraron ${data.vacancies.length} vacantes compatibles.`, "success");
+    } catch (err: any) {
+      setError(err.message || "Error al buscar vacantes.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // If no user, show loading screen
+  if (!userEmail) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center p-8 bg-white rounded-2xl shadow-xl">
+          <h1 className="text-2xl font-bold text-slate-900 mb-4">Conecta<span className="text-blue-600">Vacantes</span></h1>
+          <p className="text-slate-600 mb-4">Cargando aplicación...</p>
+          <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto" />
+        </div>
+      </div>
+    );
   }
 
-  if (!isLoggedIn) return <LoginScreen onLoginSuccess={async (email) => {
-    const safeEmail = sanitizeEmail(email);
-    setIsLoggedIn(true);
-    setUserEmail(safeEmail);
-    localStorage.setItem("connectavacantes_logged_in", "true");
-    localStorage.setItem("connectavacantes_user_email", safeEmail);
-    if (isFirebaseReady) {
-      await ensureUserProfile(safeEmail, { displayName: safeEmail.split("@")[0] });
-    }
-  }} />;
-
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-200">
-      {/* Top Professional Header */}
-      <header className="border-b border-slate-200/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-40 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="p-2.5 bg-blue-600 rounded-xl text-white shadow-md">
-              <Briefcase className="h-5 w-5" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex flex-col">
+      <Header />
+
+      {/* Navigation Tabs */}
+      <div className="max-w-5xl mx-auto px-4 py-4 sm:px-6 lg:px-8 w-full">
+        <div className="flex items-center gap-2 bg-white/80 backdrop-blur-md p-2 rounded-2xl border border-slate-100 shadow-sm mb-6">
+          <button
+            onClick={() => setActiveTab("main")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              activeTab === "main"
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-slate-600 hover:bg-slate-100"
+            }`}
+          >
+            <FileText className="h-4 w-4" />
+            <span>Generador ATS</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("dashboard")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              activeTab === "dashboard"
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-slate-600 hover:bg-slate-100"
+            }`}
+          >
+            <BarChart3 className="h-4 w-4" />
+            <span>Tablero</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("mail")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              activeTab === "mail"
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-slate-600 hover:bg-slate-100"
+            }`}
+          >
+            <Mail className="h-4 w-4" />
+            <span>Correo</span>
+          </button>
+          <div className="ml-auto flex items-center gap-3">
+            <div className="text-xs text-slate-500 flex items-center gap-1.5">
+              <User className="h-3.5 w-3.5" />
+              <span>{userEmail}</span>
             </div>
-            <h1 className="font-display text-lg font-extrabold tracking-tight">
-              Conecta<span className="text-blue-600">Vacantes</span>
-            </h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => setShowProfileModal(true)} className="px-3.5 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5">
-              <User className="h-4 w-4" />
-              <span>Editar Perfil</span>
-            </button>
-            <button onClick={handleLogout} className="px-3 py-2 text-rose-600 text-xs font-bold">Salir</button>
-          </div>
-        </div>
-      </header>
-      
-      <main className="max-w-7xl mx-auto px-4 py-6">
-        {/* Navigation Tabs */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 p-2 rounded-2xl mb-6 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
-          <div className="flex items-center gap-2 font-bold text-sm px-1.5">
-            <span className="text-emerald-500 font-mono text-xs">●</span>
-            <span>Espacio de Trabajo:</span>
-            <span className="text-slate-400 font-normal text-xs">{userEmail}</span>
-          </div>
-          
-          <div className="flex gap-1.5 w-full sm:w-auto">
-            <button onClick={() => setActivePage("postulations")} className={`flex-1 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activePage === "postulations" ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:bg-slate-100"}`}>
-              Buscar Vacantes
-            </button>
-            <button onClick={() => { setActivePage("mail"); setUnreadEmailsCount(0); }} className={`flex-1 px-4 py-2 rounded-xl text-xs font-bold transition-all relative ${activePage === "mail" ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:bg-slate-100"}`}>
-              Correo
-              {unreadEmailsCount > 0 && <span className="absolute -top-1 -right-1 h-4 w-4 bg-rose-500 text-[10px] text-white rounded-full flex items-center justify-center animate-pulse">{unreadEmailsCount}</span>}
-            </button>
-            <button onClick={() => setActivePage("dashboard")} className={`flex-1 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activePage === "dashboard" ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:bg-slate-100"}`}>
-              Tablero Analítico
-            </button>
-            <button onClick={() => setActivePage("consultor")} className={`flex-1 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activePage === "consultor" ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:bg-slate-100"}`}>
-              Consultor de Carrera
+            <button
+              onClick={handleLogout}
+              className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+              title="Cerrar sesión"
+            >
+              <LogOut className="h-4 w-4" />
             </button>
           </div>
         </div>
+      </div>
 
-        {/* PAGE 1: BUSCADOR DE VACANTES (Layout de Producción) */}
-        {activePage === "postulations" && (
-          <div className="space-y-8">
-            {/* Paso 1: Requerimiento de CV (Centrado) */}
-            {!cv ? (
-              <div className="max-w-2xl mx-auto bg-white dark:bg-slate-900 p-8 rounded-[2rem] border-2 border-blue-100 shadow-xl text-center space-y-4">
-                <div className="p-3 bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
-                  <FileText className="text-blue-600 h-8 w-8" />
-                </div>
-                <h2 className="text-xl font-black text-slate-900 dark:text-white">Carga tu Currículum para Empezar</h2>
-                <p className="text-xs text-slate-500">Necesitamos analizar tu experiencia para encontrar las mejores vacantes reales y calcular tu Match Score.</p>
-                <CVUpload onUpload={setCv} selectedFile={cv} />
-              </div>
-            ) : (
-              /* Paso 2: Buscador Inteligente (Centrado) */
-              <div className="max-w-4xl mx-auto space-y-6">
-                <div className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border-2 border-slate-300 dark:border-slate-700 shadow-2xl space-y-6">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                    <h2 className="text-xl font-black flex items-center gap-2">
-                      <Sparkles className="h-5 w-5 text-blue-600" /> Buscador Global de Vacantes
-                    </h2>
-                    <button onClick={() => setCv(null)} className="text-[10px] font-bold text-rose-500 uppercase hover:underline">Cambiar CV</button>
-                  </div>
-
-                  <div className="space-y-6">
-                    <input 
-                      type="text" 
-                      value={jobSearch} 
-                      onChange={(e) => setJobSearch(e.target.value)} 
-                      placeholder="¿Qué puesto buscas? Ej. Senior React Developer" 
-                      className="w-full px-6 py-5 bg-slate-50 border-2 border-slate-300 rounded-2xl text-lg font-black focus:border-blue-600 outline-none transition-all" 
-                    />
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {/* Filtro: Región */}
-                      <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Región Geográfica</label>
-                        <div className="flex flex-col gap-2">
-                          {['latam', 'na', 'es', 'caribe'].map(r => (
-                            <label key={r} className="flex items-center gap-2 text-xs font-bold cursor-pointer">
-                              <input type="checkbox" checked={selectedRegions.includes(r)} onChange={(e) => e.target.checked ? setSelectedRegions([...selectedRegions, r]) : setSelectedRegions(selectedRegions.filter(x => x !== r))} className="w-4 h-4 rounded border-slate-300 text-blue-600" />
-                              {r === 'na' ? 'Norteamérica' : r === 'es' ? 'España' : r.toUpperCase()}
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Filtro: Idioma */}
-                      <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Idioma de la Oferta</label>
-                        <div className="flex flex-col gap-2">
-                          {['es', 'en'].map(l => (
-                            <label key={l} className="flex items-center gap-2 text-xs font-bold cursor-pointer">
-                              <input type="checkbox" checked={selectedLanguages.includes(l)} onChange={(e) => e.target.checked ? setSelectedLanguages([...selectedLanguages, l]) : setSelectedLanguages(selectedLanguages.filter(x => x !== l))} className="w-4 h-4 rounded border-slate-300 text-blue-600" />
-                              {l === 'es' ? 'Español' : 'Inglés'}
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Filtro: Contrato */}
-                      <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Tipo de Contrato</label>
-                        <div className="flex flex-col gap-2">
-                          {['contrato', 'proyecto'].map(c => (
-                            <label key={c} className="flex items-center gap-2 text-xs font-bold cursor-pointer">
-                              <input type="checkbox" checked={selectedContracts.includes(c)} onChange={(e) => e.target.checked ? setSelectedContracts([...selectedContracts, c]) : setSelectedContracts(selectedContracts.filter(x => x !== c))} className="w-4 h-4 rounded border-slate-300 text-blue-600" />
-                              {c === 'contrato' ? 'Tiempo Completo' : 'Freelance / Proyecto'}
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <button 
-                      onClick={handleSearchVacancies} 
-                      disabled={matchingLoading}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl text-sm font-black flex items-center justify-center gap-3 shadow-xl transition-all"
+      {/* Main Content */}
+      <main className="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-12">
+        <AnimatePresence mode="wait">
+          {activeTab === "main" && (
+            <motion.div
+              key="main"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-6"
+            >
+              {/* Format Selector */}
+              <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                <div className="flex items-center gap-4">
+                  <span className="text-xs font-bold text-slate-600">Formato de salida:</span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setFormat("cover-letter")}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                        format === "cover-letter"
+                          ? "bg-blue-600 text-white"
+                          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      }`}
                     >
-                      {matchingLoading ? <RefreshCw className="h-5 w-5 animate-spin" /> : <Search className="h-5 w-5" />}
-                      REALIZAR BÚSQUEDA REAL
+                      Carta de Presentación
+                    </button>
+                    <button
+                      onClick={() => setFormat("cold-email")}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                        format === "cold-email"
+                          ? "bg-blue-600 text-white"
+                          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      }`}
+                    >
+                      Email de Contacto
                     </button>
                   </div>
                 </div>
               </div>
-            )}
 
-            {/* Resultados (Layout de 2 Columnas) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div className="lg:col-span-8 space-y-4">
-                {matchingLoading ? (
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 rounded-2xl p-6 text-center text-sm text-slate-500">
-                    <RefreshCw className="h-5 w-5 animate-spin mx-auto mb-3 text-blue-600" />
-                    Estamos analizando tu perfil y comparándolo con vacantes reales en tiempo real.
-                  </div>
-                ) : vacancies ? (
-                  vacancies.length > 0 ? (
-                    <div className="space-y-3">
-                      {vacancies.map((vacancy, index) => (
-                        <button
-                          key={`${vacancy.title}-${index}`}
-                          onClick={() => handleSelectVacancy(vacancy)}
-                          className="w-full text-left bg-white dark:bg-slate-900 border border-slate-200 rounded-2xl p-4 shadow-sm hover:border-blue-500 hover:shadow-md transition-all"
-                        >
-                          <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                            <div className="space-y-2">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] bg-blue-50 text-blue-700 px-2 py-1 rounded-full">
-                                  {vacancy.platform || "Plataforma"}
-                                </span>
-                                <span className="text-[10px] text-slate-400">{vacancy.location || "Remoto"}</span>
-                              </div>
-                              <h3 className="font-bold text-sm text-slate-900 dark:text-white">{vacancy.title}</h3>
-                              <p className="text-xs text-slate-500">{vacancy.company}</p>
-                              <p className="text-xs text-slate-500 line-clamp-3">{vacancy.description}</p>
-                            </div>
-                            <div className="flex items-center gap-3 md:flex-col md:items-end">
-                              <span className={`text-sm font-black ${vacancy.matchScore >= 55 ? "text-emerald-600" : "text-amber-600"}`}>
-                                {vacancy.matchScore}%
-                              </span>
-                              <span className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Ver detalle</span>
-                            </div>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
+              {/* CV Upload Section */}
+              <CVUpload onUpload={setSelectedFile} selectedFile={selectedFile} />
+
+              {/* Job Input Section */}
+              <JobInput value={jobInput} onChange={setJobInput} />
+
+              {/* Generate Button */}
+              <div className="flex justify-center">
+                <button
+                  onClick={handleGenerate}
+                  disabled={loading || (!selectedFile && !jobInput)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+                      <span>Generando...</span>
+                    </>
                   ) : (
-                    <div className="bg-white dark:bg-slate-900 border border-slate-200 rounded-2xl p-6 text-sm text-slate-500">
-                      No se encontraron vacantes con los filtros actuales. Intenta con otros términos o habilita más regiones.
-                    </div>
-                  )
-                ) : null}
+                    <>
+                      <Sparkles className="h-4 w-4" />
+                      <span>Generar {format === "cover-letter" ? "Carta" : "Email"} ATS</span>
+                    </>
+                  )}
+                </button>
               </div>
 
-              {/* Columna Derecha: Panel IA */}
-              <div className="lg:col-span-4 lg:sticky lg:top-20">
-                {activeVacancy && (
-                  <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm space-y-4">
-                  <div className="border-b pb-3">
-                    <h4 className="font-bold text-sm line-clamp-2">{activeVacancy.title}</h4>
-                    <p className="text-[11px] text-slate-500">{activeVacancy.company} • {activeVacancy.platform}</p>
-                  </div>
-                  
-                  <div className="bg-slate-50 p-4 rounded-xl flex items-center gap-3 border border-slate-100">
-                    <div className="relative h-12 w-12 flex items-center justify-center">
-                      <svg className="w-full h-full transform -rotate-90">
-                        <circle cx="24" cy="24" r="20" className="stroke-slate-200" strokeWidth="4" fill="transparent" />
-                        <circle cx="24" cy="24" r="20" className={activeVacancy.matchScore >= 55 ? "stroke-emerald-500" : "stroke-rose-500"} strokeWidth="4" fill="transparent" strokeDasharray="125.6" strokeDashoffset={125.6 - (activeVacancy.matchScore / 100) * 125.6} strokeLinecap="round" />
-                      </svg>
-                      <span className="absolute text-[10px] font-bold">{activeVacancy.matchScore}%</span>
-                    </div>
-                    <div>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase block">Afinidad ATS</span>
-                      <span className={`text-xs font-bold ${activeVacancy.matchScore >= 55 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                        {activeVacancy.matchScore >= 55 ? 'Alta Posibilidad' : 'Afinidad Baja'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex border-b gap-2">
-                    <button onClick={() => setActiveInspectTab("analysis")} className={`pb-2 text-xs font-bold border-b-2 ${activeInspectTab === "analysis" ? "border-blue-600 text-blue-600" : "border-transparent text-slate-400"}`}>Análisis</button>
-                    <button onClick={() => setActiveInspectTab("document")} className={`pb-2 text-xs font-bold border-b-2 ${activeInspectTab === "document" ? "border-blue-600 text-blue-600" : "border-transparent text-slate-400"}`}>Borrador</button>
-                  </div>
-
-                  <div className="min-h-[150px] text-xs">
-                    {loading ? (
-                      <div className="flex flex-col items-center py-8 gap-2">
-                        <RefreshCw className="h-5 w-5 animate-spin text-blue-600" />
-                        <p className="text-slate-400">Procesando con Gemini...</p>
-                      </div>
-                    ) : generationError ? (
-                      <div className="p-3 bg-rose-50 text-rose-600 rounded-lg">{generationError}</div>
-                    ) : activeInspectTab === "analysis" ? (
-                      <div className="space-y-3">
-                        <div className="flex flex-wrap gap-1.5">
-                          {generationResult?.keywords?.map((kw, i) => (
-                            <span key={i} className={`px-2 py-0.5 rounded text-[10px] ${kw.matched ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>
-                              {kw.keyword}
-                            </span>
-                          ))}
-                        </div>
-                        <div className="p-3 bg-amber-50 rounded-lg text-amber-800">
-                          <strong>Consejo:</strong> {generationResult?.gaps?.[0]}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-2">
-                        <pre className="p-3 bg-slate-50 rounded-lg whitespace-pre-wrap font-sans max-h-[200px] overflow-y-auto border border-slate-150">
-                          {generationResult?.generatedText}
-                        </pre>
-                        <button onClick={() => { navigator.clipboard.writeText(generationResult?.generatedText || ""); showToast("Copiado", "success"); }} className="w-full py-2 bg-slate-100 font-bold rounded-lg flex items-center justify-center gap-2">
-                          <Clipboard className="h-3 w-3" /> Copiar Texto
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="pt-3 border-t">
-                    {activeVacancy.matchScore >= 55 ? (
-                      <button 
-                        onClick={handleAutoSendEmail}
-                        className="w-full bg-emerald-600 text-white py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-md"
-                      >
-                        <Mail className="h-4 w-4" /> Despachar Correo Automático
-                      </button>
-                    ) : (
-                      <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-center space-y-1">
-                        <p className="text-xs font-bold text-amber-800 flex items-center justify-center gap-1">
-                          <AlertTriangle className="h-3 w-3" /> Postulación Manual
-                        </p>
-                        <p className="text-[10px] text-amber-700">Afinidad baja. El botón automático se bloquea por seguridad.</p>
-                        <span className="inline-block bg-white px-2 py-0.5 rounded text-[9px] font-bold border">
-                          Estas vacantes sí tienes que postularte tú
-                        </span>
-                      </div>
-                    )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activePage === "dashboard" && (
-          <DashboardAnalytics userEmail={userEmail} cvText={cv?.textData} processes={processes} setProcesses={setProcesses} onShowToast={showToast} />
-        )}
-
-        {activePage === "mail" && <MailInbox userEmail={userEmail} onShowToast={showToast} />}
-        
-        {activePage === "consultor" && <CareerConsultant cvText={cv?.textData} jobDescription={jobInput} />}
-      </main>
-
-      {/* MODAL DE PERFIL - RESTAURADO */}
-      <AnimatePresence>
-        {showProfileModal && (
-          <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-[500px] p-6 shadow-2xl space-y-4 border border-slate-200 dark:border-slate-800">
-              <div className="flex items-center justify-between border-b pb-3">
-                <h3 className="font-bold text-sm flex items-center gap-2 text-slate-900 dark:text-white"><User className="h-4 w-4 text-blue-600" /> Editar Perfil</h3>
-                <button onClick={() => setShowProfileModal(false)} className="text-slate-400 hover:text-slate-600"><X className="h-4 w-4" /></button>
+              {/* Match Vacancies Button */}
+              <div className="flex justify-center">
+                <button
+                  onClick={handleMatchVacancies}
+                  disabled={loading || !selectedFile}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+                      <span>Buscando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>🔍 Buscar Vacantes Compatibles</span>
+                    </>
+                  )}
+                </button>
               </div>
 
-              <div className="space-y-4">
-                <CVUpload onUpload={setCv} selectedFile={cv} />
-                
-                <div className="space-y-1">
-                  <label className="block text-[11px] font-bold text-slate-600 uppercase">Nombre</label>
-                  <input type="text" value={candidateName} onChange={(e) => setCandidateName(e.target.value)} className="w-full px-3 py-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-950 dark:border-slate-800" />
-                </div>
+              {/* Result Panel */}
+              {result && <ResultPanel result={result} format={format} />}
 
-                <div className="space-y-1">
-                  <label className="block text-[11px] font-bold text-slate-600 uppercase">Keywords (Separadas por coma)</label>
-                  <input type="text" value={profileKeywords} onChange={(e) => setProfileKeywords(e.target.value)} className="w-full px-3 py-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-950 dark:border-slate-800" />
-                </div>
-
-                <div className="border-t pt-3 space-y-3">
-                  <label className="block text-[11px] font-bold text-slate-600 uppercase">Cuentas Vinculadas</label>
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className={`p-3 rounded-xl border flex flex-col items-center gap-2 ${isLinkedinConnected ? 'bg-blue-50 border-blue-200 dark:bg-blue-900/20' : 'bg-slate-50 dark:bg-slate-950'}`}>
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-5 h-5 bg-[#0077b5] text-white flex items-center justify-center rounded font-bold text-[10px]">in</span>
-                        <span className="text-[11px] font-bold">LinkedIn</span>
-                      </div>
-                      {isLinkedinConnected ? (
-                        <button onClick={() => handleDisconnectOAuth("linkedin")} className="w-full py-1 text-[10px] font-bold text-rose-600 hover:bg-rose-50 rounded-lg">Desvincular</button>
-                      ) : (
-                        <button onClick={() => handleConnectOAuth("linkedin")} className="w-full py-1 bg-[#0077b5] text-white font-bold rounded-lg text-[10px]">Vincular</button>
-                      )}
-                    </div>
-
-                    <div className={`p-3 rounded-xl border flex flex-col items-center gap-2 ${isIndeedConnected ? 'bg-indigo-50 border-indigo-200 dark:bg-indigo-900/20' : 'bg-slate-50 dark:bg-slate-950'}`}>
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-5 h-5 bg-[#2557a7] text-white flex items-center justify-center rounded font-black text-[8px]">indeed</span>
-                        <span className="text-[11px] font-bold">Indeed</span>
-                      </div>
-                      {isIndeedConnected ? (
-                        <button onClick={() => handleDisconnectOAuth("indeed")} className="w-full py-1 text-[10px] font-bold text-rose-600 hover:bg-rose-50 rounded-lg">Desvincular</button>
-                      ) : (
-                        <button onClick={() => handleConnectOAuth("indeed")} className="w-full py-1 bg-[#2557a7] text-white font-bold rounded-lg text-[10px]">Vincular</button>
-                      )}
-                    </div>
-
-                    <div className={`p-3 rounded-xl border flex flex-col items-center gap-2 ${isWorkupConnected ? 'bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20' : 'bg-slate-50 dark:bg-slate-950'}`}>
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-5 h-5 bg-emerald-600 text-white flex items-center justify-center rounded font-bold text-[10px]">W</span>
-                        <span className="text-[11px] font-bold">Workup</span>
-                      </div>
-                      {isWorkupConnected ? (
-                        <button onClick={() => handleDisconnectOAuth("workup")} className="w-full py-1 text-[10px] font-bold text-rose-600 hover:bg-rose-50 rounded-lg">Desvincular</button>
-                      ) : (
-                        <button onClick={() => handleConnectOAuth("workup")} className="w-full py-1 bg-emerald-600 text-white font-bold rounded-lg text-[10px]">Vincular</button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-2 pt-3 border-t">
-                <button onClick={() => setShowProfileModal(false)} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-bold">Cancelar</button>
-                <button onClick={async () => {
-                  const safeName = sanitizeText(candidateName, 80);
-                  const safeKeywords = sanitizeText(profileKeywords, 220);
-                  setCandidateName(safeName);
-                  setProfileKeywords(safeKeywords);
-                  localStorage.setItem(`cv_name_${userEmail}`, safeName);
-                  localStorage.setItem(`cv_keywords_${userEmail}`, safeKeywords);
-                  if (isFirebaseReady) {
-                    await ensureUserProfile(userEmail, { displayName: safeName, keywords: safeKeywords, linkedinProfile });
-                  }
-                  setShowProfileModal(false);
-                  showToast("Perfil guardado", "success");
-                }} className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-md">Guardar</button>
+              {/* Career Consultant Chat */}
+              <div className="mt-8">
+                <CareerConsultant cvText={selectedFile?.textData} jobDescription={jobInput} />
               </div>
             </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+          )}
 
-      {/* TOAST NOTIFICATIONS */}
+          {activeTab === "dashboard" && (
+            <motion.div
+              key="dashboard"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <DashboardAnalytics
+                userEmail={userEmail}
+                cvName={selectedFile?.name}
+                cvText={selectedFile?.textData}
+                onShowToast={showToast}
+                processes={processes}
+                setProcesses={setProcesses}
+              />
+            </motion.div>
+          )}
+
+          {activeTab === "mail" && (
+            <motion.div
+              key="mail"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <MailInbox userEmail={userEmail} onShowToast={showToast} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
+
+      {/* Toast Notifications */}
       <AnimatePresence>
-        {alertToast && (
+        {success && (
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className={`fixed bottom-5 right-5 z-50 p-4 rounded-xl shadow-xl border flex items-start gap-3 max-w-xs ${
-              alertToast.type === "success" ? "bg-emerald-50 border-emerald-200 text-emerald-800" :
-              alertToast.type === "error" ? "bg-rose-50 border-rose-200 text-rose-800" : "bg-amber-50 border-amber-200 text-amber-800"
-            }`}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-4 right-4 z-50 p-4 bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-xl text-sm flex items-center gap-2 shadow-lg"
           >
-            <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
-            <div className="text-xs font-semibold leading-relaxed flex-1">{alertToast.message}</div>
-            <button onClick={() => setAlertToast(null)} className="text-slate-400 font-bold">×</button>
+            <CheckCircle className="h-4 w-4" />
+            <span>{success}</span>
+          </motion.div>
+        )}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-4 right-4 z-50 p-4 bg-rose-50 border border-rose-100 text-rose-700 rounded-xl text-sm flex items-center gap-2 shadow-lg"
+          >
+            <XCircle className="h-4 w-4" />
+            <span>{error}</span>
           </motion.div>
         )}
       </AnimatePresence>

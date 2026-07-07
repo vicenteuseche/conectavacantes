@@ -14,10 +14,10 @@ export default defineConfig(() => {
     server: {
       port: 5173,
       proxy: {
-        // Sincronizado con el puerto 8080 del servidor Express
-        '/api': 'http://localhost:8080',
-        '/auth': 'http://localhost:8080',
-        '/oauth': 'http://localhost:8080',
+        // Sincronizado con el puerto del servidor Express (viWW.ts)
+        '/api': 'http://localhost:3000',
+        '/auth': 'http://localhost:3000',
+        '/oauth': 'http://localhost:3000',
       },
       strictPort: true,
       host: true,

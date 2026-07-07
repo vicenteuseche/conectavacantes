@@ -1,10 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
-import * as admin from "firebase-admin";
+import admin from "firebase-admin";
 import path from "path";
 import { GoogleGenAI, Type } from "@google/genai";
 
 dotenv.config();
+
+// Cast admin to any for ESM compatibility
+const adminAny: any = admin;
 
 const GEMINI_MODEL = "gemini-2.0-flash";
 
@@ -70,16 +73,21 @@ const formatGeminiError = (err: unknown): string => {
 };
 
 // --- Firebase Admin Initialization ---
+let db: any = null;
+let statsDocRef: any = null;
+
 try {
   const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
   if (serviceAccountString) {
     const serviceAccount = JSON.parse(serviceAccountString);
-    if (admin.apps.length === 0) {
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
+    if (adminAny.apps.length === 0) {
+      adminAny.initializeApp({
+        credential: adminAny.credential.cert(serviceAccount),
       });
       console.log("✅ Firebase Admin SDK inicializado correctamente.");
     }
+    db = adminAny.firestore();
+    statsDocRef = db.collection("stats").doc("global");
   } else {
     console.warn("⚠️ FIREBASE_SERVICE_ACCOUNT_JSON no encontrado. Las métricas no se persistirán en Firestore.");
   }
@@ -87,11 +95,10 @@ try {
   console.error("❌ Error al inicializar Firebase Admin SDK:", error.message);
 }
 
-const db = admin.firestore();
-const statsDocRef = db.collection("stats").doc("global");
-
-const incrementStat = (fieldName: string, amount: number = 1) => {
-  if (admin.apps.length > 0) statsDocRef.set({ [fieldName]: admin.firestore.FieldValue.increment(amount) }, { merge: true });
+const incrementStat = async (fieldName: string, amount: number = 1) => {
+  if (adminAny.apps && adminAny.apps.length > 0 && statsDocRef) {
+    await statsDocRef.set({ [fieldName]: adminAny.firestore.FieldValue.increment(amount) }, { merge: true });
+  }
 }
 
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
@@ -137,7 +144,7 @@ export function createApp() {
 
   app.get("/api/stats", apiRateLimiter(20, 60000), async (_req, res) => {
     try {
-      if (admin.apps.length === 0) throw new Error("Firestore no está conectado.");
+      if (adminAny.apps.length === 0) throw new Error("Firestore no está conectado.");
       
       const doc = await statsDocRef.get();
       const data = doc.data() || {};
@@ -239,13 +246,13 @@ CRITERIOS DE BÚSQUEDA:
       return res.status(200).json(result);
     } catch (err) {
       const errorMessage = formatGeminiError(err);
-      // Solo activar el fallback para errores de cuota o disponibilidad, no para errores de configuración.
-      if (errorMessage.includes("Cuota excedida") || errorMessage.includes("alta demanda")) {
+      // Activar el fallback para errores de cuota, disponibilidad o API key inválida
+      if (errorMessage.includes("Cuota excedida") || errorMessage.includes("alta demanda") || errorMessage.includes("API key not valid") || errorMessage.includes("API_KEY_INVALID")) {
         console.warn("Gemini no disponible, usando fallback:", errorMessage);
         incrementStat('totalSearches');
         return res.status(200).json({ vacancies: fallbackVacancies(req.body?.searchQuery || "desarrollador", req.body?.allowedRegions, req.body?.languages, req.body?.contractTypes) });
       }
-      // Para otros errores (ej. API key inválida), devolver un error 500 claro.
+      // Para otros errores, devolver un error 500 claro.
       return res.status(500).json({ error: errorMessage });
     }
   });
