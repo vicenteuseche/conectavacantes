@@ -66,6 +66,7 @@
                 </div>
                 <nav class="flex items-center space-x-4">
                     <a href="#features" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Características</a>
+                    <a href="#how-it-works" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Cómo funciona</a>
                     <a href="#api-status" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Estado API</a>
                 </nav>
             </div>
@@ -85,7 +86,7 @@
                     </div>
                     
                     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-                        <button onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})" 
+                        <button onclick="document.getElementById('how-it-works').scrollIntoView({behavior: 'smooth'})" 
                             class="px-8 py-3 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 transition-all duration-200 shadow-lg hover:shadow-xl">
                             Comenzar ahora
                         </button>
@@ -93,6 +94,58 @@
                             class="px-8 py-3 border border-border bg-background hover:bg-accent hover:text-accent-foreground font-medium rounded-lg transition-all duration-200">
                             Ver API Status
                         </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works Section -->
+            <section id="how-it-works" class="container mx-auto px-4 py-20">
+                <div class="mx-auto max-w-5xl">
+                    <div class="text-center mb-12">
+                        <h3 class="text-3xl font-bold tracking-tight text-foreground mb-4">Cómo funciona</h3>
+                        <p class="text-muted-foreground">Desde tu perfil hasta tu primera entrevista en 4 pasos.</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="p-6 bg-card rounded-2xl border border-border text-center">
+                            <div class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-purple-600/20 text-purple-600 text-2xl font-bold">
+                                1
+                            </div>
+                            <h4 class="text-lg font-semibold text-foreground mb-2">Crea tu perfil</h4>
+                            <p class="text-sm text-muted-foreground">
+                                Sube tu CV e ingresa tu perfil profesional una sola vez.
+                            </p>
+                        </div>
+
+                        <div class="p-6 bg-card rounded-2xl border border-border text-center">
+                            <div class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-500 text-2xl font-bold">
+                                2
+                            </div>
+                            <h4 class="text-lg font-semibold text-foreground mb-2">Busca vacantes remotas</h4>
+                            <p class="text-sm text-muted-foreground">
+                                La IA escanea cientos de vacantes y te presenta las más compatibles con tu perfil.
+                            </p>
+                        </div>
+
+                        <div class="p-6 bg-card rounded-2xl border border-border text-center">
+                            <div class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/20 text-amber-500 text-2xl font-bold">
+                                3
+                            </div>
+                            <h4 class="text-lg font-semibold text-foreground mb-2">Postúlate en segundos</h4>
+                            <p class="text-sm text-muted-foreground">
+                                Genera cartas de presentación personalizadas y emails fríos con un clic.
+                            </p>
+                        </div>
+
+                        <div class="p-6 bg-card rounded-2xl border border-border text-center">
+                            <div class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-blue-500/20 text-blue-500 text-2xl font-bold">
+                                4
+                            </div>
+                            <h4 class="text-lg font-semibold text-foreground mb-2">Haz seguimiento</h4>
+                            <p class="text-sm text-muted-foreground">
+                                Gestiona el estado de cada postulación y recibe consejos del consultor IA.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>
