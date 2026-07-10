@@ -1,0 +1,53 @@
+[2026-07-02T17:00:07.629Z] Activating Agent Skill Installer
+[2026-07-02T17:00:07.658Z] appName: Code OSS for Cloud Shell, ideType: 6
+[2026-07-02T17:00:07.658Z] Profile antigravity-ide is NOT active
+[2026-07-02T17:00:07.658Z] Profile antigravity is NOT active
+[2026-07-02T17:00:07.658Z] Profile jetski is NOT active
+[2026-07-02T17:00:07.658Z] Profile cursor is NOT active
+[2026-07-02T17:00:07.658Z] Profile copilot is NOT active
+[2026-07-02T17:00:07.658Z] Profile gemini-code-assist is active
+[2026-07-02T17:00:11.054Z] Checking skills for Gemini Code Assist in /home/vicenteaugusto_useche/.gemini/skills. Force=false
+[2026-07-02T17:00:11.056Z] No previous manifest found or it was invalid.
+[2026-07-02T17:00:11.058Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills
+[2026-07-02T17:00:11.072Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/bigquery-data-transfer-service
+[2026-07-02T17:00:11.072Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/accidental-data-loss-prevention
+[2026-07-02T17:00:11.073Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/data-autocleaning
+[2026-07-02T17:00:11.073Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/building-data-apps
+[2026-07-02T17:00:11.073Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/dbt-bigquery
+[2026-07-02T17:00:11.073Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/developing-with-bigquery
+[2026-07-02T17:00:11.073Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/discovering-gcp-data-assets
+[2026-07-02T17:00:11.073Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/federate-lakehouse-catalog
+[2026-07-02T17:00:11.074Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/gcloud-auth-verification
+[2026-07-02T17:00:11.074Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/gcp-composer-troubleshooting
+[2026-07-02T17:00:11.076Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/gcp-data-pipelines
+[2026-07-02T17:00:11.076Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/gcp-dataflow
+[2026-07-02T17:00:11.076Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/gcp-pipeline-orchestration
+[2026-07-02T17:00:11.076Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/managing-python-dependencies
+[2026-07-02T17:00:11.076Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/gcp-pipeline-resource-provisioning
+[2026-07-02T17:00:11.076Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/gcp-spark
+[2026-07-02T17:00:11.077Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/ml-best-practices
+[2026-07-02T17:00:11.077Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/notebook-guidance
+[2026-07-02T17:00:11.077Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/skill-repair
+[2026-07-02T17:00:11.077Z] Ensured destination directory exists: /home/vicenteaugusto_useche/.gemini/skills/dataform-bigquery
+[2026-07-02T17:00:11.134Z] Copied skill dataform-bigquery to /home/vicenteaugusto_useche/.gemini/skills/dataform-bigquery
+[2026-07-02T17:00:11.139Z] Copied skill accidental-data-loss-prevention to /home/vicenteaugusto_useche/.gemini/skills/accidental-data-loss-prevention
+[2026-07-02T17:00:11.140Z] Copied skill federate-lakehouse-catalog to /home/vicenteaugusto_useche/.gemini/skills/federate-lakehouse-catalog
+[2026-07-02T17:00:11.140Z] Copied skill dbt-bigquery to /home/vicenteaugusto_useche/.gemini/skills/dbt-bigquery
+[2026-07-02T17:00:11.141Z] Copied skill gcloud-auth-verification to /home/vicenteaugusto_useche/.gemini/skills/gcloud-auth-verification
+[2026-07-02T17:00:11.141Z] Copied skill gcp-data-pipelines to /home/vicenteaugusto_useche/.gemini/skills/gcp-data-pipelines
+[2026-07-02T17:00:11.141Z] Copied skill gcp-composer-troubleshooting to /home/vicenteaugusto_useche/.gemini/skills/gcp-composer-troubleshooting
+[2026-07-02T17:00:11.142Z] Copied skill managing-python-dependencies to /home/vicenteaugusto_useche/.gemini/skills/managing-python-dependencies
+[2026-07-02T17:00:11.143Z] Copied skill notebook-guidance to /home/vicenteaugusto_useche/.gemini/skills/notebook-guidance
+[2026-07-02T17:00:11.143Z] Copied skill ml-best-practices to /home/vicenteaugusto_useche/.gemini/skills/ml-best-practices
+[2026-07-02T17:00:11.144Z] Copied skill discovering-gcp-data-assets to /home/vicenteaugusto_useche/.gemini/skills/discovering-gcp-data-assets
+[2026-07-02T17:00:11.144Z] Copied skill skill-repair to /home/vicenteaugusto_useche/.gemini/skills/skill-repair
+[2026-07-02T17:00:11.392Z] Copied skill data-autocleaning to /home/vicenteaugusto_useche/.gemini/skills/data-autocleaning
+[2026-07-02T17:00:11.394Z] Copied skill gcp-pipeline-resource-provisioning to /home/vicenteaugusto_useche/.gemini/skills/gcp-pipeline-resource-provisioning
+[2026-07-02T17:00:11.416Z] Copied skill bigquery-data-transfer-service to /home/vicenteaugusto_useche/.gemini/skills/bigquery-data-transfer-service
+[2026-07-02T17:00:11.424Z] Copied skill gcp-spark to /home/vicenteaugusto_useche/.gemini/skills/gcp-spark
+[2026-07-02T17:00:11.491Z] Copied skill building-data-apps to /home/vicenteaugusto_useche/.gemini/skills/building-data-apps
+[2026-07-02T17:00:11.494Z] Copied skill gcp-dataflow to /home/vicenteaugusto_useche/.gemini/skills/gcp-dataflow
+[2026-07-02T17:00:11.494Z] Copied skill gcp-pipeline-orchestration to /home/vicenteaugusto_useche/.gemini/skills/gcp-pipeline-orchestration
+[2026-07-02T17:00:11.529Z] Copied skill developing-with-bigquery to /home/vicenteaugusto_useche/.gemini/skills/developing-with-bigquery
+[2026-07-02T17:00:11.529Z] Finished copying skills to /home/vicenteaugusto_useche/.gemini/skills. Updated 20 skills.
+[2026-07-02T17:00:11.545Z] Installation completed. Manifest updated.

@@ -1,0 +1,61 @@
+2026-07-02 20:54:18.995 [info] Extension host with pid 1543 started
+2026-07-02 20:54:19.009 [error] Error: EEXIST: file already exists, open '/home/vicenteaugusto_useche/.codeoss/data/User/workspaceStorage/-1a97932b/vscode.lock'
+2026-07-02 20:54:19.011 [info] Lock '/home/vicenteaugusto_useche/.codeoss/data/User/workspaceStorage/-1a97932b/vscode.lock': Could not acquire lock, checking if the file is stale.
+2026-07-02 20:54:19.014 [info] Lock '/home/vicenteaugusto_useche/.codeoss/data/User/workspaceStorage/-1a97932b/vscode.lock': The pid 4576 appears to be gone.
+2026-07-02 20:54:19.015 [info] Lock '/home/vicenteaugusto_useche/.codeoss/data/User/workspaceStorage/-1a97932b/vscode.lock': Deleting a stale lock.
+2026-07-02 20:54:19.020 [info] Lock '/home/vicenteaugusto_useche/.codeoss/data/User/workspaceStorage/-1a97932b/vscode.lock': Lock acquired.
+2026-07-02 20:54:19.190 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2026-07-02 20:54:19.191 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2026-07-02 20:54:19.191 [info] ExtensionService#_doActivateExtension google.geminicodeassist, startup: false, activationEvent: 'onView:cloudcode.gemini.chatView'
+2026-07-02 20:54:20.238 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*', root cause: vscode.git
+2026-07-02 20:54:20.249 [info] ExtensionService#_doActivateExtension vscode.npm, startup: true, activationEvent: 'workspaceContains:package.json'
+2026-07-02 20:54:20.791 [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*'
+2026-07-02 20:54:20.791 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2026-07-02 20:54:20.991 [info] ExtensionService#_doActivateExtension google.cloud-shell, startup: false, activationEvent: 'onCommand:cloudshell.isAuthorized'
+2026-07-02 20:54:21.754 [info] ExtensionService#_doActivateExtension vscode.configuration-editing, startup: false, activationEvent: 'onLanguage:jsonc'
+2026-07-02 20:54:21.754 [info] ExtensionService#_doActivateExtension vscode.json-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+2026-07-02 20:54:21.755 [info] ExtensionService#_doActivateExtension vscode.typescript-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+2026-07-02 20:54:24.517 [info] Eager extensions activated
+2026-07-02 20:54:24.518 [info] ExtensionService#_doActivateExtension EditorConfig.EditorConfig, startup: false, activationEvent: 'onStartupFinished'
+2026-07-02 20:54:24.518 [info] ExtensionService#_doActivateExtension ms-toolsai.jupyter, startup: false, activationEvent: 'onStartupFinished', root cause: googlecloudtools.cloudcode
+2026-07-02 20:54:24.519 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2026-07-02 20:54:24.519 [info] ExtensionService#_doActivateExtension google.gemini-cli-vscode-ide-companion, startup: false, activationEvent: 'onStartupFinished'
+2026-07-02 20:54:24.519 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2026-07-02 20:54:25.647 [info] ExtensionService#_doActivateExtension ms-python.python, startup: false, activationEvent: 'api', root cause: ms-toolsai.jupyter
+2026-07-02 20:54:26.313 [info] ExtensionService#_doActivateExtension googlecloudtools.datacloud, startup: false, activationEvent: 'onStartupFinished', root cause: googlecloudtools.cloudcode
+2026-07-02 20:54:31.615 [info] ExtensionService#_doActivateExtension googlecloudtools.cloudcode, startup: false, activationEvent: 'onStartupFinished'
+2026-07-02 20:54:35.302 [info] ExtensionService#_doActivateExtension vscode.extension-editing, startup: false, activationEvent: 'onLanguage:json'
+2026-07-02 20:54:38.770 [info] ExtensionService#_doActivateExtension vscode.terminal-suggest, startup: false, activationEvent: 'onTerminalShellIntegration:*'
+2026-07-02 21:10:13.896 [warning] ExtHostTextEditorOptions 'setOptions' failed:'
+2026-07-02 21:10:13.896 [warning] Illegal argument: TextEditor(vs.editor.ICodeEditor:1,$model10)
+2026-07-02 21:11:26.530 [info] ExtensionService#_doActivateExtension ms-vscode.js-debug, startup: false, activationEvent: 'onCommand:extension.js-debug.createDebuggerTerminal'
+2026-07-02 21:11:49.674 [info] ExtensionService#_doActivateExtension vscode.debug-server-ready, startup: false, activationEvent: 'onDebugResolve'
+2026-07-02 21:16:59.826 [info] ExtensionService#_doActivateExtension golang.go, startup: false, activationEvent: 'onDebugInitialConfigurations'
+2026-07-02 21:16:59.826 [info] ExtensionService#_doActivateExtension vscjava.vscode-java-debug, startup: false, activationEvent: 'onDebugInitialConfigurations'
+2026-07-02 21:17:00.117 [info] ExtensionService#_doActivateExtension redhat.java, startup: false, activationEvent: 'api', root cause: vscjava.vscode-java-debug
+2026-07-02 21:17:01.262 [warning] [redhat.java] Accessing a resource scoped configuration without providing a resource is not expected. To get the effective value for '[java]', provide the URI of a resource or 'null' for any resource.
+2026-07-02 21:17:01.782 [warning] [redhat.java] Accessing a resource scoped configuration without providing a resource is not expected. To get the effective value for '[java]', provide the URI of a resource or 'null' for any resource.
+2026-07-02 21:33:24.694 [info] ExtensionService#_doActivateExtension vscode.html-language-features, startup: false, activationEvent: 'onLanguage:html'
+2026-07-02 21:49:38.060 [warning] ExtHostTextEditorOptions 'setOptions' failed:'
+2026-07-02 21:49:38.060 [warning] Illegal argument: TextEditor(vs.editor.ICodeEditor:1,$model20)
+2026-07-02 23:21:38.839 [error] Error: Invalid debug adapter
+    at oci.p (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:981:100)
+    at oci.$acceptDAMessage (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:980:33732)
+    at LOt.S (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:4240:27484)
+    at LOt.Q (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:4240:27262)
+    at LOt.M (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:4240:26350)
+    at LOt.L (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:4240:25451)
+    at Phe.value (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:4240:24243)
+    at D.C (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:29:2349)
+    at D.fire (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:29:2568)
+    at xie.fire (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:1010:10371)
+    at S2s.A (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:1010:13501)
+    at Phe.value (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:1010:11920)
+    at D.C (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:29:2349)
+    at D.fire (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:29:2568)
+    at HYe.acceptChunk (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:1010:8157)
+    at https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:1010:7442
+    at Phe.value (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:4238:21230)
+    at D.C (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:29:2349)
+    at D.fire (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:29:2568)
+    at KLn.j.onload (https://970-cs-2692c06f-fb8b-4a5a-8d1e-c5bb6a209a86.cs-us-east1-rtep.cloudshell.dev/cde-12045988ede50bfcfc4958558303fa91c3b8ad61/static/out/vs/code/browser/workbench/workbench.js:4238:19721)

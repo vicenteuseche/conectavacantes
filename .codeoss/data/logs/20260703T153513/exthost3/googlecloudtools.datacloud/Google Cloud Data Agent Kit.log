@@ -1,0 +1,78 @@
+2026-07-03 15:43:16.240 [info] [OnboardingStatus] Updating context key 'gDataCloud.alreadyOnboarded' to true
+2026-07-03 15:43:16.240 [info] Getting gcloud config internal...
+2026-07-03 15:43:16.240 [info] Checking for gcloud binary path...
+2026-07-03 15:43:16.240 [info] Executing: which gcloud
+2026-07-03 15:43:16.240 [info] Getting gcloud config internal...
+2026-07-03 15:43:16.240 [info] Checking for gcloud binary path...
+2026-07-03 15:43:16.240 [info] Executing: which gcloud
+2026-07-03 15:43:16.240 [info] Checking for gcloud binary path...
+2026-07-03 15:43:16.240 [info] Executing: which gcloud
+2026-07-03 15:43:16.240 [info] Checking for gcloud binary path...
+2026-07-03 15:43:16.240 [info] Executing: which gcloud
+2026-07-03 15:43:16.240 [info] hasGcloud: true
+2026-07-03 15:43:16.240 [info] Syncing gcloud settings to extension
+2026-07-03 15:43:16.240 [info] hasGcloud: true
+2026-07-03 15:43:16.241 [info] Getting gcloud config internal...
+2026-07-03 15:43:16.241 [info] Executing: gcloud config config-helper --format json
+2026-07-03 15:43:16.241 [info] hasGcloud: true
+2026-07-03 15:43:16.241 [info] Executing: gcloud config config-helper --format json
+2026-07-03 15:43:16.241 [info] Executing: gcloud config config-helper --format json
+2026-07-03 15:43:16.241 [info] Activating bigquery
+2026-07-03 15:43:16.241 [info] ConversationalAnalyticsPlugin activated
+2026-07-03 15:43:16.241 [info] ConversationalAnalyticsPlugin: activate finished
+2026-07-03 15:43:16.241 [info] Activating Databases
+2026-07-03 15:43:16.241 [info] Activating Catalog Feature
+2026-07-03 15:43:16.241 [info] Activating dataplex universal catalog
+2026-07-03 15:43:16.241 [info] Activating dataproc
+2026-07-03 15:43:16.241 [info] Activating spark resource tree
+2026-07-03 15:43:16.241 [info] SparkMonitorPlugin: Activating...
+2026-07-03 15:43:16.241 [info] SparkMonitorPlugin: State change - experiment: true, setting: true, overall: true
+2026-07-03 15:43:16.241 [info] [2026-07-03T15:43:15.441Z] Activating Agent Skill Installer
+2026-07-03 15:43:16.241 [info] [2026-07-03T15:43:15.454Z] appName: Code OSS for Cloud Shell, ideType: 6
+2026-07-03 15:43:16.241 [info] [2026-07-03T15:43:15.454Z] Profile antigravity-ide is NOT active
+2026-07-03 15:43:16.241 [info] [2026-07-03T15:43:15.454Z] Profile antigravity is NOT active
+2026-07-03 15:43:16.241 [info] [2026-07-03T15:43:15.454Z] Profile jetski is NOT active
+2026-07-03 15:43:16.241 [info] [2026-07-03T15:43:15.454Z] Profile cursor is NOT active
+2026-07-03 15:43:16.241 [info] [2026-07-03T15:43:15.454Z] Profile copilot is NOT active
+2026-07-03 15:43:16.241 [info] [2026-07-03T15:43:15.454Z] Profile gemini-code-assist is active
+2026-07-03 15:43:16.241 [info] [MCP Registry] Server 'notebooks' listening on IPC socket: /tmp/datacloud-mcp-notebooks-codeossforcloudshell.sock
+2026-07-03 15:43:16.241 [info] [MCP Registry] Server 'visualization' listening on IPC socket: /tmp/datacloud-mcp-visualization-codeossforcloudshell.sock
+2026-07-03 15:43:16.303 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-03 15:43:16.309 [info] MCP config plugin: ideType: 6
+2026-07-03 15:43:19.985 [info] gcloud version: 574.0.0, isCompatible: true
+2026-07-03 15:43:19.985 [info] Checking if logged in to gcloud...
+2026-07-03 15:43:19.985 [info] Getting gcloud config internal...
+2026-07-03 15:43:19.995 [info] Executing: gcloud config config-helper --format json
+2026-07-03 15:43:20.040 [info] Checking if identities match...Fetching ADC account name...
+2026-07-03 15:43:20.098 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-03 15:43:20.123 [info] SparkMonitorPlugin: Wrote filter config file with value: true
+2026-07-03 15:43:20.327 [info] hasGcloud: true
+2026-07-03 15:43:20.702 [info] [2026-07-03T15:43:20.702Z] Checking skills for Gemini Code Assist in /home/vicenteaugusto_useche/.gemini/skills. Force=false
+2026-07-03 15:43:20.710 [info] [2026-07-03T15:43:20.710Z] Bundle checksum match. Skipping installation.
+2026-07-03 15:43:22.454 [info] Identity match check: {"gcloudAccountEmpty":false,"vscodeAccountEmpty":false,"gcloudAdcAccountEmpty":false,"gcloudAccountMatchesVscode":true,"gcloudAdcAccountMatchesVscode":true}
+2026-07-03 15:43:22.476 [info] Executing: gcloud auth application-default print-access-token
+2026-07-03 15:43:22.672 [info] gcloud version: 574.0.0, isCompatible: true
+2026-07-03 15:43:22.674 [info] Checking if logged in to gcloud...
+2026-07-03 15:43:22.677 [info] Getting gcloud config internal...
+2026-07-03 15:43:22.717 [info] Executing: gcloud config config-helper --format json
+2026-07-03 15:43:24.601 [info] Verified that user is logged in to gcloud CLI and ADC.
+2026-07-03 15:43:25.071 [info] Executing: gcloud auth application-default print-access-token
+2026-07-03 15:43:26.832 [info] Verified that user is logged in to gcloud CLI and ADC.
+2026-07-03 15:43:28.089 [info] hasGcloud: true
+2026-07-03 15:43:28.187 [info] MCP config plugin: ideType: 6
+2026-07-03 15:43:28.190 [info] SparkMonitorPlugin: State change - experiment: true, setting: true, overall: true
+2026-07-03 15:43:28.203 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-03 15:43:28.381 [info] SparkMonitorPlugin: Wrote filter config file with value: true
+2026-07-03 15:43:29.793 [info] gcloud version: 574.0.0, isCompatible: true
+2026-07-03 15:43:29.793 [info] Checking if logged in to gcloud...
+2026-07-03 15:43:29.794 [info] Getting gcloud config internal...
+2026-07-03 15:43:29.822 [info] Executing: gcloud config config-helper --format json
+2026-07-03 15:43:32.314 [info] Executing: gcloud auth application-default print-access-token
+2026-07-03 15:43:34.391 [info] Verified that user is logged in to gcloud CLI and ADC.
+2026-07-03 15:45:58.215 [info] Deactivating bigquery
+2026-07-03 15:45:58.215 [info] Deactivating GCS
+2026-07-03 15:45:58.215 [info] Deactivating Databases
+2026-07-03 15:45:58.215 [info] Deactivating Catalog Feature
+2026-07-03 15:45:58.215 [info] Deactivating dataproc
+2026-07-03 15:45:58.215 [info] SparkMonitorPlugin: Deactivating...
+2026-07-03 15:45:58.215 [info] Deactivating settings

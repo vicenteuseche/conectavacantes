@@ -1,0 +1,33 @@
+2026-07-02 17:00:10.695 [warning] Dir "/home/vicenteaugusto_useche/.pixi/envs" is not watchable (directory does not exist)
+2026-07-02 17:00:11.182 [info] Starting Environment refresh
+2026-07-02 17:00:11.182 [info] Searching for interpreters in posix paths locator
+2026-07-02 17:00:11.196 [info] Searching for pyenv environments
+2026-07-02 17:00:11.196 [info] Searching for conda environments
+2026-07-02 17:00:11.197 [info] Searching for global virtual environments
+2026-07-02 17:00:11.197 [info] Searching for custom virtual environments
+2026-07-02 17:00:11.276 [info] Skipping ActivatedEnv Detection:  process.env.VSCODE_CLI !== '1'
+2026-07-02 17:00:11.277 [info] Skipping ActivatedEnv Detection:  process.env.VSCODE_CLI !== '1'
+2026-07-02 17:00:11.283 [info] pyenv is not installed
+2026-07-02 17:00:11.283 [info] Finished searching for pyenv environments: 99 milliseconds
+2026-07-02 17:00:11.284 [info] Finished searching for custom virtual envs: 98 milliseconds
+2026-07-02 17:00:11.298 [info] > conda info --json
+2026-07-02 17:00:11.313 [info] > hatch env show --json
+2026-07-02 17:00:11.313 [info] cwd: .
+2026-07-02 17:00:11.336 [info] > pyenv which python
+2026-07-02 17:00:11.336 [info] cwd: .
+2026-07-02 17:00:11.336 [info] Finished searching for global virtual envs: 150 milliseconds
+2026-07-02 17:00:11.372 [info] Found: /bin/python --> /bin/python3.12
+2026-07-02 17:00:11.387 [info] Found: /bin/python3 --> /bin/python3.12
+2026-07-02 17:00:11.392 [info] Found: /bin/python3.12 --> /bin/python3.12
+2026-07-02 17:00:11.438 [info] Found: /usr/bin/python --> /usr/bin/python3.12
+2026-07-02 17:00:11.473 [info] Found: /usr/bin/python3 --> /usr/bin/python3.12
+2026-07-02 17:00:11.486 [info] Found: /usr/bin/python3.12 --> /usr/bin/python3.12
+2026-07-02 17:00:11.603 [info] Finished searching for interpreters in posix paths locator: 411 milliseconds
+2026-07-02 17:00:11.605 [info] > /bin/python -I /google/devshell/editor/code-oss-for-cloud-shell/extensions/ms-python.python/python_files/get_output_via_markers.py /google/devshell/editor/code-oss-for-cloud-shell/extensions/ms-python.python/python_files/interpreterInfo.py
+2026-07-02 17:00:11.645 [info] > /usr/bin/python -I /google/devshell/editor/code-oss-for-cloud-shell/extensions/ms-python.python/python_files/get_output_via_markers.py /google/devshell/editor/code-oss-for-cloud-shell/extensions/ms-python.python/python_files/interpreterInfo.py
+2026-07-02 17:00:11.702 [info] Environments refresh paths discovered (event): 524 milliseconds
+2026-07-02 17:00:11.702 [info] Environments refresh paths discovered: 524 milliseconds
+2026-07-02 17:00:11.727 [info] Environments refresh finished (event): 548 milliseconds
+2026-07-02 17:00:11.740 [info] Environment refresh took 562 milliseconds
+2026-07-02 17:00:11.745 [info] Python interpreter path: /bin/python
+2026-07-02 17:00:14.651 [info] Starting Jedi language server for vicenteaugusto_useche.

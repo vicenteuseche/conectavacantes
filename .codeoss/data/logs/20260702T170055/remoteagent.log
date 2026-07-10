@@ -1,0 +1,12 @@
+2026-07-02 17:00:55.181 [info] 
+
+
+
+
+2026-07-02 17:00:55.198 [info] Extension host agent started.
+2026-07-02 17:00:55.424 [error] [127.0.0.1][bed58956][ManagementConnection] Unknown reconnection token (never seen).
+2026-07-02 17:00:57.218 [info] [127.0.0.1][9a87dcdb][ManagementConnection] New connection established.
+2026-07-02 17:00:57.327 [info] [127.0.0.1][d64b756d][ExtensionHostConnection] New connection established.
+2026-07-02 17:00:58.406 [info] [127.0.0.1][d64b756d][ExtensionHostConnection] <2981> Launched Extension Host Process.
+2026-07-02 17:00:58.805 [info] [127.0.0.1][d64b756d][ExtensionHostConnection] <2981> [reconnection-grace-time] Extension host: read VSCODE_RECONNECTION_GRACE_TIME=10800000ms (10800s)
+

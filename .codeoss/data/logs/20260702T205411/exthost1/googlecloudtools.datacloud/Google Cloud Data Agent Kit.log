@@ -1,0 +1,148 @@
+2026-07-02 20:54:31.345 [info] [OnboardingStatus] Updating context key 'gDataCloud.alreadyOnboarded' to false
+2026-07-02 20:54:31.345 [info] Getting gcloud config internal...
+2026-07-02 20:54:31.345 [info] Checking for gcloud binary path...
+2026-07-02 20:54:31.345 [info] Executing: which gcloud
+2026-07-02 20:54:31.345 [info] Getting gcloud config internal...
+2026-07-02 20:54:31.345 [info] Checking for gcloud binary path...
+2026-07-02 20:54:31.345 [info] Executing: which gcloud
+2026-07-02 20:54:31.345 [info] Checking for gcloud binary path...
+2026-07-02 20:54:31.345 [info] Executing: which gcloud
+2026-07-02 20:54:31.345 [info] hasGcloud: true
+2026-07-02 20:54:31.345 [info] Syncing gcloud settings to extension
+2026-07-02 20:54:31.345 [info] hasGcloud: true
+2026-07-02 20:54:31.345 [info] Getting gcloud config internal...
+2026-07-02 20:54:31.345 [info] Executing: gcloud config config-helper --format json
+2026-07-02 20:54:31.345 [info] Executing: gcloud config config-helper --format json
+2026-07-02 20:54:31.345 [info] Executing: gcloud config config-helper --format json
+2026-07-02 20:54:31.345 [info] [OnboardingPlugin] Cloud Code extension or Cloud Shell/Workstations detected. Skipping automatic onboarding.
+2026-07-02 20:54:31.345 [info] Activating bigquery
+2026-07-02 20:54:31.345 [info] ConversationalAnalyticsPlugin activated
+2026-07-02 20:54:31.345 [info] ConversationalAnalyticsPlugin: activate finished
+2026-07-02 20:54:31.345 [info] Activating Databases
+2026-07-02 20:54:31.345 [info] Activating Catalog Feature
+2026-07-02 20:54:31.345 [info] Activating dataplex universal catalog
+2026-07-02 20:54:31.345 [info] Activating dataproc
+2026-07-02 20:54:31.345 [info] Activating spark resource tree
+2026-07-02 20:54:31.345 [info] SparkMonitorPlugin: Activating...
+2026-07-02 20:54:31.345 [info] SparkMonitorPlugin: State change - experiment: true, setting: true, overall: true
+2026-07-02 20:54:31.345 [info] [2026-07-02T20:54:29.037Z] Activating Agent Skill Installer
+2026-07-02 20:54:31.345 [info] [2026-07-02T20:54:29.088Z] appName: Code OSS for Cloud Shell, ideType: 6
+2026-07-02 20:54:31.345 [info] [2026-07-02T20:54:29.088Z] Profile antigravity-ide is NOT active
+2026-07-02 20:54:31.345 [info] [2026-07-02T20:54:29.088Z] Profile antigravity is NOT active
+2026-07-02 20:54:31.345 [info] [2026-07-02T20:54:29.088Z] Profile jetski is NOT active
+2026-07-02 20:54:31.345 [info] [2026-07-02T20:54:29.088Z] Profile cursor is NOT active
+2026-07-02 20:54:31.345 [info] [2026-07-02T20:54:29.088Z] Profile copilot is NOT active
+2026-07-02 20:54:31.345 [info] [2026-07-02T20:54:29.088Z] Profile gemini-code-assist is active
+2026-07-02 20:54:31.345 [info] [MCP Registry] Server 'notebooks' listening on IPC socket: /tmp/datacloud-mcp-notebooks-codeossforcloudshell.sock
+2026-07-02 20:54:31.345 [info] [MCP Registry] Server 'visualization' listening on IPC socket: /tmp/datacloud-mcp-visualization-codeossforcloudshell.sock
+2026-07-02 20:54:31.554 [info] Checking if identities match...Fetching ADC account name...
+2026-07-02 20:54:31.607 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 20:54:31.608 [info] MCP config plugin: ideType: 6
+2026-07-02 20:54:35.368 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 20:54:35.369 [info] SparkMonitorPlugin: Wrote filter config file with value: true
+2026-07-02 20:54:35.382 [info] hasGcloud: true
+2026-07-02 20:54:35.418 [info] Identity match check: {"gcloudAccountEmpty":false,"vscodeAccountEmpty":false,"gcloudAdcAccountEmpty":false,"gcloudAccountMatchesVscode":true,"gcloudAdcAccountMatchesVscode":true}
+2026-07-02 20:54:35.918 [info] [2026-07-02T20:54:35.918Z] Checking skills for Gemini Code Assist in /home/vicenteaugusto_useche/.gemini/skills. Force=false
+2026-07-02 20:54:35.946 [info] [2026-07-02T20:54:35.946Z] Bundle checksum match. Skipping installation.
+2026-07-02 20:54:36.612 [info] gcloud version: 574.0.0, isCompatible: true
+2026-07-02 20:54:36.612 [info] Checking if logged in to gcloud...
+2026-07-02 20:54:36.612 [info] Getting gcloud config internal...
+2026-07-02 20:54:36.639 [info] Executing: gcloud config config-helper --format json
+2026-07-02 20:54:38.763 [info] Executing: gcloud auth application-default print-access-token
+2026-07-02 20:54:40.206 [info] Verified that user is logged in to gcloud CLI and ADC.
+2026-07-02 20:54:41.430 [info] hasGcloud: true
+2026-07-02 20:54:42.932 [info] gcloud version: 574.0.0, isCompatible: true
+2026-07-02 20:54:42.932 [info] Checking if logged in to gcloud...
+2026-07-02 20:54:42.932 [info] Getting gcloud config internal...
+2026-07-02 20:54:42.986 [info] Executing: gcloud config config-helper --format json
+2026-07-02 20:54:43.781 [info] MCP config plugin: ideType: 6
+2026-07-02 20:54:43.781 [info] SparkMonitorPlugin: State change - experiment: true, setting: true, overall: true
+2026-07-02 20:54:43.786 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 20:54:43.975 [info] SparkMonitorPlugin: Wrote filter config file with value: true
+2026-07-02 20:54:44.427 [info] Executing: gcloud auth application-default print-access-token
+2026-07-02 20:54:46.143 [info] Verified that user is logged in to gcloud CLI and ADC.
+2026-07-02 20:55:09.868 [info] [OnboardingStatus] Updating context key 'gDataCloud.alreadyOnboarded' to true
+2026-07-02 20:55:09.953 [info] [OnboardingPlugin] Opening webview with route: ONBOARDING_GET_STARTED and panel ID: gDataCloud.onboarding.getStarted
+2026-07-02 20:55:34.372 [info] MCP config plugin: ideType: 6
+2026-07-02 20:55:35.573 [info] MCP config plugin: ideType: 6
+2026-07-02 20:55:35.612 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 20:55:49.580 [info] MCP config plugin configureMcpServers called with servers: [{"id":"bigquery","mode":"remote","selected":false},{"id":"spanner","mode":"remote","selected":true},{"id":"alloydb","mode":"remote","selected":false},{"id":"cloud-sql","mode":"remote","selected":false},{"id":"knowledge_catalog","mode":"remote","selected":false},{"id":"dataproc","mode":"remote","selected":false}]
+2026-07-02 20:55:49.580 [info] MCP config plugin: ideType: 6
+2026-07-02 20:55:49.580 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 20:55:49.581 [info] Installed MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:49.582 [info] Updated MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:50.484 [info] MCP config plugin configureMcpServers called with servers: [{"id":"bigquery","mode":"remote","selected":false},{"id":"spanner","mode":"remote","selected":true},{"id":"alloydb","mode":"remote","selected":false},{"id":"cloud-sql","mode":"remote","selected":false},{"id":"knowledge_catalog","mode":"remote","selected":false},{"id":"dataproc","mode":"remote","selected":true}]
+2026-07-02 20:55:50.484 [info] MCP config plugin: ideType: 6
+2026-07-02 20:55:50.485 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 20:55:50.485 [info] Installed MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:50.486 [info] Updated MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:51.182 [info] MCP config plugin configureMcpServers called with servers: [{"id":"bigquery","mode":"remote","selected":true},{"id":"spanner","mode":"remote","selected":true},{"id":"alloydb","mode":"remote","selected":false},{"id":"cloud-sql","mode":"remote","selected":false},{"id":"knowledge_catalog","mode":"remote","selected":false},{"id":"dataproc","mode":"remote","selected":true}]
+2026-07-02 20:55:51.182 [info] MCP config plugin: ideType: 6
+2026-07-02 20:55:51.183 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 20:55:51.183 [info] Installed MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:51.184 [info] Updated MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:52.036 [info] MCP config plugin configureMcpServers called with servers: [{"id":"bigquery","mode":"remote","selected":true},{"id":"spanner","mode":"remote","selected":true},{"id":"alloydb","mode":"remote","selected":false},{"id":"cloud-sql","mode":"remote","selected":true},{"id":"knowledge_catalog","mode":"remote","selected":false},{"id":"dataproc","mode":"remote","selected":true}]
+2026-07-02 20:55:52.036 [info] MCP config plugin: ideType: 6
+2026-07-02 20:55:52.037 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 20:55:52.038 [info] Installed MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:52.038 [info] Updated MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:52.739 [info] MCP config plugin configureMcpServers called with servers: [{"id":"bigquery","mode":"remote","selected":true},{"id":"spanner","mode":"remote","selected":true},{"id":"alloydb","mode":"remote","selected":true},{"id":"cloud-sql","mode":"remote","selected":true},{"id":"knowledge_catalog","mode":"remote","selected":false},{"id":"dataproc","mode":"remote","selected":true}]
+2026-07-02 20:55:52.739 [info] MCP config plugin: ideType: 6
+2026-07-02 20:55:52.740 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 20:55:52.740 [info] Installed MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:52.740 [info] Updated MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:53.660 [info] MCP config plugin configureMcpServers called with servers: [{"id":"bigquery","mode":"remote","selected":true},{"id":"spanner","mode":"remote","selected":true},{"id":"alloydb","mode":"remote","selected":true},{"id":"cloud-sql","mode":"remote","selected":true},{"id":"knowledge_catalog","mode":"remote","selected":true},{"id":"dataproc","mode":"remote","selected":true}]
+2026-07-02 20:55:53.661 [info] MCP config plugin: ideType: 6
+2026-07-02 20:55:53.661 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 20:55:53.662 [info] Installed MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:53.662 [info] Updated MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:55.779 [info] MCP config plugin configureMcpServers called with servers: [{"id":"bigquery","mode":"toolbox","selected":true},{"id":"spanner","mode":"toolbox","selected":true},{"id":"alloydb","mode":"toolbox","selected":true},{"id":"cloud-sql","mode":"toolbox","selected":true},{"id":"knowledge_catalog","mode":"toolbox","selected":true},{"id":"dataproc","mode":"toolbox","selected":true}]
+2026-07-02 20:55:55.779 [info] MCP config plugin: ideType: 6
+2026-07-02 20:55:55.780 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 20:55:55.781 [info] Installed MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:55:55.781 [info] Updated MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:56:02.036 [info] MCP config plugin configureMcpServers called with servers: [{"id":"bigquery","mode":"remote","selected":true},{"id":"spanner","mode":"remote","selected":true},{"id":"alloydb","mode":"remote","selected":true},{"id":"cloud-sql","mode":"remote","selected":true},{"id":"knowledge_catalog","mode":"remote","selected":true},{"id":"dataproc","mode":"remote","selected":true}]
+2026-07-02 20:56:02.036 [info] MCP config plugin: ideType: 6
+2026-07-02 20:56:02.037 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 20:56:02.037 [info] Installed MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:56:02.037 [info] Updated MCP servers configuration in /home/vicenteaugusto_useche/.gemini/settings.json
+2026-07-02 20:56:39.868 [info] hasGcloud: true
+2026-07-02 20:56:40.659 [info] gcloud version: 574.0.0, isCompatible: true
+2026-07-02 20:56:40.660 [info] Checking if logged in to gcloud...
+2026-07-02 20:56:40.660 [info] Getting gcloud config internal...
+2026-07-02 20:56:40.668 [info] Executing: gcloud config config-helper --format json
+2026-07-02 20:56:41.565 [info] Executing: gcloud auth application-default print-access-token
+2026-07-02 20:56:42.371 [info] Verified that user is logged in to gcloud CLI and ADC.
+2026-07-02 21:46:04.274 [info] proactively refreshing access token
+2026-07-02 21:54:43.942 [info] MCP config plugin: ideType: 6
+2026-07-02 21:54:43.961 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 21:54:54.048 [info] MCP config plugin: ideType: 6
+2026-07-02 21:54:54.048 [info] SparkMonitorPlugin: State change - experiment: true, setting: true, overall: true
+2026-07-02 21:54:54.048 [info] SparkMonitorPlugin: State change - experiment: true, setting: true, overall: true
+2026-07-02 21:54:54.050 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 21:54:54.051 [info] MCP config plugin: ideType: 6
+2026-07-02 21:54:54.051 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 21:54:54.199 [info] SparkMonitorPlugin: Wrote filter config file with value: true
+2026-07-02 21:54:54.203 [info] SparkMonitorPlugin: Wrote filter config file with value: true
+2026-07-02 22:45:07.785 [info] proactively refreshing access token
+2026-07-02 22:54:54.140 [info] MCP config plugin: ideType: 6
+2026-07-02 22:54:54.141 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 22:57:53.871 [info] MCP config plugin: ideType: 6
+2026-07-02 22:57:53.871 [info] SparkMonitorPlugin: State change - experiment: true, setting: true, overall: true
+2026-07-02 22:57:53.871 [info] SparkMonitorPlugin: State change - experiment: true, setting: true, overall: true
+2026-07-02 22:57:53.916 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 22:57:53.917 [info] MCP config plugin: ideType: 6
+2026-07-02 22:57:53.923 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 22:57:54.094 [info] SparkMonitorPlugin: Wrote filter config file with value: true
+2026-07-02 22:57:54.100 [info] SparkMonitorPlugin: Wrote filter config file with value: true
+2026-07-02 23:44:05.058 [info] proactively refreshing access token
+2026-07-02 23:57:53.969 [info] MCP config plugin: ideType: 6
+2026-07-02 23:57:53.971 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 23:57:58.309 [info] MCP config plugin: ideType: 6
+2026-07-02 23:57:58.309 [info] SparkMonitorPlugin: State change - experiment: true, setting: true, overall: true
+2026-07-02 23:57:58.311 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 23:57:58.378 [info] MCP config plugin: ideType: 6
+2026-07-02 23:57:58.378 [info] SparkMonitorPlugin: State change - experiment: true, setting: true, overall: true
+2026-07-02 23:57:58.379 [info] MCP config plugin: MCP config key: mcpServers
+2026-07-02 23:57:58.459 [info] SparkMonitorPlugin: Wrote filter config file with value: true
+2026-07-02 23:57:58.527 [info] SparkMonitorPlugin: Wrote filter config file with value: true

@@ -1,0 +1,79 @@
+2026-07-03 15:40:02.518 [info] [main] Log level: Info
+2026-07-03 15:40:02.518 [info] [main] Validating found git in: "git"
+2026-07-03 15:40:02.518 [info] [main] Using git "2.43.0" from "git"
+2026-07-03 15:40:02.518 [info] [Model][doInitialScan] Initial repository scan started
+2026-07-03 15:40:02.518 [info] > git rev-parse --show-toplevel [4ms]
+2026-07-03 15:40:02.518 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:40:02.518 [info] > git rev-parse --show-toplevel [2ms]
+2026-07-03 15:40:02.518 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:40:02.518 [info] > git rev-parse --show-toplevel [2ms]
+2026-07-03 15:40:02.518 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:40:02.518 [info] > git rev-parse --show-toplevel [2ms]
+2026-07-03 15:40:02.518 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:40:02.518 [info] > git rev-parse --show-toplevel [3ms]
+2026-07-03 15:40:02.518 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:40:02.518 [info] > git rev-parse --show-toplevel [2ms]
+2026-07-03 15:40:02.518 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:40:02.518 [info] > git rev-parse --show-toplevel [2ms]
+2026-07-03 15:40:02.518 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:40:02.518 [info] > git rev-parse --show-toplevel [2ms]
+2026-07-03 15:40:02.518 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:40:02.518 [info] > git rev-parse --show-toplevel [2ms]
+2026-07-03 15:40:02.518 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:40:02.518 [info] > git rev-parse --show-toplevel [2ms]
+2026-07-03 15:40:02.518 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:40:02.518 [info] [Model][doInitialScan] Initial repository scan completed - repositories (0), closed repositories (0), parent repositories (0), unsafe repositories (0)
+2026-07-03 15:40:07.419 [info] > git rev-parse --show-toplevel [250ms]
+2026-07-03 15:40:07.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:40:12.038 [info] > git rev-parse --show-toplevel [19ms]
+2026-07-03 15:40:12.038 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:40:24.337 [info] > git rev-parse --show-toplevel [4ms]
+2026-07-03 15:40:24.413 [info] > git rev-parse --git-dir --git-common-dir --show-superproject-working-tree [41ms]
+2026-07-03 15:40:24.595 [info] [Model][openRepository] Opened repository (path): /home/vicenteaugusto_useche/.gemini/history/vicenteaugusto-useche
+2026-07-03 15:40:24.595 [info] [Model][openRepository] Opened repository (real path): /home/vicenteaugusto_useche/.gemini/history/vicenteaugusto-useche
+2026-07-03 15:40:24.595 [info] [Model][openRepository] Opened repository (kind): repository
+2026-07-03 15:40:24.693 [info] [Git][getRemotes] No remotes found in the git config file
+2026-07-03 15:40:24.717 [info] > git config --get commit.template [67ms]
+2026-07-03 15:40:24.718 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [27ms]
+2026-07-03 15:40:24.847 [info] > git status -z -uall [107ms]
+2026-07-03 15:40:24.948 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [185ms]
+2026-07-03 15:40:25.021 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [41ms]
+2026-07-03 15:40:25.048 [info] > git config --get --local branch.main.vscode-merge-base [5ms]
+2026-07-03 15:40:25.049 [warning] [Git][config] git config failed: Failed to execute git
+2026-07-03 15:40:25.070 [info] > git config --get commit.template [50ms]
+2026-07-03 15:40:25.087 [info] > git reflog main --grep-reflog=branch: Created from *. [18ms]
+2026-07-03 15:40:25.110 [info] [Git][getRemotes] No remotes found in the git config file
+2026-07-03 15:40:25.117 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [8ms]
+2026-07-03 15:40:25.162 [info] > git status -z -uall [25ms]
+2026-07-03 15:40:25.162 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [3ms]
+2026-07-03 15:40:29.703 [warning] [Model][getRepositoryExact] Failed to get repository realpath for: "/home/vicenteaugusto_useche/.npm/_cacache/tmp/git-clone2eYlqj/". Error:Error: ENOENT: no such file or directory, realpath '/home/vicenteaugusto_useche/.npm/_cacache/tmp/git-clone2eYlqj/'
+2026-07-03 15:40:29.730 [info] > git rev-parse --show-toplevel [1ms]
+2026-07-03 15:40:29.747 [info] > git rev-parse --git-dir --git-common-dir --show-superproject-working-tree [4ms]
+2026-07-03 15:40:29.824 [info] [Model][openRepository] Opened repository (path): /home/vicenteaugusto_useche/.npm/_cacache/tmp/git-clonek4w7mH
+2026-07-03 15:40:29.824 [info] [Model][openRepository] Opened repository (real path): /home/vicenteaugusto_useche/.npm/_cacache/tmp/git-clonek4w7mH
+2026-07-03 15:40:29.824 [info] [Model][openRepository] Opened repository (kind): repository
+2026-07-03 15:40:29.853 [info] > git config --get commit.template [15ms]
+2026-07-03 15:40:29.854 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2026-07-03 15:40:29.854 [warning] [Git][getBranch] No such branch: master
+2026-07-03 15:40:29.881 [info] > git status -z -uall [15ms]
+2026-07-03 15:40:29.883 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2026-07-03 15:40:29.914 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [17ms]
+2026-07-03 15:40:29.914 [warning] [Git][getBranch] No such branch: master
+2026-07-03 15:40:29.916 [error] [GitHistoryProvider][resolveHEADMergeBase] Failed to resolve merge base for master: Error: No such branch: master.
+2026-07-03 15:40:29.920 [info] > git config --get commit.template [7ms]
+2026-07-03 15:40:29.937 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [3ms]
+2026-07-03 15:40:29.937 [warning] [Git][getBranch] No such branch: master
+2026-07-03 15:40:29.964 [info] > git status -z -uall [15ms]
+2026-07-03 15:40:29.966 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [3ms]

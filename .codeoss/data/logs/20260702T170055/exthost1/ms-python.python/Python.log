@@ -1,0 +1,7 @@
+2026-07-02 17:01:08.813 [warning] Dir "/home/vicenteaugusto_useche/.pixi/envs" is not watchable (directory does not exist)
+2026-07-02 17:01:12.307 [info] Skipping ActivatedEnv Detection:  process.env.VSCODE_CLI !== '1'
+2026-07-02 17:01:12.333 [info] > conda info --json
+2026-07-02 17:01:12.338 [info] Python interpreter path: /bin/python
+2026-07-02 17:01:12.549 [info] > pyenv which python
+2026-07-02 17:01:12.549 [info] cwd: .
+2026-07-02 17:01:15.130 [info] Starting Jedi language server for vicenteaugusto_useche.

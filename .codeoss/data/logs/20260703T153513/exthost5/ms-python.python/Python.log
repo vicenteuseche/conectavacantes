@@ -1,0 +1,28 @@
+2026-07-03 15:53:09.526 [warning] Dir "/home/vicenteaugusto_useche/.pixi/envs" is not watchable (directory does not exist)
+2026-07-03 15:53:10.496 [info] Skipping ActivatedEnv Detection:  process.env.VSCODE_CLI !== '1'
+2026-07-03 15:53:10.522 [info] Python interpreter path: /bin/python
+2026-07-03 15:53:10.685 [info] > conda info --json
+2026-07-03 15:53:10.834 [info] > pyenv which python
+2026-07-03 15:53:10.834 [info] cwd: .
+2026-07-03 15:53:12.382 [info] Starting Jedi language server for vicenteaugusto_useche.
+2026-07-03 18:00:31.520 [info] Send text to terminal: # 1. Asegúrate de que el frontend esté compilado
+npm run build
+
+# 2. Despliega a Firebase (requiere que estés logueado)
+npx firebase deploy --only hosting,functions --project conectavacantes-2026
+
+2026-07-03 18:03:34.859 [info] Send text to terminal: # 1. Instalar dependencias si no lo has hecho
+npm install
+
+# 2. Compilar el frontend
+npm run build
+
+# 3. Configurar el secreto en Firebase (esto soluciona el error en producción)
+# Reemplaza TU_CLAVE por la clave real si el comando falla al leer el .env
+grep GEMINI_API_KEY .env | cut -d '=' -f2 | tr -d '"' | npx firebase-tools functions:secrets:set GEMINI_API_KEY --project conectavacantes-2026
+
+# 4. Desplegar todo
+npx firebase-tools deploy --only hosting,functions --project conectavacantes-2026
+
+2026-07-03 18:10:42.262 [info] Send text to terminal: gcloud builds submit --config cloudbuild.yaml
+

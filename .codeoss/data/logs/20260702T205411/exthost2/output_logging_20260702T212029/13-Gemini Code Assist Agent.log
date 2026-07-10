@@ -1,0 +1,303 @@
+Starting background process...
+Background process started with PID 6637
+[INFO] 2026-07-02 21:20:57.304 PM -- [CoderAgentExecutor] Overriding workspace path to: /home/vicenteaugusto_useche
+[ERROR] 2026-07-02 21:20:57.314 PM -- Warning: unexpected file /home/vicenteaugusto_useche/.gemini/extensions/extension-enablement.json in extensions directory.
+[ERROR] 2026-07-02 21:20:57.314 PM -- Warning: unexpected file /home/vicenteaugusto_useche/.gemini/extensions/extension-enablement.json in extensions directory.
+[INFO] 2026-07-02 21:20:57.315 PM -- Loading extension: vertex (version: 0.2.0)
+Ignore file not found: /home/vicenteaugusto_useche/.geminiignore, continue without it.
+Ignore file not found: /home/vicenteaugusto_useche/.aiexclude, continue without it.
+Ignore file not found: /home/vicenteaugusto_useche/.geminiignore, continue without it.
+Ignore file not found: /home/vicenteaugusto_useche/.aiexclude, continue without it.
+Ripgrep is not available. Falling back to GrepTool.
+Loading extension: vertex
+[MCP error] Error during discovery for MCP server 'VertexMcpServer': spawn ${extensionPath}/run.sh ENOENT Error: spawn ${extensionPath}/run.sh ENOENT
+    at ChildProcess._handle.onexit (node:internal/child_process:285:19)
+    at onErrorNT (node:internal/child_process:483:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'spawn ${extensionPath}/run.sh',
+  path: '${extensionPath}/run.sh',
+  spawnargs: []
+}
+[MCP error] Error during discovery for MCP server 'datacloud_alloydb_remote': fetch failed TypeError: fetch failed
+    at node:internal/deps/undici/undici:14900:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async fetch (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/a2a-server.mjs:403500:12)
+    at async StreamableHTTPClientTransport.send (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/a2a-server.mjs:301752:28)
+    at async McpComplianceTransport.send (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/a2a-server.mjs:402413:9) {
+  [cause]: Error: getaddrinfo ENOTFOUND alloydb.${region}.rep.googleapis.com
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'alloydb.${region}.rep.googleapis.com'
+  }
+}
+[MCP error] Error during discovery for MCP server 'datacloud_dataproc_remote': fetch failed TypeError: fetch failed
+    at node:internal/deps/undici/undici:14900:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async fetch (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/a2a-server.mjs:403500:12)
+    at async StreamableHTTPClientTransport.send (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/a2a-server.mjs:301752:28)
+    at async McpComplianceTransport.send (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/a2a-server.mjs:402413:9) {
+  [cause]: Error: getaddrinfo ENOTFOUND dataproc-${region}.googleapis.com
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'dataproc-${region}.googleapis.com'
+  }
+}
+Registering notification handlers for server 'datacloud_cloud-sql_remote'. Capabilities: { tools: { listChanged: false } }
+Server 'datacloud_cloud-sql_remote' has tools but did not declare 'listChanged' capability. Listening anyway for robustness...
+Registering notification handlers for server 'datacloud_knowledge_catalog_remote'. Capabilities: { tools: { listChanged: false } }
+Server 'datacloud_knowledge_catalog_remote' has tools but did not declare 'listChanged' capability. Listening anyway for robustness...
+Registering notification handlers for server 'datacloud_spanner_remote'. Capabilities: { tools: { listChanged: false } }
+Server 'datacloud_spanner_remote' has tools but did not declare 'listChanged' capability. Listening anyway for robustness...
+Registering notification handlers for server 'datacloud_bigquery_remote'. Capabilities: { tools: { listChanged: false } }
+Server 'datacloud_bigquery_remote' has tools but did not declare 'listChanged' capability. Listening anyway for robustness...
+Hook registry initialized with 0 hook entries
+Hook system initialized successfully
+[DEBUG] [MemoryDiscovery] Loading environment memory for trusted root: /home/vicenteaugusto_useche (Stopping at trusted root: /home/vicenteaugusto_useche — no git root found)
+[DEBUG] [MemoryDiscovery] Starting upward search from /home/vicenteaugusto_useche stopping at /home/vicenteaugusto_useche
+[DEBUG] [MemoryDiscovery] deduplication: keeping /home/vicenteaugusto_useche/.gemini/extensions/vertex/GEMINI.md (dev: 2065, ino: 131111)
+[DEBUG] [MemoryDiscovery] Successfully read and processed imports: /home/vicenteaugusto_useche/.gemini/extensions/vertex/GEMINI.md (Length: 55458)
+unknown format "google-duration" ignored in schema at path "#/$defs/PasswordValidationPolicy/properties/passwordChangeInterval"
+unknown format "google-duration" ignored in schema at path "#/$defs/PasswordValidationPolicy/properties/passwordChangeInterval"
+unknown format "google-duration" ignored in schema at path "#/$defs/SqlServerAuditConfig/properties/retentionInterval"
+unknown format "google-duration" ignored in schema at path "#/$defs/SqlServerAuditConfig/properties/retentionInterval"
+unknown format "google-duration" ignored in schema at path "#/$defs/SqlServerAuditConfig/properties/uploadInterval"
+unknown format "google-duration" ignored in schema at path "#/$defs/SqlServerAuditConfig/properties/uploadInterval"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/Metadata/properties/sqlStatementExecutionTime"
+unknown format "google-duration" ignored in schema at path "#/$defs/Metadata/properties/sqlStatementExecutionTime"
+unknown format "google-duration" ignored in schema at path "#/$defs/Metadata/properties/sqlStatementExecutionTime"
+unknown format "google-duration" ignored in schema at path "#/$defs/Metadata/properties/sqlStatementExecutionTime"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/properties/passwordExpirationDuration"
+unknown format "google-duration" ignored in schema at path "#/properties/passwordExpirationDuration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "google-duration" ignored in schema at path "#/$defs/AcquireSsrsLeaseContext/properties/duration"
+unknown format "uint64" ignored in schema at path "#/properties/lastModifiedTime"
+unknown format "uint64" ignored in schema at path "#/properties/lastModifiedTime"
+unknown format "uint64" ignored in schema at path "#/$defs/MaterializedViewDefinition/properties/refreshIntervalMs"
+unknown format "uint64" ignored in schema at path "#/$defs/MaterializedViewDefinition/properties/refreshIntervalMs"
+unknown format "uint64" ignored in schema at path "#/properties/numRows"
+unknown format "uint64" ignored in schema at path "#/properties/numRows"
+unknown format "uint64" ignored in schema at path "#/$defs/Streamingbuffer/properties/estimatedBytes"
+unknown format "uint64" ignored in schema at path "#/$defs/Streamingbuffer/properties/estimatedBytes"
+unknown format "uint64" ignored in schema at path "#/$defs/Streamingbuffer/properties/estimatedRows"
+unknown format "uint64" ignored in schema at path "#/$defs/Streamingbuffer/properties/estimatedRows"
+unknown format "uint64" ignored in schema at path "#/$defs/Streamingbuffer/properties/oldestEntryTime"
+unknown format "uint64" ignored in schema at path "#/$defs/Streamingbuffer/properties/oldestEntryTime"
+Registering notification handlers for server 'visualization'. Capabilities: { tools: {} }
+Server 'visualization' has tools but did not declare 'listChanged' capability. Listening anyway for robustness...
+Registering notification handlers for server 'notebook'. Capabilities: { tools: {} }
+Server 'notebook' has tools but did not declare 'listChanged' capability. Listening anyway for robustness...
+Scheduling MCP context refresh...
+Executing MCP context refresh...
+MCP context refresh already in progress, queuing trailing execution.
+[DEBUG] [MemoryDiscovery] Loading environment memory for trusted root: /home/vicenteaugusto_useche (Stopping at trusted root: /home/vicenteaugusto_useche — no git root found)
+[DEBUG] [MemoryDiscovery] Starting upward search from /home/vicenteaugusto_useche stopping at /home/vicenteaugusto_useche
+[DEBUG] [MemoryDiscovery] deduplication: keeping /home/vicenteaugusto_useche/.gemini/extensions/vertex/GEMINI.md (dev: 2065, ino: 131111)
+[DEBUG] [MemoryDiscovery] Successfully read and processed imports: /home/vicenteaugusto_useche/.gemini/extensions/vertex/GEMINI.md (Length: 55458)
+MCP context refresh complete.
+Coalescing burst refresh requests (300ms delay)...
+Executing MCP context refresh...
+[DEBUG] [MemoryDiscovery] Loading environment memory for trusted root: /home/vicenteaugusto_useche (Stopping at trusted root: /home/vicenteaugusto_useche — no git root found)
+[DEBUG] [MemoryDiscovery] Starting upward search from /home/vicenteaugusto_useche stopping at /home/vicenteaugusto_useche
+[DEBUG] [MemoryDiscovery] deduplication: keeping /home/vicenteaugusto_useche/.gemini/extensions/vertex/GEMINI.md (dev: 2065, ino: 131111)
+[DEBUG] [MemoryDiscovery] Successfully read and processed imports: /home/vicenteaugusto_useche/.gemini/extensions/vertex/GEMINI.md (Length: 55458)
+MCP context refresh complete.
+[STARTUP] StartupProfiler.flush() called with 1 phases
+[STARTUP] Recording metric for phase: discover_tools duration: 4575.103445000001
+[INFO] 2026-07-02 21:21:05.828 PM -- [Config] Using CCPA Auth:
+[INFO] 2026-07-02 21:21:05.828 PM -- [Config] Attempting COMPUTE_ADC first.
+Failed to load credentials from /home/vicenteaugusto_useche/.gemini/oauth_creds.json: ENOENT: no such file or directory, open '/home/vicenteaugusto_useche/.gemini/oauth_creds.json'
+Attempting to authenticate via metadata server application default credentials.
+Authentication successful.
+Experiments loaded {
+  experimentIds: [
+    106018688,
+    105979538,
+    105979560,
+    106015337,
+    105979579,
+    105867471,
+    105979522,
+    105995634,
+    106100625,
+    104638466,
+    101868197,
+    104817729,
+    105695344,
+    104913215,
+    105821930,
+    104922093,
+    103012598,
+    106143956,
+    105856899,
+    106312323,
+    106064030,
+    105757908,
+    104892493,
+    105822886,
+    105785683,
+    105721273,
+    105897325,
+    105658067,
+    106240752,
+    105885552,
+    105864343,
+    106166745,
+    106106762,
+    106057393,
+    106106760,
+    106283618,
+    105620019,
+    106038160,
+    106281951,
+    106264532,
+    106222835,
+    106094629,
+    105887313,
+    105849474,
+    106032303,
+    106228452,
+    106113886,
+    103118072,
+    105979531,
+    105979553,
+    106015328,
+    105867469,
+    105979517,
+    106100654,
+    104638459,
+    101551624,
+    104673683,
+    105695346,
+    104913210,
+    105821928,
+    104922082,
+    103012592,
+    106064028,
+    104892490,
+    105822881,
+    105721268,
+    105895316,
+    105658064,
+    106240748,
+    105885549,
+    105863625,
+    106102706,
+    106057389,
+    106283614,
+    105620012,
+    106038153,
+    105887311,
+    106032301,
+    106113877,
+    103118069,
+    106018685
+  ],
+  flags: [
+    {
+      flagId: '45740197',
+      floatValue: 0.7
+    },
+    {
+      flagId: '45740199',
+      stringValue: ''
+    },
+    {
+      flagId: '45740200',
+      stringValue: ''
+    },
+    {
+      flagId: '45743869',
+      boolValue: false
+    },
+    {
+      flagId: '45750526',
+      boolValue: true
+    },
+    {
+      flagId: '45750527',
+      intValue: '95'
+    },
+    {
+      flagId: '45752213',
+      boolValue: true
+    },
+    {
+      flagId: '45761848',
+      boolValue: true
+    },
+    {
+      flagId: '45768879',
+      boolValue: true
+    },
+    {
+      flagId: '45773036',
+      stringValue: ''
+    },
+    {
+      flagId: '45773134',
+      intValue: '300'
+    },
+    {
+      flagId: '45773135',
+      intValue: '600'
+    },
+    {
+      flagId: '45773187',
+      stringValue: ''
+    },
+    {
+      flagId: '45773188',
+      boolValue: false
+    },
+    {
+      flagId: '45773189',
+      intValue: '30'
+    },
+    {
+      flagId: '45773190',
+      intValue: '15'
+    },
+    {
+      flagId: '45774515',
+      intValue: '10'
+    },
+    {
+      flagId: '45784352',
+      boolValue: true
+    },
+    {
+      flagId: '45807049',
+      boolValue: false
+    }
+  ]
+}
+[INFO] 2026-07-02 21:21:06.212 PM -- [Config] COMPUTE_ADC successful.
+[INFO] 2026-07-02 21:21:06.212 PM -- [Config] GOOGLE_CLOUD_PROJECT: cloudshell-gca
+[INFO] 2026-07-02 21:21:06.229 PM -- Using InMemoryTaskStore
+[INFO] 2026-07-02 21:21:06.239 PM -- [CoreAgent] Agent Server started on http://localhost:38441
+[INFO] 2026-07-02 21:21:06.239 PM -- [CoreAgent] Agent Card: http://localhost:38441/.well-known/agent-card.json
+[INFO] 2026-07-02 21:21:06.239 PM -- [CoreAgent] Press Ctrl+C to stop the server

@@ -1,0 +1,70 @@
+2026-07-03 15:43:11.444 [info] [main] Log level: Info
+2026-07-03 15:43:11.444 [info] [main] Validating found git in: "git"
+2026-07-03 15:43:11.444 [info] [main] Using git "2.43.0" from "git"
+2026-07-03 15:43:11.444 [info] [Model][doInitialScan] Initial repository scan started
+2026-07-03 15:43:11.444 [info] > git rev-parse --show-toplevel [4ms]
+2026-07-03 15:43:11.444 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:11.444 [info] > git rev-parse --show-toplevel [2ms]
+2026-07-03 15:43:11.444 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:11.444 [info] > git rev-parse --show-toplevel [13ms]
+2026-07-03 15:43:11.444 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:11.444 [info] > git rev-parse --show-toplevel [2ms]
+2026-07-03 15:43:11.444 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:11.444 [info] > git rev-parse --show-toplevel [3ms]
+2026-07-03 15:43:11.444 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:11.444 [info] > git rev-parse --show-toplevel [1ms]
+2026-07-03 15:43:11.444 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:11.444 [info] > git rev-parse --show-toplevel [3ms]
+2026-07-03 15:43:11.444 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:11.444 [info] > git rev-parse --show-toplevel [2ms]
+2026-07-03 15:43:11.444 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:11.444 [info] > git rev-parse --show-toplevel [1ms]
+2026-07-03 15:43:11.444 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:11.444 [info] > git rev-parse --show-toplevel [2ms]
+2026-07-03 15:43:11.444 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:11.444 [info] [Model][doInitialScan] Initial repository scan completed - repositories (0), closed repositories (0), parent repositories (0), unsafe repositories (0)
+2026-07-03 15:43:16.081 [info] > git rev-parse --show-toplevel [191ms]
+2026-07-03 15:43:16.082 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:20.408 [info] > git rev-parse --show-toplevel [84ms]
+2026-07-03 15:43:20.410 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:30.196 [info] > git rev-parse --show-toplevel [8ms]
+2026-07-03 15:43:30.198 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2026-07-03 15:43:32.786 [info] > git rev-parse --show-toplevel [3ms]
+2026-07-03 15:43:32.927 [info] > git rev-parse --git-dir --git-common-dir --show-superproject-working-tree [97ms]
+2026-07-03 15:43:33.089 [info] [Model][openRepository] Opened repository (path): /home/vicenteaugusto_useche/.gemini/history/vicenteaugusto-useche
+2026-07-03 15:43:33.089 [info] [Model][openRepository] Opened repository (real path): /home/vicenteaugusto_useche/.gemini/history/vicenteaugusto-useche
+2026-07-03 15:43:33.089 [info] [Model][openRepository] Opened repository (kind): repository
+2026-07-03 15:43:33.139 [info] > git config --get commit.template [4ms]
+2026-07-03 15:43:33.168 [info] [Git][getRemotes] No remotes found in the git config file
+2026-07-03 15:43:33.171 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [4ms]
+2026-07-03 15:43:33.221 [info] > git status -z -uall [30ms]
+2026-07-03 15:43:33.228 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [13ms]
+2026-07-03 15:43:33.300 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [38ms]
+2026-07-03 15:43:33.325 [info] > git config --get commit.template [26ms]
+2026-07-03 15:43:33.327 [info] > git config --get --local branch.main.vscode-merge-base [6ms]
+2026-07-03 15:43:33.327 [warning] [Git][config] git config failed: Failed to execute git
+2026-07-03 15:43:33.372 [info] [Git][getRemotes] No remotes found in the git config file
+2026-07-03 15:43:33.373 [info] > git reflog main --grep-reflog=branch: Created from *. [27ms]
+2026-07-03 15:43:33.382 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [9ms]
+2026-07-03 15:43:33.429 [info] > git status -z -uall [29ms]
+2026-07-03 15:43:33.432 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [5ms]
+2026-07-03 15:43:38.663 [warning] [Model][getRepositoryExact] Failed to get repository realpath for: "/home/vicenteaugusto_useche/.npm/_cacache/tmp/git-cloneG3Ks0m/". Error:Error: ENOENT: no such file or directory, realpath '/home/vicenteaugusto_useche/.npm/_cacache/tmp/git-cloneG3Ks0m/'
+2026-07-03 15:43:38.676 [warning] [Model][getRepositoryExact] Failed to get repository realpath for: "/home/vicenteaugusto_useche/.npm/_cacache/tmp/git-cloneape6iQ/". Error:Error: ENOENT: no such file or directory, realpath '/home/vicenteaugusto_useche/.npm/_cacache/tmp/git-cloneape6iQ/'
+2026-07-03 15:43:40.750 [info] [Git][getRemotes] No remotes found in the git config file
+2026-07-03 15:43:40.750 [info] > git config --get commit.template [17ms]
+2026-07-03 15:43:40.751 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [2ms]
+2026-07-03 15:43:40.779 [info] > git status -z -uall [15ms]
+2026-07-03 15:43:40.781 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [3ms]

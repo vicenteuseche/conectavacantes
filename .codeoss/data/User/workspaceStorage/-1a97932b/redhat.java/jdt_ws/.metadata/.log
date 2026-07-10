@@ -1,0 +1,369 @@
+!SESSION 2026-07-02 21:17:02.467 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=21.0.11
+java.vendor=Ubuntu
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  --pipe=/tmp/lsp-1c5c7f701cd48b2dcbb5179c676de181.sock
+Command-line arguments:  -data /home/vicenteaugusto_useche/.codeoss/data/User/workspaceStorage/-1a97932b/redhat.java/jdt_ws --pipe=/tmp/lsp-1c5c7f701cd48b2dcbb5179c676de181.sock
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:10.610
+!MESSAGE class org.eclipse.jdt.ls.core.internal.JavaLanguageServerPlugin is started
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:11.118
+!MESSAGE Started org.eclipse.buildship.core 404ms
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:11.120
+!MESSAGE Started org.eclipse.m2e.core 0ms
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:11.556
+!MESSAGE Main thread is waiting
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:11.740
+!MESSAGE >> initialize
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:11.770
+!MESSAGE Initializing JDT Language Server (Standard)
+	- Version: 1.59.0-SNAPSHOT (OSGi 1.59.0.202604240842)
+	- Git Commit: 3b74b0e - Add regenerate hashCode()/equals() method quick-fix (#3764)
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.527
+!MESSAGE ProjectRegistryRefreshJob finished 2406ms
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.836
+!MESSAGE Setting /usr/lib/jvm/java-21-openjdk-amd64 as 'JavaSE-21' environment (id:1783027033722)
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.871
+!MESSAGE Setting /usr/lib/jvm/java-17-openjdk-amd64 as 'JavaSE-17' environment (id:1783027033853)
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.878
+!MESSAGE JVM Runtimes changed, saving new configuration
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.912
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-debug/server/com.microsoft.java.debug.plugin-0.53.2.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.917
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-dependency/server/com.microsoft.jdtls.ext.core-0.24.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.926
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/com.microsoft.java.test.plugin-0.43.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.937
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-api_5.14.3.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.957
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-api_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.967
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-engine_5.14.3.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.977
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-engine_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.981
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-migrationsupport_5.14.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.990
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-params_5.14.3.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:13.995
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-params_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.003
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-commons_1.14.3.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.013
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-commons_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.017
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-engine_1.14.3.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.033
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-engine_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.059
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-launcher_1.14.3.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.071
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-launcher_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.078
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-runner_1.14.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.086
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-suite-api_1.14.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.094
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-suite-api_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.099
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-suite-commons_1.14.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.108
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-suite-engine_1.14.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.113
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-suite-engine_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.121
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-vintage-engine_5.14.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.126
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/org.apiguardian.api_1.1.2.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.131
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/org.eclipse.jdt.junit4.runtime_1.4.0.v20251113-1434.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.139
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/org.eclipse.jdt.junit5.runtime_1.2.0.v20251113-1434.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.144
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/org.eclipse.jdt.junit6.runtime_1.0.0.v20251112-1701.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.156
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/org.jacoco.core_0.8.14.202510111229.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.164
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/org.opentest4j_1.3.0.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.172
+!MESSAGE Installed reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-maven/jdtls.ext/com.microsoft.java.maven.plugin/target/com.microsoft.java.maven.plugin-0.39.0.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.222
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-launcher_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.250
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-engine_5.14.3.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.275
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/org.eclipse.jdt.junit4.runtime_1.4.0.v20251113-1434.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.359
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-dependency/server/com.microsoft.jdtls.ext.core-0.24.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.361
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-engine_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.368
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-commons_1.14.3.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.386
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-suite-commons_1.14.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.387
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-suite-api_1.14.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.411
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-params_5.14.3.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.423
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-suite-engine_1.14.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.439
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-params_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.455
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-suite-engine_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.477
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/org.eclipse.jdt.junit6.runtime_1.0.0.v20251112-1701.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.485
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-runner_1.14.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.486
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-api_5.14.3.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.492
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-vintage-engine_5.14.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.498
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/org.jacoco.core_0.8.14.202510111229.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.527
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-debug/server/com.microsoft.java.debug.plugin-0.53.2.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.528
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-engine_1.14.3.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.529
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-launcher_1.14.3.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.530
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-commons_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.531
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-api_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.532
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/org.apiguardian.api_1.1.2.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.533
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/org.opentest4j_1.3.0.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.786
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/com.microsoft.java.test.plugin-0.43.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.787
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/org.eclipse.jdt.junit5.runtime_1.2.0.v20251113-1434.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.788
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-migrationsupport_5.14.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.790
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-jupiter-engine_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.791
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-java-test/server/junit-platform-suite-api_6.0.1.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.848
+!MESSAGE Started reference:file:/google/devshell/editor/code-oss-for-cloud-shell/extensions/vscjava.vscode-maven/jdtls.ext/com.microsoft.java.maven.plugin/target/com.microsoft.java.maven.plugin-0.39.0.jar
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.856
+!MESSAGE Static Commands: []
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.856
+!MESSAGE Non-Static Commands: [java.project.import, java.project.changeImportedProjects, java.navigate.openTypeHierarchy, java.project.resolveStackTraceLocation, java.edit.handlePasteEvent, java.edit.stringFormatting, java.project.getSettings, java.project.resolveWorkspaceSymbol, java.project.upgradeGradle, java.project.createModuleInfo, java.vm.getAllInstalls, java.edit.organizeImports, java.project.refreshDiagnostics, java.project.removeFromSourcePath, java.project.listSourcePaths, java.project.updateSettings, java.project.getAll, java.reloadBundles, java.project.isTestFile, java.project.resolveText, java.project.getClasspaths, java.navigate.resolveTypeHierarchy, java.getTroubleshootingInfo, java.edit.smartSemicolonDetection, java.project.updateSourceAttachment, java.project.updateClassPaths, java.decompile, java.protobuf.generateSources, java.project.resolveSourceAttachment, java.project.updateJdk, java.project.addToSourcePath, java.completion.onDidSelect]
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.857
+!MESSAGE Static Commands: []
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.857
+!MESSAGE Non-Static Commands: [java.project.refreshLib, java.project.checkImportStatus, java.project.list, java.project.generateJar, java.project.getFileImports, java.project.getMainClasses, java.project.getImportClassContent, java.getPackageData, java.project.getDependencies, java.resolvePath]
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.858
+!MESSAGE Static Commands: []
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.858
+!MESSAGE Non-Static Commands: [vscode.java.checkProjectSettings, vscode.java.isOnClasspath, vscode.java.fetchUsageData, vscode.java.validateLaunchConfig, vscode.java.resolveInlineVariables, vscode.java.resolveClassFilters, vscode.java.resolveMainMethod, vscode.java.resolveClasspath, vscode.java.resolveBuildFiles, vscode.java.resolveMainClass, vscode.java.updateDebugSettings, vscode.java.resolveSourceUri, vscode.java.fetchPlatformSettings, vscode.java.buildWorkspace, vscode.java.startDebugSession, vscode.java.inferLaunchCommandLength, vscode.java.resolveElementAtSelection, vscode.java.resolveJavaExecutable]
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.859
+!MESSAGE Static Commands: []
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.859
+!MESSAGE Non-Static Commands: [vscode.java.test.jacoco.getCoverageDetail, vscode.java.test.findJavaProjects, vscode.java.test.findTestPackagesAndTypes, vscode.java.test.findTestTypesAndMethods, vscode.java.test.resolvePath, vscode.java.test.findTestLocation, vscode.java.test.get.testpath, vscode.java.test.findDirectTestChildrenForClass, vscode.java.test.navigateToTestOrTarget, vscode.java.test.junit.argument, vscode.java.test.generateTests]
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.860
+!MESSAGE Static Commands: []
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.860
+!MESSAGE Non-Static Commands: [java.maven.initializeSearcher, java.maven.searchArtifact, java.maven.addDependency, java.maven.controlContext]
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.897
+!MESSAGE RepositoryRegistryUpdateJob finished 1ms
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.941
+!MESSAGE >> initialized
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:14.966
+!MESSAGE Importers: GradleProjectImporter, MavenProjectImporter, EclipseProjectImporter, InvisibleProjectImporter
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:15.576
+!MESSAGE Workspace initialized in 680ms
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:15.588
+!MESSAGE >> initialization job finished
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:15.723
+!MESSAGE >> build jobs finished
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:15.723
+!MESSAGE >> registerWatchers'
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-02 21:17:15.727
+!MESSAGE >> registerFeature 'workspace/didChangeWatchedFiles'
+!SESSION 2026-07-03 14:10:11.188 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=21.0.11
+java.vendor=Ubuntu
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  --pipe=/tmp/lsp-2799ac5909074787b635420f8c4132a3.sock
+Command-line arguments:  -data /home/vicenteaugusto_useche/.codeoss/data/User/workspaceStorage/-1a97932b/redhat.java/jdt_ws --pipe=/tmp/lsp-2799ac5909074787b635420f8c4132a3.sock
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:18.816
+!MESSAGE class org.eclipse.jdt.ls.core.internal.JavaLanguageServerPlugin is started
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:19.010
+!MESSAGE Started org.eclipse.buildship.core 158ms
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:19.011
+!MESSAGE Started org.eclipse.m2e.core 0ms
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:19.321
+!MESSAGE Main thread is waiting
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:19.387
+!MESSAGE >> initialize
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:19.393
+!MESSAGE Initializing JDT Language Server (Standard)
+	- Version: 1.59.0-SNAPSHOT (OSGi 1.59.0.202604240842)
+	- Git Commit: 3b74b0e - Add regenerate hashCode()/equals() method quick-fix (#3764)
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:20.862
+!MESSAGE ProjectRegistryRefreshJob finished 1850ms
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:20.994
+!MESSAGE Static Commands: []
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:20.995
+!MESSAGE Non-Static Commands: [java.project.import, java.project.changeImportedProjects, java.navigate.openTypeHierarchy, java.project.resolveStackTraceLocation, java.edit.handlePasteEvent, java.edit.stringFormatting, java.project.getSettings, java.project.resolveWorkspaceSymbol, java.project.upgradeGradle, java.project.createModuleInfo, java.vm.getAllInstalls, java.edit.organizeImports, java.project.refreshDiagnostics, java.project.removeFromSourcePath, java.project.listSourcePaths, java.project.updateSettings, java.project.getAll, java.reloadBundles, java.project.isTestFile, java.project.resolveText, java.project.getClasspaths, java.navigate.resolveTypeHierarchy, java.getTroubleshootingInfo, java.edit.smartSemicolonDetection, java.project.updateSourceAttachment, java.project.updateClassPaths, java.decompile, java.protobuf.generateSources, java.project.resolveSourceAttachment, java.project.updateJdk, java.project.addToSourcePath, java.completion.onDidSelect]
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:20.996
+!MESSAGE Static Commands: []
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:20.997
+!MESSAGE Non-Static Commands: [vscode.java.checkProjectSettings, vscode.java.isOnClasspath, vscode.java.fetchUsageData, vscode.java.validateLaunchConfig, vscode.java.resolveInlineVariables, vscode.java.resolveClassFilters, vscode.java.resolveMainMethod, vscode.java.resolveClasspath, vscode.java.resolveBuildFiles, vscode.java.resolveMainClass, vscode.java.updateDebugSettings, vscode.java.resolveSourceUri, vscode.java.fetchPlatformSettings, vscode.java.buildWorkspace, vscode.java.startDebugSession, vscode.java.inferLaunchCommandLength, vscode.java.resolveElementAtSelection, vscode.java.resolveJavaExecutable]
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:20.998
+!MESSAGE Static Commands: []
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:20.998
+!MESSAGE Non-Static Commands: [java.project.refreshLib, java.project.checkImportStatus, java.project.list, java.project.generateJar, java.project.getFileImports, java.project.getMainClasses, java.project.getImportClassContent, java.getPackageData, java.project.getDependencies, java.resolvePath]
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:20.999
+!MESSAGE Static Commands: []
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:20.999
+!MESSAGE Non-Static Commands: [vscode.java.test.jacoco.getCoverageDetail, vscode.java.test.findJavaProjects, vscode.java.test.findTestPackagesAndTypes, vscode.java.test.findTestTypesAndMethods, vscode.java.test.resolvePath, vscode.java.test.findTestLocation, vscode.java.test.get.testpath, vscode.java.test.findDirectTestChildrenForClass, vscode.java.test.navigateToTestOrTarget, vscode.java.test.junit.argument, vscode.java.test.generateTests]
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:21.000
+!MESSAGE Static Commands: []
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:21.001
+!MESSAGE Non-Static Commands: [java.maven.initializeSearcher, java.maven.searchArtifact, java.maven.addDependency, java.maven.controlContext]
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:21.062
+!MESSAGE >> initialized
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:21.064
+!MESSAGE RepositoryRegistryUpdateJob finished 1ms
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:21.104
+!MESSAGE Importers: GradleProjectImporter, MavenProjectImporter, EclipseProjectImporter, InvisibleProjectImporter
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:21.452
+!MESSAGE Workspace initialized in 388ms
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:21.458
+!MESSAGE >> initialization job finished
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:21.584
+!MESSAGE >> build jobs finished
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:21.585
+!MESSAGE >> registerWatchers'
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:10:21.593
+!MESSAGE >> registerFeature 'workspace/didChangeWatchedFiles'
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:12:24.142
+!MESSAGE >> shutdown
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:12:24.284
+!MESSAGE >> exit
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:12:24.289
+!MESSAGE Shutdown received... waking up main thread
+
+!ENTRY org.eclipse.jdt.ls.core 1 0 2026-07-03 14:12:24.307
+!MESSAGE class org.eclipse.jdt.ls.core.internal.JavaLanguageServerPlugin is stopping:
