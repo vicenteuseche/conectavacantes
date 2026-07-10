@@ -1,12 +1,195 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ConectaVacantes</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConectaVacantes - Encuentra empleo remoto</title>
+    
+    <!-- Fuentes modernas (Geist, Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;500;600;700;800;900&family=Geist+Mono:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Geist', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        'mono': ['Geist Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+                    },
+                    colors: {
+                        background: 'oklch(14.5% 0 0)',
+                        foreground: 'oklch(98.5% 0 0)',
+                        primary: {
+                            DEFAULT: 'oklch(48.8% 0 0)',
+                            foreground: 'oklch(98.5% 0 0)'
+                        },
+                        card: {
+                            DEFAULT: 'oklch(20.5% 0 0)',
+                            foreground: 'oklch(98.5% 0 0)'
+                        },
+                        muted: {
+                            DEFAULT: 'oklch(26.9% 0 0)',
+                            foreground: 'oklch(70.8% 0 0)'
+                        },
+                        accent: {
+                            DEFAULT: 'oklch(26.9% 0 0)',
+                            foreground: 'oklch(98.5% 0 0)'
+                        },
+                        border: 'oklch(100% 0 0/.1)',
+                        input: 'oklch(100% 0 0/.15)',
+                        ring: 'oklch(55.6% 0 0)'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="min-h-screen bg-background text-foreground font-sans antialiased">
+    <div id="root" class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="border-b border-border bg-card/50 backdrop-blur-sm">
+            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z"/>
+                        <path d="M17 11l-5 5-5-5"/>
+                    </svg>
+                    <h1 class="text-xl font-semibold text-foreground">ConectaVacantes</h1>
+                </div>
+                <nav class="flex items-center space-x-4">
+                    <a href="#features" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Características</a>
+                    <a href="#api-status" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Estado API</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <main class="flex-1">
+            <section class="container mx-auto px-4 py-20 text-center">
+                <div class="mx-auto max-w-3xl space-y-8">
+                    <div class="space-y-4">
+                        <h2 class="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+                            Encuentra tu trabajo remoto ideal
+                        </h2>
+                        <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+                            Genera cartas de presentación profesionales y encuentra vacantes que coincidan con tu perfil usando IA
+                        </p>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+                        <button onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})" 
+                            class="px-8 py-3 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 transition-all duration-200 shadow-lg hover:shadow-xl">
+                            Comenzar ahora
+                        </button>
+                        <button onclick="document.getElementById('api-status').scrollIntoView({behavior: 'smooth'})" 
+                            class="px-8 py-3 border border-border bg-background hover:bg-accent hover:text-accent-foreground font-medium rounded-lg transition-all duration-200">
+                            Ver API Status
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features" class="container mx-auto px-4 py-20">
+                <div class="mx-auto max-w-5xl">
+                    <div class="text-center mb-12">
+                        <h3 class="text-3xl font-bold tracking-tight text-foreground mb-4">Características principales</h3>
+                        <p class="text-muted-foreground">Herramientas diseñadas para impulsar tu carrera profesional</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="group relative p-8 bg-card rounded-2xl border border-border transition-all duration-300 hover:shadow-lg">
+                            <div class="absolute inset-0 rounded-2xl bg-gradient-to-b from-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="relative">
+                                <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-purple-600/20 text-purple-600">
+                                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                        <path d="M2 17l10 5 10-5"/>
+                                        <path d="M2 12l10 5 10-5"/>
+                                    </svg>
+                                </div>
+                                <h4 class="text-xl font-semibold text-foreground mb-2">Generador de Cartas</h4>
+                                <p class="text-muted-foreground">
+                                    Crea cartas de presentación profesionales optimizadas para ATS con ayuda de IA
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="group relative p-8 bg-card rounded-2xl border border-border transition-all duration-300 hover:shadow-lg">
+                            <div class="absolute inset-0 rounded-2xl bg-gradient-to-b from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="relative">
+                                <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-500">
+                                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="M21 21l-4.35-4.35"/>
+                                    </svg>
+                                </div>
+                                <h4 class="text-xl font-semibold text-foreground mb-2">Búsqueda de Vacantes</h4>
+                                <p class="text-muted-foreground">
+                                    Encuentra empleos remotos que coincidan con tu perfil y habilidades
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="group relative p-8 bg-card rounded-2xl border border-border transition-all duration-300 hover:shadow-lg">
+                            <div class="absolute inset-0 rounded-2xl bg-gradient-to-b from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="relative">
+                                <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-amber-500/20 text-amber-500">
+                                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 0 2 2z"/>
+                                    </svg>
+                                </div>
+                                <h4 class="text-xl font-semibold text-foreground mb-2">Asistente IA</h4>
+                                <p class="text-muted-foreground">
+                                    Obtén ayuda personalizada de nuestro asistente de carrera inteligente
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API Status Section -->
+            <section id="api-status" class="container mx-auto px-4 py-12">
+                <div class="mx-auto max-w-2xl">
+                    <div class="p-6 bg-card rounded-2xl border border-border">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="h-3 w-3 bg-emerald-500 rounded-full animate-pulse"></div>
+                            <span class="text-sm font-medium text-foreground">API Status: Online</span>
+                        </div>
+                        <div class="space-y-2 text-sm text-muted-foreground">
+                            <p>• Generación de cartas con IA: Disponible</p>
+                            <p>• Búsqueda de vacantes: Disponible</p>
+                            <p>• Asistente de chat: Disponible</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-border bg-card/50">
+            <div class="container mx-auto px-4 py-8">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-sm text-muted-foreground">
+                        &copy; 2025 ConectaVacantes. Todos los derechos reservados.
+                    </p>
+                    <div class="flex items-center space-x-4 text-sm text-muted-foreground">
+                        <span>Hecho con Flask + Gemini AI</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
 </html>

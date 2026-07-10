@@ -1,84 +1,208 @@
-/* ConectaVacantes - Estilos básicos */
-* {
+/* ConectaVacantes - Estilos modernos con fuentes Geist/Inter */
+
+/* Reset y base */
+*, ::before, ::after {
+    box-sizing: border-box;
+    border: 0 solid;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
+/* Configuración de fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;500;600;700;800;900&family=Geist+Mono:wght@100;200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Fuente base */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    color: #f8fafc;
+    font-family: var(--font-sans);
+    background-color: oklch(14.5% 0 0);
+    color: oklch(98.5% 0 0);
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-#root {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
+/* Dark mode */
+.dark {
+    --background: oklch(14.5% 0 0);
+    --foreground: oklch(98.5% 0 0);
+    --card: oklch(20.5% 0 0);
+    --card-foreground: oklch(98.5% 0 0);
+    --primary: oklch(48.8% 0 0);
+    --primary-foreground: oklch(98.5% 0 0);
+    --muted: oklch(26.9% 0 0);
+    --muted-foreground: oklch(70.8% 0 0);
+    --accent: oklch(26.9% 0 0);
+    --accent-foreground: oklch(98.5% 0 0);
+    --border: oklch(100% 0 0/.1);
+    --input: oklch(100% 0 0/.15);
+    --ring: oklch(55.6% 0 0);
 }
 
-header {
-    text-align: center;
-    margin-bottom: 3rem;
-    padding: 2rem 0;
-    border-bottom: 1px solid #334155;
+/* Animaciones */
+@keyframes pulse {
+    50% { opacity: 0.5; }
 }
 
-header h1 {
-    font-size: 2.5rem;
-    color: #6366f1;
-    margin-bottom: 0.5rem;
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-header p {
-    color: #94a3b8;
-    font-size: 1.1rem;
+/* Utilidades */
+.sr-only {
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    position: absolute;
+    overflow: hidden;
 }
 
-.hero {
-    text-align: center;
-    margin-bottom: 4rem;
+/* Contenedor */
+.container {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 1rem;
+    padding-left: 1rem;
 }
 
-.hero h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: #f1f5f9;
+@media (min-width: 64rem) {
+    .container {
+        max-width: 64rem;
+    }
 }
 
-.hero p {
-    color: #cbd5e1;
-    font-size: 1.2rem;
-}
-
-.features {
+/* Grid responsivo */
+.grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
-    margin-top: 2rem;
 }
 
-.feature-card {
-    background: rgba(99, 102, 241, 0.1);
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    border-radius: 12px;
-    padding: 2rem;
-    text-align: center;
-    transition: transform 0.3s ease;
+@media (min-width: 768px) {
+    .md\:grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 }
 
-.feature-card:hover {
-    transform: translateY(-5px);
+/* Flex utilities */
+.flex {
+    display: flex;
 }
 
-.feature-card h3 {
-    color: #818cf8;
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
+.items-center {
+    align-items: center;
 }
 
-.feature-card p {
-    color: #e2e8f0;
-    line-height: 1.6;
+.justify-between {
+    justify-content: space-between;
+}
+
+.space-x-2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+/* Tipografía */
+.text-foreground { color: var(--foreground); }
+.text-muted-foreground { color: var(--muted-foreground); }
+.text-primary { color: var(--primary); }
+.text-primary-foreground { color: var(--primary-foreground); }
+
+.text-xs { font-size: 0.75rem; line-height: 1rem; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+.text-2xl { font-size: 1.5rem; line-height: 2rem; }
+.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+.text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+.text-5xl { font-size: 3rem; line-height: 1; }
+
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+/* Bordes y sombras */
+.border {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--border);
+}
+
+.border-t {
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-color: var(--border);
+}
+
+.rounded-lg {
+    border-radius: 0.5rem;
+}
+
+.rounded-2xl {
+    border-radius: 1rem;
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* Transiciones */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 0.15s;
+}
+
+/* Tamaños */
+.h-3 { height: 0.75rem; }
+.w-3 { width: 0.75rem; }
+.h-6 { height: 1.5rem; }
+.w-6 { width: 1.5rem; }
+.h-12 { height: 3rem; }
+.w-12 { width: 3rem; }
+
+/* Colores de fondo */
+.bg-background { background-color: var(--background); }
+.bg-card { background-color: var(--card); }
+.bg-muted { background-color: var(--muted); }
+.bg-primary { background-color: var(--primary); }
+
+/* Hover states */
+.hover\:bg-primary\/90:hover { background-color: color-mix(in oklab, var(--primary) 90%, transparent); }
+.hover\:text-foreground:hover { color: var(--foreground); }
+
+/* Backdrop blur */
+.backdrop-blur-sm {
+    backdrop-filter: blur(8px);
+}
+
+/* Ocultar scrollbar pero mantener funcionalidad */
+.overflow-auto::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.overflow-auto::-webkit-scrollbar-track {
+    background: var(--muted);
+    border-radius: 4px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+/* Responsive */
+@media (min-width: 640px) {
+    .sm\:text-5xl { font-size: 3rem; line-height: 1; }
 }
