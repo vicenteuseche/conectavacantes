@@ -1,13 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# Node.js (no longer used, kept for reference)
 node_modules/
-build/
+npm-debug.log*
+
+# Build
 dist/
+build/
 coverage/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
-*.log
+Thumbs.db
+
+# Env
 .env*
 !.env.example
-<<<<<<< HEAD
 
+# Vercel
+.vercel/
 .vercel
-=======
->>>>>>> 1742d16c17d75e6b70e636f44838e48de8d81b58
