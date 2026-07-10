@@ -1,0 +1,35 @@
+# Dependencias pesadas a ignorar
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+.pytest_cache
+.mypy_cache
+
+# Archivos de desarrollo
+.git
+.github
+docs/
+scripts/
+.docker/
+docker-compose*.y*ml
+Dockerfile
+
+# Archivos grandes no necesarios
+*.egg-info/
+.eggs/
+*.log
+
+# Cache de Python
+.python-version
+.pyupdater/
