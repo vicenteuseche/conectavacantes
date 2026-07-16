@@ -9,12 +9,15 @@ import json
 import base64
 import hashlib
 import secrets
+import logging
+import time
 from datetime import datetime, timedelta
 from collections import defaultdict
 from functools import wraps
 from io import BytesIO
+from typing import Optional
 
-from flask import Flask, request, jsonify, render_template_string, g
+from flask import Flask, request, jsonify, render_template_string, g, session
 import httpx
 from dotenv import load_dotenv
 import google.generativeai as genai
@@ -22,6 +25,56 @@ import PyPDF2
 import docx
 import jwt
 from authlib.integrations.flask_client import OAuth
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Circuit Breaker for external APIs
+class CircuitBreaker:
+    def __init__(self, failure_threshold: int = 5, recovery_timeout: int = 60):
+        self.failure_threshold = failure_threshold
+        self.recovery_timeout = recovery_timeout
+        self.failure_count = defaultdict(int)
+        self.last_failure_time = defaultdict(float)
+        self.state = defaultdict(lambda: "CLOSED")  # CLOSED, OPEN, HALF_OPEN
+
+    def call(self, service: str):
+        def decorator(func):
+            @wraps(func)
+            async def wrapper(*args, **kwargs):
+                if self.state[service] == "OPEN":
+                    if time.time() - self.last_failure_time[service] > self.recovery_timeout:
+                        self.state[service] = "HALF_OPEN"
+                    else:
+                        logger.warning(f"Circuit breaker OPEN for {service}")
+                        return []
+                
+                try:
+                    result = await func(*args, **kwargs)
+                    self.failure_count[service] = 0
+                    self.state[service] = "CLOSED"
+                    return result
+                except Exception as e:
+                    self.failure_count[service] += 1
+                    self.last_failure_time[service] = time.time()
+                    if self.failure_count[service] >= self.failure_threshold:
+                        self.state[service] = "OPEN"
+                    logger.error(f"Circuit breaker failure for {service}: {e}")
+                    return []
+            return wrapper
+        return decorator
+
+circuit_breaker = CircuitBreaker()
+
+# CSRF Protection
+def generate_csrf_token():
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = secrets.token_hex(32)
+    return session['_csrf_token']
+
+def validate_csrf_token(token: str) -> bool:
+    return token and session.get('_csrf_token') and secrets.compare_digest(token, session['_csrf_token'])
 
 # Cargar variables de entorno
 load_dotenv()
@@ -312,9 +365,144 @@ async def fetch_remote_jobs(platform: str, query: str = "developer", region: str
             async with httpx.AsyncClient() as client:
                 response = await client.get(url, timeout=15.0)
                 if response.is_success:
-                    return [{"title": query, "company": "Arc.dev", "sourceApi": "arc.dev", "url": url}]
+                    # Parse job listings from Arc.dev
+                    html = response.text
+                    job_pattern = r'href="(https://arc\.dev/remote-jobs/\d+)"[^>]*>([^<]+)</a>'
+                    matches = re.findall(job_pattern, html, re.IGNORECASE)
+                    arc_jobs = []
+                    for match in matches[:5]:
+                        arc_jobs.append({
+                            "title": match[1].strip() if match[1] else query,
+                            "company": "Arc.dev",
+                            "sourceApi": "arc.dev",
+                            "url": match[0] if match[0] else url
+                        })
+                    return arc_jobs if arc_jobs else [{"title": query, "company": "Arc.dev", "sourceApi": "arc.dev", "url": url}]
         except Exception as e:
             print(f"Arc.dev error: {e}")
+        return []
+    
+    async def fetch_haired_app():
+        """Hired.app (haired.app)"""
+        try:
+            url = f"https://www.haired.app/jobs?q={query.replace(' ', '+')}"
+            async with httpx.AsyncClient() as client:
+                response = await client.get(url, timeout=15.0)
+                if response.is_success:
+                    html = response.text
+                    # Extract job listings from haired.app
+                    job_pattern = r'href="(https://www\.haired\.app/job/[^\"]+)"[^>]*>([^<]+)</a>'
+                    matches = re.findall(job_pattern, html, re.IGNORECASE)
+                    haired_jobs = []
+                    for match in matches[:5]:
+                        haired_jobs.append({
+                            "title": match[1].strip() if match[1] else query,
+                            "company": "Hired.app",
+                            "sourceApi": "haired.app",
+                            "url": match[0]
+                        })
+                    return haired_jobs if haired_jobs else [{"title": query, "company": "Hired.app", "sourceApi": "haired.app", "url": url}]
+        except Exception as e:
+            print(f"Hired.app error: {e}")
+        return []
+    
+    async def fetch_jobspresso_co():
+        """Jobspresso.co"""
+        try:
+            url = f"https://jobspresso.co/?s={query.replace(' ', '+')}"
+            async with httpx.AsyncClient() as client:
+                response = await client.get(url, timeout=15.0)
+                if response.is_success:
+                    html = response.text
+                    job_pattern = r'href="(https://jobspresso\.co/job/[^\"]+)"[^>]*>([^<]+)</a>'
+                    matches = re.findall(job_pattern, html, re.IGNORECASE)
+                    jobspresso_jobs = []
+                    for match in matches[:5]:
+                        jobspresso_jobs.append({
+                            "title": match[1].strip() if match[1] else query,
+                            "company": "Jobspresso.co",
+                            "sourceApi": "jobspresso.co",
+                            "url": match[0]
+                        })
+                    return jobspresso_jobs if jobspresso_jobs else [{"title": query, "company": "Jobspresso.co", "sourceApi": "jobspresso.co", "url": url}]
+        except Exception as e:
+            print(f"Jobspresso.co error: {e}")
+        return []
+    
+    async def fetch_linkedin():
+        """LinkedIn Jobs"""
+        try:
+            url = f"https://www.linkedin.com/jobs/search?keywords={query.replace(' ', '+')}"
+            async with httpx.AsyncClient() as client:
+                response = await client.get(url, timeout=15.0, headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+                })
+                if response.is_success:
+                    html = response.text
+                    # LinkedIn job pattern
+                    job_pattern = r'href="(https://www\.linkedin\.com/jobs/view/[^\"]+)"[^>]*>([^<]+)</a>'
+                    matches = re.findall(job_pattern, html, re.IGNORECASE)
+                    linkedin_jobs = []
+                    for match in matches[:5]:
+                        linkedin_jobs.append({
+                            "title": match[1].strip() if match[1] else query,
+                            "company": "LinkedIn",
+                            "sourceApi": "linkedin",
+                            "url": match[0]
+                        })
+                    return linkedin_jobs if linkedin_jobs else [{"title": query, "company": "LinkedIn", "sourceApi": "linkedin", "url": url}]
+        except Exception as e:
+            print(f"LinkedIn error: {e}")
+        return []
+    
+    async def fetch_indeed():
+        """Indeed"""
+        try:
+            url = f"https://www.indeed.com/jobs?q={query.replace(' ', '+')}"
+            async with httpx.AsyncClient() as client:
+                response = await client.get(url, timeout=15.0, headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+                })
+                if response.is_success:
+                    html = response.text
+                    job_pattern = r'href="(https://www\.indeed\.com/viewjob\?jk=[^\"]+)"[^>]*>([^<]+)</a>'
+                    matches = re.findall(job_pattern, html, re.IGNORECASE)
+                    indeed_jobs = []
+                    for match in matches[:5]:
+                        indeed_jobs.append({
+                            "title": match[1].strip() if match[1] else query,
+                            "company": "Indeed",
+                            "sourceApi": "indeed",
+                            "url": match[0]
+                        })
+                    return indeed_jobs if indeed_jobs else [{"title": query, "company": "Indeed", "sourceApi": "indeed", "url": url}]
+        except Exception as e:
+            print(f"Indeed error: {e}")
+        return []
+    
+    async def fetch_upwork():
+        """Upwork (workup)"""
+        try:
+            url = f"https://www.upwork.com/jobs/search?nbs=1&q={query.replace(' ', '+')}"
+            async with httpx.AsyncClient() as client:
+                response = await client.get(url, timeout=15.0, headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+                })
+                if response.is_success:
+                    html = response.text
+                    job_pattern = r'href="(https://www\.upwork\.com/jobs/~[^\"]+)"[^>]*>([^<]+)</a>'
+                    matches = re.findall(job_pattern, html, re.IGNORECASE)
+                    upwork_jobs = []
+                    for match in matches[:5]:
+                        upwork_jobs.append({
+                            "title": match[1].strip() if match[1] else query,
+                            "company": "Upwork",
+                            "sourceApi": "upwork",
+                            "url": match[0]
+                        })
+                    return upwork_jobs if upwork_jobs else [{"title": query, "company": "Upwork", "sourceApi": "upwork", "url": url}]
+        except Exception as e:
+            print(f"Upwork error: {e}")
         return []
     
     # Ejecutar fetchers según plataforma
@@ -324,6 +512,16 @@ async def fetch_remote_jobs(platform: str, query: str = "developer", region: str
         jobs.extend(await fetch_remote_co())
     if platform in ["all", "arc.dev"]:
         jobs.extend(await fetch_arc_dev())
+    if platform in ["all", "haired.app"]:
+        jobs.extend(await fetch_haired_app())
+    if platform in ["all", "jobspresso.co"]:
+        jobs.extend(await fetch_jobspresso_co())
+    if platform in ["all", "linkedin"]:
+        jobs.extend(await fetch_linkedin())
+    if platform in ["all", "indeed"]:
+        jobs.extend(await fetch_indeed())
+    if platform in ["all", "upwork"]:
+        jobs.extend(await fetch_upwork())
     
     return jobs
 
@@ -363,10 +561,79 @@ def generate_realistic_jobs(query: str, skills: list, regions: list) -> list:
 # Email Functions
 # ============================================
 
+# Firebase Admin SDK
+try:
+    import firebase_admin
+    from firebase_admin import credentials, firestore
+    from google.oauth2.credentials import Credentials
+    from googleapiclient.discovery import build
+    FIREBASE_AVAILABLE = True
+except ImportError:
+    FIREBASE_AVAILABLE = False
+
+# Initialize Firebase for persistent storage
+def init_firestore():
+    """Initialize Firestore database"""
+    if FIREBASE_AVAILABLE and not firebase_admin._apps:
+        try:
+            cred = credentials.Certificate({
+                "project_id": os.getenv("FIREBASE_PROJECT_ID"),
+                "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
+                "private_key": os.getenv("FIREBASE_PRIVATE_KEY", "").replace("\\n", "\n"),
+            })
+            firebase_admin.initialize_app(cred)
+            return firestore.client()
+        except Exception as e:
+            logger.warning(f"Firebase init failed: {e}")
+    return None
+
+db = init_firestore()
+
+# Gmail API Integration
+def send_gmail_email(to_email: str, subject: str, body: str) -> dict:
+    """Send email using Gmail API"""
+    try:
+        creds = Credentials(
+            token=os.getenv("GMAIL_REFRESH_TOKEN"),
+            refresh_token=os.getenv("GMAIL_REFRESH_TOKEN"),
+            token_uri="https://oauth2.googleapis.com/token",
+            client_id=os.getenv("GMAIL_CLIENT_ID"),
+            client_secret=os.getenv("GMAIL_CLIENT_SECRET"),
+        )
+        service = build('gmail', 'v1', credentials=creds)
+        
+        import base64
+        from email.mime.text import MIMEText
+        
+        message = MIMEText(body)
+        message['to'] = to_email
+        message['subject'] = subject
+        
+        raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+        send_message = service.users().messages().send(
+            userId='me', body={'raw': raw_message}
+        ).execute()
+        
+        return {
+            "success": True,
+            "messageId": send_message.get('id'),
+            "to": to_email,
+            "subject": subject
+        }
+    except Exception as e:
+        logger.error(f"Gmail API error: {e}")
+        # Fallback to simulated email
+        return send_auto_email(to_email, subject, body)
+
 def send_auto_email(to_email: str, subject: str, body: str, user_email: str = None) -> dict:
-    """Simula envío de correo (en producción usar SendGrid, Mailgun, etc.)"""
-    # En producción, integrar con proveedor de email real
-    # Por ahora, simulamos el envío
+    """Envía correo usando Gmail API o simulación"""
+    if all([
+        os.getenv("GMAIL_CLIENT_ID"),
+        os.getenv("GMAIL_CLIENT_SECRET"),
+        os.getenv("GMAIL_REFRESH_TOKEN")
+    ]):
+        return send_gmail_email(to_email, subject, body)
+    # Fallback simulation
     return {
         "success": True,
         "messageId": f"sim_{secrets.token_hex(8)}",

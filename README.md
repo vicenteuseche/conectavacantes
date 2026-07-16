@@ -1,13 +1,18 @@
 # ConectaVacantes
 
-Aplicación completa en Python con Flask para conectar candidatos con oportunidades laborales remotas.
+Aplicación completa en Python con Flask para conectar candidatos con oportunidades laborales remotas usando IA.
 
 ## 🚀 Características
 
 - **Generador de cartas de presentación** - Optimizadas para ATS (Applicant Tracking System)
-- **Búsqueda de vacantes remotas** - Personalizadas según tu perfil y preferencias
+- **Búsqueda de vacantes remotas** - Personalizadas según tu perfil y preferencias (We Work Remotely, Remote.co, Arc.dev, Hired.app, Jobspresso.co)
 - **Asistente de carrera con IA** - Powered by Google Gemini
-- **Integración OAuth simulada** - Con LinkedIn, Indeed y Workup para demo
+- **Parsing automático de CV** - Extrae nombre, teléfono, email, dirección y habilidades de PDF/DOCX
+- **Autenticación completa** - Login/Register + Google OAuth
+- **Dashboard con gráficos** - Estadísticas de postulaciones y vacantes (Chart.js)
+- **Seguimiento de aplicaciones** - Estados: Enviado, Leído, Sin respuesta, Rechazado
+- **Recomendaciones de cursos** - Cursos gratuitos basados en tus habilidades
+- **Envío automático de correos** - Cuando match > 55%, se envía automáticamente al reclutador
 
 ## 📋 Requisitos
 
@@ -17,7 +22,7 @@ Aplicación completa en Python con Flask para conectar candidatos con oportunida
 ## 🔧 Instalación
 
 ```bash
-# Clonar repositiorio
+# Clonar repositorio
 git clone https://github.com/vicenteuseche/conectavacantes.git
 cd conectavacantes
 
@@ -44,13 +49,21 @@ gunicorn --bind 0.0.0.0:8080 main:app
 | Endpoint | Método | Descripción |
 |----------|--------|-------------|
 | `/api/health` | GET | Verificar estado del servidor |
+| `/api/parse-cv` | POST | Parsear CV y extraer datos (nombre, teléfono, email, habilidades) |
 | `/api/match-vacancies` | POST | Buscar vacantes coincidentes con tu perfil |
 | `/api/generate` | POST | Generar carta de presentación o email |
 | `/api/chat` | POST | Asistente de IA para consultas |
 | `/api/mail/inbox` | GET | Bandeja de entrada simulada |
-| `/auth/callback` | GET | Callback OAuth simulado |
-| `/api/auth/{platform}/url` | GET | URLs de autenticación |
-| `/oauth/{platform}-provider` | GET | Páginas OAuth simuladas |
+| `/api/mail/send` | POST | Enviar correo de postulación |
+| `/api/dashboard/stats` | GET | Estadísticas del dashboard |
+| `/api/dashboard/chart` | GET | Datos para gráficos |
+| `/api/courses` | GET | Recomendaciones de cursos gratuitos |
+| `/api/applications` | GET/POST | Gestión de aplicaciones |
+| `/api/applications/<id>/status` | PATCH | Actualizar estado de aplicación |
+| `/api/auth/register` | POST | Registro de usuario |
+| `/api/auth/login` | POST | Login de usuario |
+| `/api/auth/google/url` | GET | URL de autenticación Google |
+| `/oauth/google-provider` | GET | Página OAuth de Google |
 
 ## 🐳 Despliegue
 
@@ -70,17 +83,16 @@ vercel --prod
 
 ```
 conectavacantes/
-├── main.py              # Aplicación Flask (backend + frontend routing)
+├── main.py              # Aplicación Flask completa
 ├── requirements.txt     # Dependencias Python
-├── Dockerfile           # Imagen Docker
+├── api/
+│   ├── index.py         # API Serverless para Vercel
+│   └── requirements.txt # Dependencias del API
+├── index.html           # Frontend principal
+├── static/app.js        # JavaScript del frontend
+├── static/style.css     # Estilos CSS
 ├── vercel.json          # Configuración Vercel
-├── .env.example         # Variables de entorno
-├── templates/           # Templates HTML
-│   └── index.html
-├── static/              # Archivos estáticos
-│   └── style.css
-├── assets/              # Recursos estáticos
-└── docs/                # Documentación
+└── .env.example         # Variables de entorno
 ```
 
 ## 🔒 Seguridad
@@ -89,6 +101,7 @@ conectavacantes/
 - Rate limiting en endpoints API
 - Validación SSRF para URLs externas
 - CORS habilitado
+- Hashing de contraseñas
 
 ## 📝 Licencia
 
