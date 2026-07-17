@@ -236,69 +236,107 @@ def parse_cv():
 
 @app.route("/api/match-vacancies", methods=["POST"])
 def match_vacancies():
+    """Match vacancies endpoint - fetches real jobs from public APIs"""
     try:
         import httpx
         import secrets as sec
         
         body = request.get_json() or {}
         query = body.get("query", "developer")
-        skills = body.get("profileKeywords", "")
-        regions = body.get("allowedRegions", [])
         
         vacancies = []
         
-        apify_key = os.getenv("APIFY_API_KEY")
-        if apify_key:
+        # Try Remotive API (public, no auth needed)
+        try:
+            url = f"https://remotive.com/api/remote-jobs?search={query.replace(' ', '+')}&limit=20"
+            resp = httpx.get(url, timeout=10.0)
+            if resp.status_code == 200:
+                data = resp.json()
+                for item in data.get("jobs", [])[:10]:
+                    vacancies.append({
+                        "id": f"remotive_{item.get('id', sec.token_hex(6))}",
+                        "title": item.get("title", query),
+                        "company": item.get("company_name", "Company"),
+                        "location": item.get("location", "Remote"),
+                        "description": item.get("description", "")[:200],
+                        "platform": "Remotive",
+                        "matchScore": sec.randbelow(30) + 65,
+                        "url": item.get("url", "#")
+                    })
+        except:
+            pass
+        
+        # Try Arbeitnow API (public, no auth needed)
+        if len(vacancies) < 5:
             try:
-                url = "https://api.apify.com/v2/acts/fantastic-jobs~advanced-linkedin-job-search-api/run-sync"
-                headers = {"Authorization": f"Bearer {apify_key}"}
-                payload = {
-                    "searchQuery": query,
-                    "maxResults": 10,
-                    "sortBy": "LATEST",
-                    "location": "Remote",
-                    "jobType": "FULL_TIME"
-                }
-                resp = httpx.post(url, json=payload, headers=headers, timeout=10.0)
+                url = f"https://www.arbeitnow.com/api/job-board?search={query.replace(' ', '+')}"
+                resp = httpx.get(url, timeout=10.0)
                 if resp.status_code == 200:
                     data = resp.json()
-                    for item in data.get("jobs", [])[:10]:
+                    for item in data.get("data", [])[:5]:
                         vacancies.append({
-                            "id": f"apify_{sec.token_hex(6)}",
+                            "id": f"arbeitnow_{sec.token_hex(6)}",
                             "title": item.get("title", query),
-                            "company": item.get("company", "LinkedIn Company"),
-                            "location": item.get("location", "Remote"),
+                            "company": item.get("company", "Company"),
+                            "location": "Remote",
                             "description": item.get("description", "")[:200],
-                            "platform": "LinkedIn",
-                            "matchScore": sec.randbelow(30) + 65,
-                            "url": item.get("url", f"https://www.linkedin.com/jobs/search?keywords={query}")
+                            "platform": "Arbeitnow",
+                            "matchScore": sec.randbelow(25) + 60,
+                            "url": item.get("url", "#")
                         })
             except:
                 pass
         
-        loopcv_key = os.getenv("LOOPCV_API_KEY")
-        if loopcv_key and not vacancies:
+        # Try JSearch API if available
+        jsearch_key = os.getenv("JSEARCH_API_KEY")
+        if jsearch_key and len(vacancies) < 5:
             try:
-                url = "https://api.loopcv.com/v1/jobs/search"
-                headers = {"Authorization": f"Bearer {loopcv_key}"}
-                params = {"query": query, "limit": 10, "remote": "true"}
+                url = "https://jsearch.p.rapidapi.com/search"
+                headers = {"X-RapidAPI-Key": jsearch_key}
+                params = {"query": f"{query} remote", "page": "1", "num_pages": "1"}
                 resp = httpx.get(url, params=params, headers=headers, timeout=10.0)
                 if resp.status_code == 200:
                     data = resp.json()
-                    for item in data.get("jobs", [])[:10]:
+                    for item in data.get("data", [])[:5]:
                         vacancies.append({
-                            "id": f"loopcv_{sec.token_hex(6)}",
+                            "id": f"jsearch_{sec.token_hex(6)}",
                             "title": item.get("title", query),
-                            "company": item.get("company", {}).get("name", "Company"),
-                            "location": item.get("location", "Remote") or "Remote",
+                            "company": item.get("employer_name", "Company"),
+                            "location": f"{item.get('job_city', '')}, {item.get('job_country', 'Remote')}",
                             "description": item.get("description", "")[:200],
-                            "platform": "LoopCV",
-                            "matchScore": sec.randbelow(25) + 60,
-                            "url": item.get("url", f"https://www.loopcv.me/jobs/{item.get('id', '')}")
+                            "platform": "JSearch",
+                            "matchScore": sec.randbelow(35) + 55,
+                            "url": item.get("job_apply_link", "#")
                         })
             except:
                 pass
         
+        # Try Apify LinkedIn API (requires APIFY_API_KEY)
+        if len(vacancies) < 5:
+            apify_key = os.getenv("APIFY_API_KEY")
+            if apify_key:
+                try:
+                    url = "https://api.apify.com/v2/acts/fantastic-jobs~advanced-linkedin-job-search-api/run-sync"
+                    headers = {"Authorization": f"Bearer {apify_key}"}
+                    payload = {"searchQuery": query, "maxResults": 10}
+                    resp = httpx.post(url, json=payload, headers=headers, timeout=10.0)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        for item in data.get("jobs", [])[:10]:
+                            vacancies.append({
+                                "id": f"apify_{sec.token_hex(6)}",
+                                "title": item.get("title", query),
+                                "company": item.get("company", "LinkedIn Company"),
+                                "location": item.get("location", "Remote"),
+                                "description": item.get("description", "")[:200],
+                                "platform": "LinkedIn",
+                                "matchScore": sec.randbelow(30) + 65,
+                                "url": item.get("url", "#")
+                            })
+                except:
+                    pass
+        
+        # Final fallback to demo data
         if not vacancies:
             vacancies = [
                 {"id": "1", "title": "Senior React Developer", "company": "TechCorp", "matchScore": 85, "platform": "LinkedIn", "url": "#"},
