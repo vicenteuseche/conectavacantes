@@ -163,33 +163,10 @@ def parse_cv():
         filename = cv.get("filename", "")
         text_data = cv.get("textData", "")
         
-        # If text data provided, parse it directly
+# If text data provided, parse it directly
         if text_data:
-            # Extract skills from text
-            skills = []
-            skill_keywords = ["python", "javascript", "react", "vue", "angular", "node", "flask", "django",
-                             "java", "c++", "aws", "docker", "kubernetes", "sql", "mongodb"]
-            text_lower = text_data.lower()
-            for skill in skill_keywords:
-                if skill in text_lower:
-                    skills.append(skill)
-            
-            # Extract email
-            email_match = re.search(r'([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})', text_data)
-            
-            # Extract phone
-            phone_match = re.search(r'(\+?\d{1,3}[\s\-]?\d{2,4}[\s\-]?\d{2,4}[\s\-]?\d{2,4})', text_data)
-            
-            # Extract name (first capitalized line)
-            name_match = re.search(r'^([A-ZÁÉÍÓÚÑ][a-záéíóúñ\s]{2,50})$', text_data, re.MULTILINE)
-            
-            return jsonify({
-                "name": name_match.group(1).strip() if name_match else "Demo Name",
-                "phone": phone_match.group(1).strip() if phone_match else None,
-                "email": email_match.group(1) if email_match else None,
-                "skills": skills[:10],
-                "rawText": text_data[:2000]
-            })
+            # Use the same helper function for consistency
+            return parse_cv_text(text_data)
         
         # If base64 file provided, try to parse it
         if base64_data:
