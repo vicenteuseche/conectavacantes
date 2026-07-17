@@ -46,8 +46,27 @@ def serve_static(path):
         static_dir = os.path.join(os.path.dirname(__file__), '..', 'static')
         file_path = os.path.join(static_dir, path)
         if os.path.exists(file_path):
-            return send_from_directory(static_dir, path)
+            # Determine mimetype
+            import mimetypes
+            mime_type, _ = mimetypes.guess_type(file_path)
+            if mime_type is None:
+                mime_type = 'application/octet-stream'
+            with open(file_path, 'rb') as f:
+                return f.read(), 200, {'Content-Type': mime_type}
         return jsonify({"error": "Static file not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/app.js')
+def serve_app_js():
+    """Serve app.js directly"""
+    try:
+        app_js_path = os.path.join(os.path.dirname(__file__), '..', 'static', 'app.js')
+        if os.path.exists(app_js_path):
+            with open(app_js_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            return Response(content, mimetype='application/javascript')
+        return jsonify({"error": "app.js not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
