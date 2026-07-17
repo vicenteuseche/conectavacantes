@@ -338,7 +338,7 @@ def fetch_all_job_sources(query: str) -> list:
     
     # Intentar con LoopCV (alternativa)
     loopcv_jobs = search_loopcv_api(query)
-    all_jobs.extend(looopcv_jobs)
+    all_jobs.extend(loopcv_jobs)
     
     # Intentar con RemoteOK
     remoteok_jobs = search_remoteok(query)
