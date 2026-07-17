@@ -1,6 +1,7 @@
 /**
  * ConectaVacantes - Frontend JavaScript Completo
  * Funcionalidad para los 4 pasos: Perfil, Vacantes, Dashboard, Seguimiento
+ * FLUJO OBLIGATORIO: Login -> Perfil -> Vacantes -> Dashboard -> Seguimiento
  */
 
 // Estado global de la aplicación
@@ -11,7 +12,10 @@ let appState = {
     profile: null,
     jobs: [],
     applications: [],
-    chart: null
+    chart: null,
+    evaluatedVacancies: [],
+    matchedVacancies: [],
+    isFirstVisit: true
 };
 
 // Inicialización
@@ -31,13 +35,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (savedToken && savedUser) {
         appState.token = savedToken;
         appState.user = JSON.parse(savedUser);
+        appState.isFirstVisit = false;
         updateAuthUI();
-    }
-    
-    // Actualizar dashboard si está autenticado
-    if (appState.token) {
-        loadDashboardStats();
-        loadApplications();
+        // Si ya está autenticado, mostrar la sección de perfil
+        showSection('perfil');
+    } else {
+        // PRIMER INGRESO: Mostrar welcome y forzar login
+        showSection('welcome');
+        // Auto-abrir el modal de autenticación
+        setTimeout(function() {
+            openAuthModal();
+        }, 500);
     }
 });
 
@@ -70,7 +78,15 @@ async function apiCall(endpoint, options = {}) {
     return response.json();
 }
 
-// Auth Functions
+// Modal Functions
+function openDetailsModal() {
+    document.getElementById('details-modal').classList.remove('hidden');
+}
+
+function closeDetailsModal() {
+    document.getElementById('details-modal').classList.add('hidden');
+}
+
 function openAuthModal() {
     document.getElementById('auth-modal').classList.remove('hidden');
 }
@@ -79,6 +95,206 @@ function closeAuthModal() {
     document.getElementById('auth-modal').classList.add('hidden');
 }
 
+// Stats Detail Functions
+async function showEvaluatedVacancies() {
+    const titleEl = document.getElementById('details-modal-title');
+    const contentEl = document.getElementById('details-modal-content');
+    
+    titleEl.textContent = 'Vacantes Evaluadas';
+    contentEl.innerHTML = '<p class="text-muted-foreground">Cargando detalles...</p>';
+    openDetailsModal();
+    
+    try {
+        const result = await apiCall('/api/dashboard/evaluated');
+        const vacancies = result.vacancies || getMockEvaluatedVacancies();
+        
+        contentEl.innerHTML = `
+            <div class="space-y-4">
+                <p class="text-muted-foreground mb-4">Total de vacantes evaluadas: <strong class="text-foreground">${vacancies.length}</strong></p>
+                <div class="overflow-x-auto max-h-96">
+                    <table class="w-full bg-card rounded-lg border border-border">
+                        <thead>
+                            <tr class="border-b border-border">
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">#</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Vacante</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Empresa</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Match</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Plataforma</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${vacancies.map((v, idx) => `
+                                <tr class="border-b border-border">
+                                    <td class="px-3 py-2 text-sm text-muted-foreground">${idx + 1}</td>
+                                    <td class="px-3 py-2 text-sm text-foreground">${v.title}</td>
+                                    <td class="px-3 py-2 text-sm text-muted-foreground">${v.company}</td>
+                                    <td class="px-3 py-2">
+                                        <span class="px-2 py-1 rounded-full text-xs ${v.matchScore > 55 ? 'bg-success/20 text-success' : 'bg-warning/20 text-warning'}">${v.matchScore}%</span>
+                                    </td>
+                                    <td class="px-3 py-2 text-sm text-muted-foreground">${v.platform}</td>
+                                    <td class="px-3 py-2">
+                                        <a href="${v.url || `https://${v.platform.toLowerCase().replace(' ', '')}.com/jobs/${v.id}`}" target="_blank" class="px-2 py-1 bg-primary/20 text-primary rounded text-xs hover:bg-primary/30">Ver vacante</a>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        contentEl.innerHTML = '<p class="text-muted-foreground">No se pudieron cargar los detalles</p>';
+    }
+}
+
+async function showMatchedVacancies() {
+    const titleEl = document.getElementById('details-modal-title');
+    const contentEl = document.getElementById('details-modal-content');
+    
+    titleEl.textContent = 'Perfiles Emparejados';
+    contentEl.innerHTML = '<p class="text-muted-foreground">Cargando detalles...</p>';
+    openDetailsModal();
+    
+    try {
+        const result = await apiCall('/api/dashboard/matched');
+        const matched = result.vacancies || getMockMatchedVacancies();
+        
+        contentEl.innerHTML = `
+            <div class="space-y-4">
+                <p class="text-muted-foreground mb-4">Total de perfiles emparejados: <strong class="text-success">${matched.length}</strong></p>
+                <div class="overflow-x-auto max-h-96">
+                    <table class="w-full bg-card rounded-lg border border-border">
+                        <thead>
+                            <tr class="border-b border-border">
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">#</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Vacante</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Empresa</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Match</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Plataforma</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${matched.map((v, idx) => `
+                                <tr class="border-b border-border">
+                                    <td class="px-3 py-2 text-sm text-muted-foreground">${idx + 1}</td>
+                                    <td class="px-3 py-2 text-sm text-foreground">${v.title}</td>
+                                    <td class="px-3 py-2 text-sm text-muted-foreground">${v.company}</td>
+                                    <td class="px-3 py-2">
+                                        <span class="px-2 py-1 bg-success/20 text-success rounded-full text-xs font-medium">${v.matchScore}%</span>
+                                    </td>
+                                    <td class="px-3 py-2 text-sm text-muted-foreground">${v.platform}</td>
+                                    <td class="px-3 py-2">
+                                        <a href="${v.url || `https://${v.platform.toLowerCase().replace(' ', '')}.com/jobs/${v.id}`}" target="_blank" class="px-2 py-1 bg-success/20 text-success rounded text-xs hover:bg-success/30">Ver vacante</a>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        contentEl.innerHTML = '<p class="text-muted-foreground">No se pudieron cargar los detalles</p>';
+    }
+}
+
+async function showSentApplications() {
+    const titleEl = document.getElementById('details-modal-title');
+    const contentEl = document.getElementById('details-modal-content');
+    
+    titleEl.textContent = 'Postulaciones Enviadas';
+    contentEl.innerHTML = '<p class="text-muted-foreground">Cargando detalles...</p>';
+    openDetailsModal();
+    
+    try {
+        const result = await apiCall('/api/applications');
+        const applications = result.applications || [];
+        
+        contentEl.innerHTML = `
+            <div class="space-y-4">
+                <p class="text-muted-foreground mb-4">Total de postulaciones: <strong class="text-amber-500">${applications.length}</strong></p>
+                <div class="overflow-x-auto max-h-96">
+                    <table class="w-full bg-card rounded-lg border border-border">
+                        <thead>
+                            <tr class="border-b border-border">
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">#</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Vacante</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Empresa</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Match</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Estado</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${applications.map((app, idx) => `
+                                <tr class="border-b border-border">
+                                    <td class="px-3 py-2 text-sm text-muted-foreground">${idx + 1}</td>
+                                    <td class="px-3 py-2 text-sm text-foreground">${app.vacancyTitle || 'Vacante'}</td>
+                                    <td class="px-3 py-2 text-sm text-muted-foreground">${app.company || 'Empresa'}</td>
+                                    <td class="px-3 py-2">
+                                        <span class="px-2 py-1 ${getStatusColor(app.status)} rounded-full text-xs">${app.matchScore || 0}%</span>
+                                    </td>
+                                    <td class="px-3 py-2">
+                                        <span class="px-2 py-1 ${getStatusColor(app.status)} rounded-full text-xs">${getStatusText(app.status)}</span>
+                                    </td>
+                                    <td class="px-3 py-2">
+                                        <div class="flex gap-1">
+                                            <button onclick="updateAppStatus('${app.id}', 'read')" class="px-2 py-1 bg-blue-500/20 text-blue-500 rounded text-xs hover:bg-blue-500/30">Leído</button>
+                                            <button onclick="updateAppStatus('${app.id}', 'rejected')" class="px-2 py-1 bg-danger/20 text-danger rounded text-xs hover:bg-danger/30">Rechazar</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        contentEl.innerHTML = '<p class="text-muted-foreground">No se pudieron cargar los detalles</p>';
+    }
+}
+
+// Mock data for demo
+function getMockEvaluatedVacancies() {
+    const platforms = ["We Work Remotely", "Remote.co", "Arc.dev"];
+    const companies = ["NovaTech", "CloudForce", "DevTeams", "BlueBridge"];
+    const titles = ["Senior React Developer", "Python Backend Engineer", "Full Stack Developer", "DevOps Specialist"];
+    
+    return Array.from({length: 10}, (_, i) => ({
+        id: `eval_${i+1}`,
+        title: titles[i % titles.length],
+        company: companies[i % companies.length],
+        platform: platforms[i % platforms.length],
+        matchScore: Math.floor(Math.random() * 40) + 60,
+        evaluatedDate: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toLocaleDateString('es-ES')
+    }));
+}
+
+function getMockMatchedVacancies() {
+    const platforms = ["We Work Remotely", "Remote.co", "Arc.dev"];
+    const companies = ["NovaTech", "CloudForce", "DevTeams"];
+    const titles = ["Senior React Developer", "Python Backend Engineer", "Full Stack Developer"];
+    
+    return Array.from({length: 5}, (_, i) => ({
+        id: `match_${i+1}`,
+        title: titles[i % titles.length],
+        company: companies[i % companies.length],
+        platform: platforms[i % platforms.length],
+        matchScore: Math.floor(Math.random() * 20) + 70,
+        matchedSkills: "React, Python, AWS"
+    }));
+}
+
+function formatDate(dateString) {
+    if (!dateString) return 'Fecha desconocida';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+// Auth Functions
 function toggleAuthMode() {
     const isRegister = document.getElementById('auth-title').textContent === 'Iniciar Sesión';
     if (isRegister) {
@@ -112,10 +328,12 @@ async function handleAuth(event) {
         if (result.success || result.token) {
             appState.token = result.token;
             appState.user = result.user;
+            appState.isFirstVisit = false;
             localStorage.setItem('token', appState.token);
             localStorage.setItem('user', JSON.stringify(appState.user));
             closeAuthModal();
             updateAuthUI();
+            // Redirigir al Paso 1: Perfil después del login exitoso
             showSection('perfil');
         } else {
             alert(result.error || 'Error de autenticación');
@@ -143,9 +361,11 @@ async function handleGoogleAuth() {
             authWindow.close();
             appState.token = 'oauth-' + Date.now();
             appState.user = event.data.profile;
+            appState.isFirstVisit = false;
             localStorage.setItem('token', appState.token);
             localStorage.setItem('user', JSON.stringify(appState.user));
             updateAuthUI();
+            // Redirigir al Paso 1: Perfil después del login exitoso
             showSection('perfil');
         }
     });
@@ -154,9 +374,12 @@ async function handleGoogleAuth() {
 function logout() {
     appState.token = null;
     appState.user = null;
+    appState.isFirstVisit = true;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     updateAuthUI();
+    // Volver a la pantalla de bienvenida
+    showSection('welcome');
 }
 
 function updateAuthUI() {
@@ -178,8 +401,14 @@ function updateAuthUI() {
     }
 }
 
-// Section Navigation
+// Section Navigation - PROTEGIDA POR AUTENTICACIÓN
 function showSection(sectionId) {
+    // Verificar autenticación obligatoria para secciones protegidas
+    if (!appState.user && sectionId !== 'welcome') {
+        openAuthModal();
+        return;
+    }
+    
     // Ocultar todas las secciones
     document.querySelectorAll('.section').forEach(section => {
         section.classList.add('hidden');
@@ -193,6 +422,11 @@ function showSection(sectionId) {
         link.classList.remove('text-primary');
     });
     
+    // Si es welcome, resaltar el enlace de inicio
+    if (sectionId === 'welcome') {
+        document.getElementById('nav-welcome').classList.add('text-primary');
+    }
+    
     // Cargar datos específicos de cada sección
     if (sectionId === 'dashboard') {
         loadDashboardStats();
@@ -205,6 +439,12 @@ function showSection(sectionId) {
 
 // Paso 1: CV Upload and Profile
 async function handleCVUpload(event) {
+    // Verificar autenticación
+    if (!appState.user) {
+        openAuthModal();
+        return;
+    }
+    
     const file = event.target.files[0];
     if (!file) return;
     
@@ -256,6 +496,12 @@ function displayCVPreview(data) {
 }
 
 async function saveProfile(event) {
+    // Verificar autenticación
+    if (!appState.user) {
+        openAuthModal();
+        return;
+    }
+    
     event.preventDefault();
     
     appState.profile = {
@@ -269,11 +515,18 @@ async function saveProfile(event) {
     
     localStorage.setItem('profile', JSON.stringify(appState.profile));
     alert('Perfil guardado exitosamente');
+    // Ir al Paso 2: Vacantes
     showSection('vacantes');
 }
 
 // Paso 2: Job Search
 async function searchJobs() {
+    // Verificar autenticación
+    if (!appState.user) {
+        openAuthModal();
+        return;
+    }
+    
     const query = appState.profile?.skills?.join(',') || 'developer';
     const regions = [appState.profile?.region || 'global'];
     
@@ -340,6 +593,12 @@ function renderJobs(jobs) {
 }
 
 async function applyToJob(jobId, autoSend = false) {
+    // Verificar autenticación
+    if (!appState.user) {
+        openAuthModal();
+        return;
+    }
+    
     const job = appState.jobs.find(j => j.id === jobId);
     if (!job) return;
     
@@ -439,6 +698,10 @@ async function updateAppStatus(appId, status) {
             body: JSON.stringify({ status })
         });
         loadApplications();
+        // Recargar el modal si está abierto
+        if (!document.getElementById('details-modal').classList.contains('hidden')) {
+            showSentApplications();
+        }
     } catch (error) {
         alert('Error al actualizar estado');
     }
@@ -498,6 +761,12 @@ async function loadChart() {
 
 // Paso 4: AI Recommendations and Courses
 async function loadAIRecommendations() {
+    // Verificar autenticación
+    if (!appState.user) {
+        document.getElementById('ai-recommendations').innerHTML = '<p class="text-muted-foreground">Debes iniciar sesión para ver las recomendaciones</p>';
+        return;
+    }
+    
     const container = document.getElementById('ai-recommendations');
     
     if (!appState.cvData && !appState.profile) {
@@ -564,6 +833,12 @@ function generateSkillRecommendations(skills) {
 }
 
 async function loadRecommendedCourses() {
+    // Verificar autenticación
+    if (!appState.user) {
+        document.getElementById('recommended-courses').innerHTML = '<p class="text-muted-foreground">Debes iniciar sesión para ver los cursos</p>';
+        return;
+    }
+    
     const container = document.getElementById('recommended-courses');
     
     if (!appState.profile?.skills && !appState.cvData?.skills) {
