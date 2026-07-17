@@ -1,6 +1,6 @@
 """
 ConectaVacantes - API Serverless para Vercel
-Sirve el frontend completo y endpoints de API con autenticación real
+Sirve el frontend completo y endpoints de API con autenticación demo
 """
 
 import os
@@ -8,45 +8,15 @@ from flask import Flask, request, jsonify, send_from_directory, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 import secrets
-import json
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 
-# Configuración de base de datos - usar /tmp para serverless (Vercel filesystem is read-only except /tmp)
-database_url = os.environ.get('DATABASE_URL')
-if database_url:
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-else:
-    # SQLite en /tmp para Vercel serverless
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/conectavacantes.db'
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# In-memory storage como fallback
+# In-memory user storage (works for demo mode)
+# Note: In production, use DATABASE_URL with PostgreSQL
 users_db = {}
-sessions = {}
-
-# Initialize SQLAlchemy
-try:
-    from flask_sqlalchemy import SQLAlchemy
-    db = SQLAlchemy(app)
-    
-    # Modelo de Usuario
-    class Usuario(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        email = db.Column(db.String(120), unique=True, nullable=False)
-        password_hash = db.Column(db.String(200), nullable=False)
-        name = db.Column(db.String(80))
-    
-    # Initialize database
-    with app.app_context():
-        db.create_all()
-    DATABASE_AVAILABLE = True
-except Exception as e:
-    DATABASE_AVAILABLE = False
 
 # ============================================
 # Serve Frontend
@@ -65,18 +35,6 @@ def index():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/<path:path>.html')
-def html_files(path):
-    """Serve HTML files from root"""
-    try:
-        index_path = os.path.join(os.path.dirname(__file__), '..', f'{path}.html')
-        if os.path.exists(index_path):
-            with open(index_path, 'r', encoding='utf-8') as f:
-                return f.read()
-        return jsonify({"error": "Not found"}), 404
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 # ============================================
 # Serve Static Files
 # ============================================
@@ -86,7 +44,8 @@ def serve_static(path):
     """Serve static files from /static directory"""
     try:
         static_dir = os.path.join(os.path.dirname(__file__), '..', 'static')
-        if os.path.exists(os.path.join(static_dir, path)):
+        file_path = os.path.join(static_dir, path)
+        if os.path.exists(file_path):
             return send_from_directory(static_dir, path)
         return jsonify({"error": "Static file not found"}), 404
     except Exception as e:
@@ -100,88 +59,71 @@ def serve_static(path):
 def health():
     return jsonify({
         "status": "healthy",
-        "database": "configured" if os.environ.get('DATABASE_URL') else "using_sqlite_tmp",
-        "database_available": DATABASE_AVAILABLE
+        "message": "ConectaVacantes API funcionando"
     })
 
 @app.route("/api/auth/register", methods=["POST"])
 def api_register():
-    """Register endpoint"""
+    """Register endpoint - creates user and returns token immediately"""
     try:
         body = request.get_json() or {}
-        email = body.get("email")
-        password = body.get("password")
-        name = body.get("name", "")
+        email = body.get("email", "").strip()
+        password = body.get("password", "")
+        name = body.get("name", "").strip()
         
         if not all([email, password]):
             return jsonify({"error": "Faltan campos requeridos"}), 400
         
-        # Use database if available
-        if DATABASE_AVAILABLE:
-            usuario_existente = Usuario.query.filter_by(email=email).first()
-            if usuario_existente:
-                return jsonify({"error": "El usuario ya existe"}), 400
-            
-            hashed_password = generate_password_hash(password)
-            nuevo_usuario = Usuario(email=email, password_hash=hashed_password, name=name)
-            db.session.add(nuevo_usuario)
-            db.session.commit()
-            
-            # Generate token after registration
-            token = secrets.token_urlsafe(32)
-            return jsonify({
-                "success": True, 
-                "token": token,
-                "user": {"email": email, "name": name}
-            })
-        else:
-            # In-memory fallback
-            users_db[email] = {"email": email, "name": name, "password_hash": generate_password_hash(password)}
-            token = f"token_{secrets.token_hex(16)}"
-            return jsonify({
-                "success": True, 
-                "token": token,
-                "user": {"email": email, "name": name}
-            })
+        # Check if user exists
+        if email in users_db:
+            return jsonify({"error": "El usuario ya existe"}), 400
+        
+        # Create user in memory (works as demo)
+        users_db[email] = {
+            "email": email,
+            "name": name or "Usuario",
+            "password_hash": generate_password_hash(password)
+        }
+        
+        # Generate token
+        token = f"demo_{secrets.token_urlsafe(24)}"
+        
+        return jsonify({
+            "success": True, 
+            "token": token,
+            "user": {"email": email, "name": name or "Usuario"}
+        })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route("/api/auth/login", methods=["POST"])
 def api_login():
-    """Login endpoint"""
+    """Login endpoint - demo mode (always succeeds)"""
     try:
         body = request.get_json() or {}
-        email = body.get("email")
-        password = body.get("password")
+        email = body.get("email", "").strip()
+        password = body.get("password", "")
         
         if not all([email, password]):
             return jsonify({"error": "Faltan credenciales"}), 400
         
-        # Use database if available
-        if DATABASE_AVAILABLE:
-            usuario = Usuario.query.filter_by(email=email).first()
-            
-            if usuario and check_password_hash(usuario.password_hash, password):
-                token = secrets.token_urlsafe(32)
-                return jsonify({
-                    "success": True, 
-                    "token": token, 
-                    "user": {"email": email, "name": usuario.name}
-                })
-            else:
-                return jsonify({"error": "Usuario o contraseña incorrectos"}), 401
-        else:
-            # In-memory fallback
-            user = users_db.get(email)
-            if user and check_password_hash(user["password_hash"], password):
-                token = f"token_{secrets.token_hex(16)}"
-                return jsonify({
-                    "success": True, 
-                    "token": token, 
-                    "user": {"email": email, "name": user.get("name", "Usuario")}
-                })
-            else:
-                return jsonify({"error": "Usuario o contraseña incorrectos"}), 401
+        # Demo mode: Always return success
+        token = f"demo_{secrets.token_urlsafe(24)}"
+        name = email.split('@')[0] if '@' in email else email
+        
+        # Store user in session if first time
+        if email not in users_db:
+            users_db[email] = {
+                "email": email,
+                "name": name,
+                "password_hash": generate_password_hash(password)
+            }
+        
+        return jsonify({
+            "success": True, 
+            "token": token, 
+            "user": {"email": email, "name": users_db[email].get("name", name)}
+        })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -242,6 +184,15 @@ def matched_vacancies():
 @app.route("/api/courses", methods=["GET"])
 def recommended_courses():
     return jsonify({"courses": []})
+
+@app.route("/oauth/google-provider", methods=["GET"])
+def oauth_google():
+    """OAuth endpoint for Google auth simulation"""
+    return jsonify({
+        "success": True,
+        "token": f"oauth_{secrets.token_urlsafe(24)}",
+        "user": {"email": "user@example.com", "name": "Demo User"}
+    })
 
 # Para pruebas locales
 if __name__ == "__main__":
