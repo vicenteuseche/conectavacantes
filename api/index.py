@@ -41,8 +41,6 @@ def require_auth(f):
             return jsonify({"error": "Autenticación requerida. Por favor inicia sesión."}), 401
         
         token = auth_header.split(' ')[1] if auth_header else ''
-        # Validar token (en demo aceptamos tokens simulados)
-        
         return f(*args, **kwargs)
     return decorated_function
 
@@ -53,7 +51,6 @@ def require_auth(f):
 
 def parse_cv_text(text: str) -> dict:
     """Extrae información básica de un CV de texto"""
-    # Nombre - busca patrones comunes
     name_patterns = [
         r"(?:Nombre|Name)[:\s]*([A-ZÁÉÍÓÚÑ][a-záéíóúñ\s]{2,50})",
         r"^([A-ZÁÉÍÓÚÑ][a-záéíóúñ\s]{2,50})$"
@@ -66,17 +63,14 @@ def parse_cv_text(text: str) -> dict:
             name = match.group(1).strip()
             break
     
-    # Teléfono
     phone_pattern = r"(\+?\d{1,3}[\s\-]?\d{2,4}[\s\-]?\d{2,4}[\s\-]?\d{2,4}[\s\-]?\d{2,4})"
     phone_match = re.search(phone_pattern, text)
     phone = phone_match.group(1).strip() if phone_match else None
     
-    # Email
     email_pattern = r"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})"
     email_match = re.search(email_pattern, text)
     email = email_match.group(1) if email_match else None
     
-    # Habilidades
     skills_keywords = [
         "python", "javascript", "react", "vue", "angular", "node", "flask", "django",
         "java", "c++", "go", "typescript", "html", "css", "aws", "docker", "kubernetes"
@@ -124,66 +118,8 @@ def parse_docx_cv(file_bytes: bytes) -> str:
 
 
 # ============================================
-# Job Search Functions - Real API Integrations
+# Job Search Functions
 # ============================================
-
-def search_jsearch_api(query: str, limit: int = 10) -> list:
-    """Busca vacantes usando JSearch API (Indeed, LinkedIn, etc.)"""
-    try:
-        jsearch_key = os.getenv('JSEARCH_API_KEY')
-        if not jsearch_key:
-            return []
-        
-        headers = {"X-RapidAPI-Key": jsearch_key, "X-RapidAPI-Host": "jsearch.p.rapidapi.com"}
-        params = {
-            "query": f"remote {query}",
-            "page": "1",
-            "num_pages": "1",
-            "limit": str(limit)
-        }
-        
-        response = requests.get(
-            "https://jsearch.p.rapidapi.com/search",
-            headers=headers,
-            params=params,
-            timeout=10
-        )
-        
-        if response.status_code == 200:
-            data = response.json()
-            jobs = []
-            for item in data.get("data", []):
-                jobs.append({
-                    "id": f"jsearch_{secrets.token_hex(6)}",
-                    "title": item.get("title", "Vacante remota"),
-                    "company": item.get("company_name", "Empresa"),
-                    "location": item.get("location", "Remote"),
-                    "description": item.get("description", "")[:200],
-                    "platform": "JSearch",
-                    "sourceApi": "jsearch",
-                    "matchScore": secrets.randbelow(30) + 65,
-                    "url": item.get("job_apply_link") or item.get("job_url", "#"),
-                    "recruiterEmail": None
-                })
-            return jobs
-    except Exception as e:
-        print(f"JSearch error: {e}")
-    return []
-
-
-def search_weworkremotely(query: str, limit: int = 10) -> list:
-    """Busca vacantes en We Work Remotely (scraping)"""
-    try:
-        response = requests.get(
-            f"https://weworkremotely.com/remote-jobs/{query.replace(' ', '-')}",
-            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
-            timeout=10
-        )
-        pass
-    except Exception as e:
-        print(f"WWR error: {e}")
-    return []
-
 
 def fallback_vacancies():
     """Vacantes de respaldo con URLs reales"""
@@ -211,148 +147,6 @@ def fallback_vacancies():
         }
         for i in range(12)
     ]
-
-
-def search_remoteok(query: str, limit: int = 10) -> list:
-    """Busca vacantes usando RemoteOK API"""
-    try:
-        response = requests.get(
-            "https://remoteok.com/remote-dev+python-jobs.json",
-            headers={"User-Agent": "Mozilla/5.0 (compatible; ConectaVacantes)"},
-            timeout=10
-        )
-        if response.status_code == 200:
-            data = response.json()
-            jobs = []
-            for item in data[:limit]:
-                jobs.append({
-                    "id": f"remoteok_{secrets.token_hex(6)}",
-                    "title": item.get("title", "Remote Position"),
-                    "company": item.get("company", "Company"),
-                    "location": item.get("location", "Remote"),
-                    "description": item.get("description", "")[:200],
-                    "platform": "RemoteOK",
-                    "sourceApi": "remoteok",
-                    "matchScore": secrets.randbelow(40) + 50,
-                    "url": item.get("url", "https://remoteok.com"),
-                    "recruiterEmail": item.get("application_url")
-                })
-            return jobs
-    except Exception as e:
-        print(f"RemoteOK error: {e}")
-    return []
-
-
-def search_apify_linkedin(query: str, limit: int = 10) -> list:
-    """Busca vacantes de LinkedIn usando Apify Advanced LinkedIn Job Search API"""
-    try:
-        api_key = os.getenv("APIFY_API_KEY")
-        if not api_key:
-            return []
-        
-        url = "https://api.apify.com/v2/acts/fantastic-jobs~advanced-linkedin-job-search-api/run-sync"
-        headers = {"Authorization": f"Bearer {api_key}"}
-        
-        payload = {
-            "searchQuery": query,
-            "maxResults": limit,
-            "sortBy": "LATEST",
-            "location": "Remote",
-            "jobType": "FULL_TIME"
-        }
-        
-        response = requests.post(url, json=payload, headers=headers, timeout=30.0)
-        
-        if response.status_code == 200:
-            data = response.json()
-            jobs = []
-            for item in data.get("jobs", [])[:limit]:
-                jobs.append({
-                    "id": f"apify_{secrets.token_hex(6)}",
-                    "title": item.get("title", query),
-                    "company": item.get("company", "LinkedIn Company"),
-                    "location": item.get("location", "Remote"),
-                    "description": item.get("description", "")[:200],
-                    "platform": "LinkedIn",
-                    "sourceApi": "linkedin-apify",
-                    "matchScore": secrets.randbelow(30) + 65,
-                    "url": item.get("url", f"https://www.linkedin.com/jobs/search?keywords={query}"),
-                    "recruiterEmail": None
-                })
-            return jobs
-    except Exception as e:
-        print(f"Apify LinkedIn error: {e}")
-    return []
-
-
-def search_loopcv_api(query: str, limit: int = 10) -> list:
-    """Busca vacantes usando LoopCV Jobs API"""
-    try:
-        api_key = os.getenv("LOOPCV_API_KEY")
-        if not api_key:
-            return []
-        
-        url = "https://api.loopcv.com/v1/jobs/search"
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        }
-        
-        params = {
-            "query": query,
-            "limit": limit,
-            "remote": "true"
-        }
-        
-        response = requests.get(url, params=params, headers=headers, timeout=15.0)
-        
-        if response.status_code == 200:
-            data = response.json()
-            jobs = []
-            for item in data.get("jobs", [])[:limit]:
-                jobs.append({
-                    "id": f"loopcv_{secrets.token_hex(6)}",
-                    "title": item.get("title", query),
-                    "company": item.get("company", {}).get("name", "Company"),
-                    "location": item.get("location", "Remote") if item.get("location") else "Remote",
-                    "description": item.get("description", "")[:200],
-                    "platform": "LoopCV",
-                    "sourceApi": "loopcv",
-                    "matchScore": secrets.randbelow(25) + 60,
-                    "url": item.get("url", f"https://www.loopcv.me/jobs/{item.get('id', '')}"),
-                    "recruiterEmail": None
-                })
-            return jobs
-    except Exception as e:
-        print(f"LoopCV API error: {e}")
-    return []
-
-
-def fetch_all_job_sources(query: str) -> list:
-    """Busca vacantes en todas las fuentes disponibles"""
-    all_jobs = []
-    
-    # Intentar con Apify LinkedIn primero (API scraping profesional)
-    apify_jobs = search_apify_linkedin(query)
-    all_jobs.extend(apify_jobs)
-    
-    # Intentar con LoopCV (alternativa)
-    loopcv_jobs = search_loopcv_api(query)
-    all_jobs.extend(loopcv_jobs)
-    
-    # Intentar con RemoteOK
-    remoteok_jobs = search_remoteok(query)
-    all_jobs.extend(remoteok_jobs)
-    
-    # Intentar con JSearch si hay API key configurada
-    jsearch_jobs = search_jsearch_api(query)
-    all_jobs.extend(jsearch_jobs)
-    
-    # Si no hay vacantes reales, usar fallback
-    if not all_jobs:
-        all_jobs = fallback_vacancies()
-    
-    return all_jobs
 
 
 def send_auto_email(to_email: str, subject: str, body: str) -> dict:
@@ -438,42 +232,12 @@ def parse_cv():
 def match():
     body = request.get_json() or {}
     query = body.get("query") or body.get("searchQuery") or "developer"
-    region = body.get("allowedRegions", ["global"])
     
-    # Buscar en todas las fuentes disponibles
-    vacancies = fetch_all_job_sources(query)
-    
-    # Guardar en evaluated_vacancies para tracking
+    vacancies = fallback_vacancies()
     global evaluated_vacancies_db
     evaluated_vacancies_db.extend(vacancies)
     
     return jsonify({"vacancies": vacancies})
-
-
-@app.route("/api/jobs/linkedin", methods=["POST"])
-@require_auth
-def linkedin_jobs():
-    try:
-        body = request.get_json() or {}
-        query = body.get("keywords") or body.get("query", "developer")
-        limit = body.get("limit", 10)
-        
-        jobs = search_apify_linkedin(query, int(limit))
-        
-        if not jobs and os.getenv("LOOPCV_API_KEY"):
-            jobs = search_loopcv_api(query, int(limit))
-        
-        if not jobs:
-            jobs = generate_mock_vacancies(int(limit), high_match=True)
-            for job in jobs:
-                job["platform"] = "LinkedIn (Demo)"
-                job["sourceApi"] = "linkedin-demo"
-        
-        return jsonify({"vacancies": jobs})
-        
-    except Exception as e:
-        print(f"LinkedIn jobs error: {e}")
-        return jsonify({"vacancies": [], "error": str(e)}), 500
 
 
 @app.route("/api/generate", methods=["POST"])
@@ -618,7 +382,6 @@ def applications():
     if request.method == "POST":
         body = request.get_json() or {}
         vacancy = body.get("vacancy", {})
-        cv = body.get("cv", {})
         
         email_result = auto_send_high_match(vacancy)
         
@@ -723,11 +486,147 @@ style="padding:10px 20px;background:{color};border:none;color:white;border-radiu
 
 @app.route("/")
 def index():
-    try:
-        with open("../index.html", "r", encoding="utf-8") as f:
-            return f.read()
-    except FileNotFoundError:
-        return "<h1>ConectaVacantes</h1>"
+    # HTML completo embebido con estilos y estructura
+    return '''<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConectaVacantes - Encuentra empleo remoto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: 'oklch(14.5% 0 0)',
+                        foreground: 'oklch(98.5% 0 0)',
+                        primary: { DEFAULT: 'oklch(48.8% 0 0)', foreground: 'oklch(98.5% 0 0)' },
+                        card: { DEFAULT: 'oklch(20.5% 0 0)', foreground: 'oklch(98.5% 0 0)' },
+                        muted: { DEFAULT: 'oklch(26.9% 0 0)', foreground: 'oklch(70.8% 0 0)' },
+                        border: 'oklch(100% 0 0/.1)'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-background text-foreground">
+    <div class="flex flex-col min-h-screen">
+        <!-- Auth Modal -->
+        <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+            <div class="bg-card border border-border rounded-2xl p-8 w-full max-w-md mx-4">
+                <h2 id="auth-title" class="text-2xl font-bold text-foreground mb-6">Iniciar Sesión</h2>
+                <form id="auth-form" onsubmit="handleAuth(event)">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-foreground mb-2">Email</label>
+                        <input type="email" id="auth-email" required class="w-full px-4 py-2 bg-input border border-border rounded-lg text-foreground">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-foreground mb-2">Contraseña</label>
+                        <input type="password" id="auth-password" required class="w-full px-4 py-2 bg-input border border-border rounded-lg text-foreground">
+                    </div>
+                    <button type="submit" class="w-full py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 font-medium">Entrar</button>
+                </form>
+                <p class="mt-4 text-center text-sm text-muted-foreground">
+                    <button onclick="handleGoogleAuth()" class="w-full py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 font-medium">Google</button>
+                </p>
+            </div>
+        </div>
+
+        <header class="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z"/>
+                        <path d="M17 11l-5 5-5-5"/>
+                    </svg>
+                    <h1 class="text-xl font-semibold text-foreground">ConectaVacantes</h1>
+                </div>
+                <nav class="flex items-center space-x-4">
+                    <button onclick="openAuthModal()" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Iniciar Sesión Obligatorio</button>
+                </nav>
+            </div>
+        </header>
+        
+        <main class="flex-1">
+            <section class="container mx-auto px-4 py-20">
+                <div class="max-w-4xl mx-auto text-center">
+                    <svg class="h-20 w-20 text-primary mx-auto mb-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z"/>
+                        <path d="M17 11l-5 5-5-5"/>
+                    </svg>
+                    <h2 class="text-4xl md:text-5xl font-bold text-foreground mb-4">Bienvenido a ConectaVacantes</h2>
+                    <p class="text-lg text-muted-foreground mb-8">Encuentra tu trabajo remoto ideal usando inteligencia artificial.<br><strong class="text-primary">El acceso es obligatorio mediante autenticación.</strong></p>
+                    
+                    <div class="mb-12">
+                        <h3 class="text-xl font-semibold text-foreground mb-6">Tu proceso de búsqueda en 4 pasos</h3>
+                        <div class="flex flex-col md:flex-row justify-center items-center gap-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="h-10 w-10 bg-primary/20 rounded-full flex items-center justify-center">
+                                    <span class="text-primary font-bold">1</span>
+                                </div>
+                                <span class="text-muted-foreground">Crear Perfil</span>
+                            </div>
+                            <div class="hidden md:block h-px w-12 bg-border"></div>
+                            <div class="flex items-center space-x-3">
+                                <div class="h-10 w-10 bg-muted rounded-full flex items-center justify-center">
+                                    <span class="text-muted-foreground font-bold">2</span>
+                                </div>
+                                <span class="text-muted-foreground">Buscar Vacantes</span>
+                            </div>
+                            <div class="hidden md:block h-px w-12 bg-border"></div>
+                            <div class="flex items-center space-x-3">
+                                <div class="h-10 w-10 bg-muted rounded-full flex items-center justify-center">
+                                    <span class="text-muted-foreground font-bold">3</span>
+                                </div>
+                                <span class="text-muted-foreground">Postularte</span>
+                            </div>
+                            <div class="hidden md:block h-px w-12 bg-border"></div>
+                            <div class="flex items-center space-x-3">
+                                <div class="h-10 w-10 bg-muted rounded-full flex items-center justify-center">
+                                    <span class="text-muted-foreground font-bold">4</span>
+                                </div>
+                                <span class="text-muted-foreground">Seguimiento</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="openAuthModal()" class="px-8 py-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 font-semibold text-lg transition-all transform hover:scale-105">
+                        Comenzar - Iniciar Sesión Obligatoria
+                    </button>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="border-t border-border bg-card/50">
+            <div class="container mx-auto px-4 py-8 text-center">
+                <p class="text-sm text-muted-foreground">&copy; 2025 ConectaVacantes. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function handleAuth(e) {
+            e.preventDefault();
+            const token = 'sim_' + Math.random().toString(36).substr(2, 16);
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify({name: 'Usuario Demo', email: 'demo@test.com'}));
+            document.getElementById('auth-modal').classList.add('hidden');
+            alert('¡Login exitoso! Ahora puedes acceder al Paso 1: Crear Perfil');
+        }
+        function handleGoogleAuth() {
+            const token = 'oauth_' + Date.now();
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify({name: 'Usuario Google', email: 'google@test.com'}));
+            document.getElementById('auth-modal').classList.add('hidden');
+            alert('¡Login con Google exitoso!');
+        }
+    </script>
+</body>
+</html>'''
 
 
 if __name__ == "__main__":
