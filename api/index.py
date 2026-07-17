@@ -35,11 +35,12 @@ sessions = {}
 def index():
     """Serve the main index.html"""
     try:
-        static_dir = os.path.join(os.path.dirname(__file__), '..', 'static')
         index_path = os.path.join(os.path.dirname(__file__), '..', 'index.html')
         if os.path.exists(index_path):
             with open(index_path, 'r', encoding='utf-8') as f:
-                return f.read()
+                content = f.read()
+            from flask import Response
+            return Response(content, mimetype='text/html')
         return "<h1>ConectaVacantes</h1>", 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
