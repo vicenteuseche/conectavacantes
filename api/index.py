@@ -127,8 +127,11 @@ def api_register():
             db.session.add(nuevo_usuario)
             db.session.commit()
             
+            # Generate token after registration
+            token = secrets.token_urlsafe(32)
             return jsonify({
                 "success": True, 
+                "token": token,
                 "user": {"email": email, "name": name}
             })
         else:
