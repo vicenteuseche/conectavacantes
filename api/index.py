@@ -238,7 +238,7 @@ def parse_cv_text(text):
     import re
     skills = []
     skill_keywords = ["python", "javascript", "react", "vue", "angular", "node", "flask", "django",
-                     "java", "c++", "aws", "docker", "kubernetes", "sql", "mongodb"]
+                     "java", "c++", "aws", "docker", "kubernetes", "sql", "mongodb", "typescript", "go", "rust"]
     text_lower = text.lower()
     for skill in skill_keywords:
         if skill in text_lower:
@@ -246,12 +246,23 @@ def parse_cv_text(text):
     
     email_match = re.search(r'([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})', text)
     phone_match = re.search(r'(\+?\d{1,3}[\s\-]?\d{2,4}[\s\-]?\d{2,4}[\s\-]?\d{2,4})', text)
-    name_match = re.search(r'^([A-ZÁÉÍÓÚÑ][a-záéíóúñ\s]{2,50})$', text, re.MULTILINE)
+    
+    # Nombre - busca líneas que empiecen con mayúscula
+    name_match = re.search(r'^([A-ZÁÉÍÓÚÑ][a-záéíóúñ\s\.]{2,50})$', text, re.MULTILINE)
+    if not name_match:
+        # Fallback: buscar "Nombre:" o "Name:" en el texto
+        name_label_match = re.search(r'(?:Nombre|Name)[:\s]+([A-ZÁÉÍÓÚÑ][a-záéíóúñ\s\.]{2,50})', text, re.IGNORECASE)
+        if name_label_match:
+            name_match = name_label_match
+    
+    # Dirección
+    address_match = re.search(r'(?:Dirección|Address|Ubicación|Location)[:\s]+([A-ZÁÉÍÓÚÑa-záéíóúñ\s,\d]{5,100})', text, re.IGNORECASE)
     
     return {
         "name": name_match.group(1).strip() if name_match else "Demo Name",
         "phone": phone_match.group(1).strip() if phone_match else None,
         "email": email_match.group(1) if email_match else None,
+        "address": address_match.group(1).strip() if address_match else None,
         "skills": skills[:10],
         "rawText": text[:2000]
     }
