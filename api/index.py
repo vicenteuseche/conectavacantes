@@ -214,14 +214,28 @@ def parse_cv():
             except:
                 pass
         
-        return jsonify({"name": "Demo Name", "phone": None, "email": None, "skills": ["python", "javascript", "react"], "rawText": "Sample CV text"})
+        # Always return all fields with defaults
+        return jsonify({
+            "name": "Demo Name",
+            "phone": None,
+            "email": None,
+            "address": None,
+            "skills": ["python", "javascript", "react"],
+            "rawText": "Sample CV text"
+        })
     except Exception as e:
-        return jsonify({"name": "Demo Name", "skills": ["python", "javascript", "react"], "rawText": "Sample CV text"})
+        return jsonify({
+            "name": "Demo Name",
+            "phone": None,
+            "email": None,
+            "address": None,
+            "skills": ["python", "javascript", "react"],
+            "rawText": "Sample CV text"
+        })
 
 
 @app.route("/api/match-vacancies", methods=["POST"])
 def match_vacancies():
-    """Match vacancies endpoint - uses real APIs when credentials available"""
     try:
         import httpx
         import secrets as sec
@@ -231,10 +245,8 @@ def match_vacancies():
         skills = body.get("profileKeywords", "")
         regions = body.get("allowedRegions", [])
         
-        # Try real APIs first
         vacancies = []
         
-        # Apify LinkedIn API (requires APIFY_API_KEY)
         apify_key = os.getenv("APIFY_API_KEY")
         if apify_key:
             try:
@@ -264,7 +276,6 @@ def match_vacancies():
             except:
                 pass
         
-        # LoopCV API (requires LOOPCV_API_KEY)
         loopcv_key = os.getenv("LOOPCV_API_KEY")
         if loopcv_key and not vacancies:
             try:
@@ -288,7 +299,6 @@ def match_vacancies():
             except:
                 pass
         
-        # Fallback to demo data if no APIs configured
         if not vacancies:
             vacancies = [
                 {"id": "1", "title": "Senior React Developer", "company": "TechCorp", "matchScore": 85, "platform": "LinkedIn", "url": "#"},
@@ -298,9 +308,7 @@ def match_vacancies():
         
         return jsonify({"vacancies": vacancies})
     except Exception as e:
-        return jsonify({"vacancies": [
-            {"id": "1", "title": "Senior React Developer", "company": "TechCorp", "matchScore": 85, "platform": "LinkedIn", "url": "#"}
-        ]})
+        return jsonify({"vacancies": [{"id": "1", "title": "Senior React Developer", "company": "TechCorp", "matchScore": 85, "platform": "LinkedIn", "url": "#"}]})
 
 
 @app.route("/api/dashboard/stats", methods=["GET"])
