@@ -119,7 +119,15 @@ def serve_app_js():
 
 @app.route("/api/health")
 def health():
-    return jsonify({"status": "healthy", "message": "ConectaVacantes API funcionando"})
+    return jsonify({
+        "status": "healthy", 
+        "message": "ConectaVacantes API funcionando",
+        "apis": {
+            "apify_configured": bool(os.getenv("APIFY_API_KEY")),
+            "loopcv_configured": bool(os.getenv("LOOPCV_API_KEY")),
+            "gemini_configured": bool(os.getenv("GEMINI_API_KEY"))
+        }
+    })
 
 
 @app.route("/api/auth/register", methods=["POST"])
