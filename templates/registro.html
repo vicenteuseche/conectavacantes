@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - ConectaVacantes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: 'oklch(14.5% 0 0)',
+                        foreground: 'oklch(98.5% 0 0)',
+                        primary: { DEFAULT: 'oklch(48.8% 0 0)', foreground: 'oklch(98.5% 0 0)' },
+                        card: { DEFAULT: 'oklch(20.5% 0 0)', foreground: 'oklch(98.5% 0 0)' },
+                        muted: { DEFAULT: 'oklch(26.9% 0 0)', foreground: 'oklch(70.8% 0 0)' },
+                        border: 'oklch(100% 0 0/.1)'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-background text-foreground">
+    <div class="flex flex-col min-h-screen">
+        <header class="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+                <h1 class="text-xl font-semibold text-foreground">ConectaVacantes</h1>
+                <a href="/login" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Iniciar sesión</a>
+            </div>
+        </header>
+        
+        <main class="flex-1 flex items-center justify-center px-4">
+            <div class="w-full max-w-md">
+                <h2 class="text-3xl font-bold text-center mb-8">Crear Cuenta</h2>
+                
+                <form method="POST" action="/registro" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Email</label>
+                        <input type="email" name="email" required class="w-full px-4 py-2 bg-input border border-border rounded-lg text-foreground">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Contraseña</label>
+                        <input type="password" name="password" required class="w-full px-4 py-2 bg-input border border-border rounded-lg text-foreground">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Nombre</label>
+                        <input type="text" name="name" required class="w-full px-4 py-2 bg-input border border-border rounded-lg text-foreground">
+                    </div>
+                    
+                    <button type="submit" class="w-full py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 font-medium">Registrarse</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
