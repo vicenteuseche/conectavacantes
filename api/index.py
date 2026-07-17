@@ -4,7 +4,7 @@ Sirve el frontend completo y endpoints de API
 """
 
 import os
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 import secrets
@@ -39,7 +39,6 @@ def index():
         if os.path.exists(index_path):
             with open(index_path, 'r', encoding='utf-8') as f:
                 content = f.read()
-            from flask import Response
             return Response(content, mimetype='text/html')
         return "<h1>ConectaVacantes</h1>", 200
     except Exception as e:
