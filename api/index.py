@@ -300,12 +300,26 @@ def recommended_courses():
 
 @app.route("/oauth/google-provider", methods=["GET"])
 def oauth_google():
-    """OAuth endpoint for Google auth simulation"""
-    return jsonify({
-        "success": True,
-        "token": f"oauth_{secrets.token_urlsafe(24)}",
-        "user": {"email": "user@example.com", "name": "Demo User"}
-    })
+    """OAuth endpoint for Google auth simulation - returns HTML with postMessage"""
+    token = f"oauth_{secrets.token_urlsafe(24)}"
+    html = f'''<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        window.onload = function() {{
+            window.opener.postMessage({{
+                type: 'OAUTH_AUTH_SUCCESS',
+                profile: {{ email: 'user@example.com', name: 'Demo User' }}
+            }}, '*');
+            window.close();
+        }};
+    </script>
+</head>
+<body>
+    <p>Autenticando...</p>
+</body>
+</html>'''
+    return Response(html, mimetype='text/html')
 
 # Para pruebas locales
 if __name__ == "__main__":
