@@ -12,8 +12,6 @@ scripts
 *.md
 *.bak
 *.tmp
-app.js.new
-bootstrap.min.css
 metadata.json
 *.log
 *.pyc

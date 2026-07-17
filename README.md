@@ -51,6 +51,7 @@ gunicorn --bind 0.0.0.0:8080 main:app
 | `/api/health` | GET | Verificar estado del servidor |
 | `/api/parse-cv` | POST | Parsear CV y extraer datos (nombre, teléfono, email, habilidades) |
 | `/api/match-vacancies` | POST | Buscar vacantes coincidentes con tu perfil |
+| `/api/jobs/linkedin` | POST | Buscar vacantes de LinkedIn (Apify/LoopCV) |
 | `/api/generate` | POST | Generar carta de presentación o email |
 | `/api/chat` | POST | Asistente de IA para consultas |
 | `/api/mail/inbox` | GET | Bandeja de entrada simulada |

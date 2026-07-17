@@ -13,11 +13,19 @@ import json
 
 load_dotenv()
 
-app = Flask(__name__, template_folder='../templates')
+# Use absolute path for templates to work in Vercel serverless
+template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
+app = Flask(__name__, template_folder=template_dir)
 app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 
-# Configuración de base de datos
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///conectavacantes.db')
+# Configuración de base de datos - usar /tmp para serverless (Vercel filesystem is read-only except /tmp)
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    # For serverless, use /tmp which is writable
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/conectavacantes.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -30,54 +38,70 @@ class Usuario(db.Model):
     name = db.Column(db.String(80))
 
 
+# Initialize database tables at module load time (for serverless)
+def init_db():
+    try:
+        with app.app_context():
+            db.create_all()
+    except Exception as e:
+        pass  # Tables may already exist or in read-only environment
+
+init_db()
+
+
 # ============================================
 # Rutas de Autenticación
 # ============================================
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        name = request.form.get('name', '')
+    try:
+        if request.method == 'POST':
+            email = request.form['email']
+            password = request.form['password']
+            name = request.form.get('name', '')
+            
+            # Verificar si el usuario ya existe
+            usuario_existente = Usuario.query.filter_by(email=email).first()
+            if usuario_existente:
+                flash('El usuario ya existe')
+                return redirect(url_for('registro'))
+            
+            # Encriptar contraseña y guardar en base de datos
+            hashed_password = generate_password_hash(password)
+            nuevo_usuario = Usuario(email=email, password_hash=hashed_password, name=name)
+            db.session.add(nuevo_usuario)
+            db.session.commit()
+            
+            flash('¡Registro exitoso! Inicia sesión.')
+            return redirect(url_for('login'))
         
-        # Verificar si el usuario ya existe
-        usuario_existente = Usuario.query.filter_by(email=email).first()
-        if usuario_existente:
-            flash('El usuario ya existe')
-            return redirect(url_for('registro'))
-        
-        # Encriptar contraseña y guardar en base de datos
-        hashed_password = generate_password_hash(password)
-        nuevo_usuario = Usuario(email=email, password_hash=hashed_password, name=name)
-        db.session.add(nuevo_usuario)
-        db.session.commit()
-        
-        flash('¡Registro exitoso! Inicia sesión.')
-        return redirect(url_for('login'))
-        
-    return render_template('registro.html')
+        return render_template('registro.html')
+    except Exception as e:
+        return jsonify({"error": f"Error en registro: {str(e)}"}), 500
 
 
-@app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        
-        usuario = Usuario.query.filter_by(email=email).first()
-        
-        # Validar contraseña y usuario
-        if usuario and check_password_hash(usuario.password_hash, password):
-            session['usuario_id'] = usuario.id
-            session['usuario_email'] = usuario.email
-            flash('Inicio de sesión exitoso')
-            return redirect(url_for('dashboard'))
-        else:
-            flash('Usuario o contraseña incorrectos')
+    try:
+        if request.method == 'POST':
+            email = request.form['email']
+            password = request.form['password']
             
-    return render_template('login.html')
+            usuario = Usuario.query.filter_by(email=email).first()
+            
+            # Validar contraseña y usuario
+            if usuario and check_password_hash(usuario.password_hash, password):
+                session['usuario_id'] = usuario.id
+                session['usuario_email'] = usuario.email
+                flash('Inicio de sesión exitoso')
+                return redirect(url_for('dashboard'))
+            else:
+                flash('Usuario o contraseña incorrectos')
+        
+        return render_template('login.html')
+    except Exception as e:
+        return jsonify({"error": f"Error en login: {str(e)}"}), 500
 
 
 @app.route('/logout')
@@ -96,12 +120,34 @@ def dashboard():
 
 
 # ============================================
+# Web Routes
+# ============================================
+
+@app.route("/")
+def index():
+    try:
+        return render_template('index.html')
+    except:
+        # Fallback if templates fail
+        return """<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>ConectaVacantes</title></head>
+<body><h1>ConectaVacantes</h1><p>API funcionando correctamente</p></body>
+</html>"""
+
+
+# ============================================
 # API Endpoints
 # ============================================
 
 @app.route("/api/health")
 def health():
-    return jsonify({"status": "healthy"})
+    return jsonify({
+        "status": "healthy",
+        "template_dir": template_dir,
+        "database": "configured" if os.environ.get('DATABASE_URL') else "using_sqlite_tmp",
+        "template_exists": os.path.exists(template_dir)
+    })
 
 
 @app.route("/api/auth/register", methods=["POST"])
