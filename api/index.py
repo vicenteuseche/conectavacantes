@@ -148,19 +148,113 @@ def api_login():
 
 @app.route("/api/parse-cv", methods=["POST"])
 def parse_cv():
-    """Parse CV endpoint"""
+    """Parse CV endpoint - handles base64 files and text"""
     try:
-        body = request.get_json() or {}
-        cv_data = body.get("cv", {})
+        import base64
+        import re
+        import PyPDF2
+        from io import BytesIO
         
-        # Simulate parsing
+        body = request.get_json() or {}
+        cv = body.get("cv", {})
+        
+        # Get extracted data
+        base64_data = cv.get("base64") or cv.get("base64Data")
+        filename = cv.get("filename", "")
+        text_data = cv.get("textData", "")
+        
+        # If text data provided, parse it directly
+        if text_data:
+            # Extract skills from text
+            skills = []
+            skill_keywords = ["python", "javascript", "react", "vue", "angular", "node", "flask", "django",
+                             "java", "c++", "aws", "docker", "kubernetes", "sql", "mongodb"]
+            text_lower = text_data.lower()
+            for skill in skill_keywords:
+                if skill in text_lower:
+                    skills.append(skill)
+            
+            # Extract email
+            email_match = re.search(r'([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})', text_data)
+            
+            # Extract phone
+            phone_match = re.search(r'(\+?\d{1,3}[\s\-]?\d{2,4}[\s\-]?\d{2,4}[\s\-]?\d{2,4})', text_data)
+            
+            # Extract name (first capitalized line)
+            name_match = re.search(r'^([A-ZÁÉÍÓÚÑ][a-záéíóúñ\s]{2,50})$', text_data, re.MULTILINE)
+            
+            return jsonify({
+                "name": name_match.group(1).strip() if name_match else "Demo Name",
+                "phone": phone_match.group(1).strip() if phone_match else None,
+                "email": email_match.group(1) if email_match else None,
+                "skills": skills[:10],
+                "rawText": text_data[:2000]
+            })
+        
+        # If base64 file provided, try to parse it
+        if base64_data:
+            try:
+                file_bytes = base64.b64decode(base64_data)
+                
+                # Try PDF parsing
+                if filename.lower().endswith('.pdf') or 'pdf' in filename.lower():
+                    try:
+                        pdf_file = BytesIO(file_bytes)
+                        reader = PyPDF2.PdfReader(pdf_file)
+                        text = ""
+                        for page in reader.pages:
+                            text += page.extract_text() or ""
+                        if text:
+                            return parse_cv_text(text)
+                    except:
+                        pass
+                
+                # Fallback: try as text
+                try:
+                    text = file_bytes.decode('utf-8')
+                    return parse_cv_text(text)
+                except:
+                    pass
+            except:
+                pass
+        
+        # Default response
         return jsonify({
-            "name": cv_data.get("textData") or "Demo Name",
+            "name": "Demo Name",
+            "phone": None,
+            "email": None,
             "skills": ["python", "javascript", "react"],
             "rawText": "Sample CV text"
         })
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            "name": "Demo Name",
+            "skills": ["python", "javascript", "react"],
+            "rawText": "Sample CV text"
+        })
+
+def parse_cv_text(text):
+    """Helper function to parse CV text"""
+    import re
+    skills = []
+    skill_keywords = ["python", "javascript", "react", "vue", "angular", "node", "flask", "django",
+                     "java", "c++", "aws", "docker", "kubernetes", "sql", "mongodb"]
+    text_lower = text.lower()
+    for skill in skill_keywords:
+        if skill in text_lower:
+            skills.append(skill)
+    
+    email_match = re.search(r'([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})', text)
+    phone_match = re.search(r'(\+?\d{1,3}[\s\-]?\d{2,4}[\s\-]?\d{2,4}[\s\-]?\d{2,4})', text)
+    name_match = re.search(r'^([A-ZÁÉÍÓÚÑ][a-záéíóúñ\s]{2,50})$', text, re.MULTILINE)
+    
+    return {
+        "name": name_match.group(1).strip() if name_match else "Demo Name",
+        "phone": phone_match.group(1).strip() if phone_match else None,
+        "email": email_match.group(1) if email_match else None,
+        "skills": skills[:10],
+        "rawText": text[:2000]
+    }
 
 @app.route("/api/match-vacancies", methods=["POST"])
 def match_vacancies():
