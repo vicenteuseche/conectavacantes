@@ -412,10 +412,10 @@ def match_vacancies():
         
         return jsonify({"vacancies": vacancies})
     except Exception as e:
-        # Return query-aware fallback on error
+        # Return safe fallback on error
         return jsonify({
             "vacancies": [
-                {"id": "demo_1", "title": f"Senior {query} Developer", "company": "TechCorp", "matchScore": 85, "platform": "Remotive", "url": "#", "location": "Remote", "description": f"Trabajo remoto como {query}"}
+                {"id": "demo_1", "title": "Senior Developer", "company": "TechCorp", "matchScore": 85, "platform": "Remotive", "url": "#", "location": "Remote", "description": "Oportunidad remota"}
             ]
         })
 
